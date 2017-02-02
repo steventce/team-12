@@ -43,3 +43,8 @@ CREATE TABLE Reservations (
 	FOREIGN KEY (ResourceId) REFERENCES Resources(ResourceId)
 );
 
+CREATE TABLE Admins(
+	AdminId INT PRIMARY KEY,
+	Name VARCHAR(20)
+);
+
