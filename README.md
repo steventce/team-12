@@ -1,11 +1,17 @@
 # CPSC 319 Team 12 - HSBC Reservation System
 
 ## Client Side Quick Start
-Change into the client directory:
+This project uses [create-react-app](https://github.com/facebookincubator/create-react-app) as a starter for the team's front-end.
+
+To get started, change into the client directory:
 ```
 cd client
 ```
-Start developing on http://localhost:3000:
+Install the required modules:
+```
+npm install
+```
+Start developing on <http://localhost:3000>:
 ```
 npm start
 ```
