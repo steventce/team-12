@@ -1,0 +1,26 @@
+{
+  "name": "team-12",
+  "version": "0.1.0",
+  "description": "HSBC Reservation System",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UBC-CPSC319/team-12.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UBC-CPSC319/team-12/issues"
+  },
+  "homepage": "https://github.com/UBC-CPSC319/team-12#readme",
+  "devDependencies": {
+    "react-scripts": "0.8.5"
+  },
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
