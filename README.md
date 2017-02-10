@@ -15,3 +15,23 @@ Start developing on <http://localhost:3000>:
 ```
 npm start
 ```
+## Folder Structure:
+```
+.
+├── components
+│   ├── HeaderNavbar
+│   └── index.js
+├── containers
+│   ├── Admin
+│   │   ├── Locations
+│   │   └── Reservations
+│   ├── App
+│   ├── index.js
+│   ├── Request
+│   └── Reservations
+├── index.css
+├── index.js
+└── redux
+    ├── modules
+    └── store.js
+```
