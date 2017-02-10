@@ -1,11 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
-import App from './app';
-import AdminReservations from './admin/reservations';
-import Locations from './admin/locations';
-import Request from './request';
-import Reservations from './reservations';
+import { App, Request, Locations, Reservations, AdminReservations } from './containers';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import './index.css';
