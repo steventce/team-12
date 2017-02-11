@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { ReservedTable }  from '../../components';
 
 class Reservations extends Component {
   render() {
     return (
       <div>
-        <h1>Reservations Entry</h1>
+        <ReservedTable />
       </div>
     );
   }
