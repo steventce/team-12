@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { div, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
-const EditLocationForm = React.createClass({
+const AddLocationForm = React.createClass({
   getInitialState() {
     return {
       value: ''
@@ -77,4 +77,4 @@ const EditLocationForm = React.createClass({
   }
 });
 
-export default EditLocationForm;
+export default AddLocationForm;

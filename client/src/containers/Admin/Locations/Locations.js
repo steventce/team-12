@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { div } from 'react-bootstrap';
 import './Locations.css';
-import EditLocationModal from './EditLocationModal.js';
+import AddLocationModal from './AddLocationModal.js';
 
 class Locations extends Component {
   render() {
@@ -28,7 +28,7 @@ class Locations extends Component {
           </BootstrapTable>
         </div>
 
-        <EditLocationModal></EditLocationModal>
+        <AddLocationModal></AddLocationModal>
 
        </div>
     );

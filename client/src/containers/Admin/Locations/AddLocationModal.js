@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { div, Modal, Button, OverlayTrigger, Tooltip, Popover, Grid, Row, Col, ButtonToolbar } from 'react-bootstrap';
-import EditLocationForm from './EditLocationForm.js'
+import AddLocationForm from './AddLocationForm.js'
 
-const EditLocationModal = React.createClass({
+const AddLocationModal = React.createClass({
   getInitialState() {
     return { showModal: false };
   },
@@ -36,11 +36,12 @@ const EditLocationModal = React.createClass({
           </Modal.Header>
 
           <Modal.Body>
-            <EditLocationForm></EditLocationForm>
+            <AddLocationForm></AddLocationForm>
           </Modal.Body>
 
           <Modal.Footer>
-            <Button onClick={this.close}>Close</Button>
+            <Button bsStyle="primary" onClick={this.close}>Add Location</Button>
+            <Button onClick={this.close}>Cancel</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -48,4 +49,4 @@ const EditLocationModal = React.createClass({
   }
 });
 
-export default EditLocationModal;
+export default AddLocationModal;
