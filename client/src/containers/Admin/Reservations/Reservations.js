@@ -4,7 +4,7 @@ class Reservations extends Component {
   render() {
     return (
       <div>
-        <h1>Admin Reservations Entry</h1>
+        <h1 className="text-center">Admin Reservations Entry</h1>
       </div>
     );
   }

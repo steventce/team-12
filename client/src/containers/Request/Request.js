@@ -54,7 +54,7 @@ class Request extends Component {
   render() {
     return (
       <div>
-        <h1>Request a Resource</h1>
+        <h1 className="text-center">Request a Resource</h1>
         {/* Select floor and section */}
         <div>
           <Grid>

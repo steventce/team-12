@@ -17,7 +17,7 @@ class Locations extends Component {
 
     return (
       <div>
-        <h2>Locations</h2>
+        <h2 className="text-center">Locations</h2>
 
         <div className='container tableContainer'>
           <BootstrapTable data={locations} striped={true} hover={true}>
