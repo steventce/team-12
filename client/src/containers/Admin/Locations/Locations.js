@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { div, Grid, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
+import { div } from 'react-bootstrap';
 import './Locations.css';
+import EditLocationModal from './EditLocationModal.js';
 
 class Locations extends Component {
   render() {
@@ -27,17 +28,9 @@ class Locations extends Component {
           </BootstrapTable>
         </div>
 
-        <Grid>
-          <Row className="show-grid">
-            <Col md={2}>
-              <ButtonToolbar className='addLocationBtnContainer'>
-                <Button>Add New Location</Button>
-              </ButtonToolbar>
-            </Col>
-          </Row>
-         </Grid>
+        <EditLocationModal></EditLocationModal>
 
-      </div>
+       </div>
     );
   }
 }
