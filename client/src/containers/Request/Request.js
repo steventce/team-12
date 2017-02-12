@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
-import { Button, Col, ControlLabel, FormControl, FormGroup, Grid, Row } from 'react-bootstrap';
+import {
+  Col,
+  Form,
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  Radio,
+  Grid,
+  Row
+} from 'react-bootstrap';
 import StaticMapImg from '../../images/Capture.PNG';
 import { connect } from 'react-redux';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import 'react-widgets/dist/css/react-widgets.css';
+import ConfirmRequestModal from './ConfirmRequestModal';
 import { selectResource } from '../../redux/modules/Request';
 
 // TODO: remove these and use props
@@ -43,6 +53,12 @@ class Request extends Component {
     });
   }
 
+  onResourceSelect(event) {
+    this.setState({
+      selectedResource: event.currentTarget.value
+    });
+  }
+
   submitClick() {
     // TODO
   }
@@ -53,141 +69,117 @@ class Request extends Component {
 
   render() {
     return (
-      <div>
-        <h1 className="text-center">Request a Resource</h1>
-        {/* Select floor and section */}
-        <div>
-          <Grid>
-            <Row className="show-grid">
-              <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
-                <FormGroup controlId="formControlsFloorSelect">
-                  <ControlLabel>Select a Floor</ControlLabel>
-                  <FormControl componentClass="select">
-                    {FloorNumArr.map(function (value) {
-                      return (
-                        <option key={value} value="other">{value}</option>
-                      );
-                    })}
-                  </FormControl>
-                </FormGroup>
-              </Col>
+      <Grid>
+        <Row>
+          <h1 className="text-center">Request a Resource</h1>
+        </Row>
 
-              <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
-                <FormGroup controlId="formControlsSectionSelect">
-                  <ControlLabel>Select a Section</ControlLabel>
-                  <FormControl componentClass="select" placeholder="select">
-                    {SectionArr.map(function (value) {
-                      return (
-                        <option key={value} value="other">{value}</option>
-                      );
-                    })}
-                  </FormControl>
-                </FormGroup>
-              </Col>
-            </Row>
-          </Grid>
+        <Form>
+          {/* Select floor and section */}
+          <Row className="show-grid">
+            <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+              <FormGroup controlId="formControlsFloorSelect">
+                <ControlLabel>Select a Floor</ControlLabel>
+                <FormControl componentClass="select">
+                  {FloorNumArr.map(function (value) {
+                    return (
+                      <option key={value} value="other">{value}</option>
+                    );
+                  })}
+                </FormControl>
+              </FormGroup>
+            </Col>
+
+            <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+              <FormGroup controlId="formControlsSectionSelect">
+                <ControlLabel>Select a Section</ControlLabel>
+                <FormControl componentClass="select" placeholder="select">
+                  {SectionArr.map(function (value) {
+                    return (
+                      <option key={value} value="other">{value}</option>
+                    );
+                  })}
+                </FormControl>
+              </FormGroup>
+            </Col>
+          </Row>
 
           {/* Choose date and time */}
-          <div>
-            <Grid>
-              <Row className="show-grid">
-                <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
-                  <FormGroup controlId="formControlsFloorSelect">
-                    <ControlLabel>From</ControlLabel>
-                    <DateTimePicker
-                      defaultValue={new Date()}
-                      value={this.state.startDateTime}
-                      onChange={this.onStartDateChange.bind(this)}
-                      min={moment().startOf('hour').toDate()}
-                      max={moment().startOf('day').add(1, 'y').toDate()}
-                      step={60}
-                    />
-                  </FormGroup>
-                </Col>
+          <Row className="show-grid">
+            <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+              <FormGroup controlId="formControlsFloorSelect">
+                <ControlLabel>From</ControlLabel>
+                <DateTimePicker
+                  value={this.state.startDateTime}
+                  onChange={this.onStartDateChange.bind(this)}
+                  min={moment().startOf('hour').toDate()}
+                  max={moment().startOf('day').add(1, 'y').toDate()}
+                  step={60}
+                />
+              </FormGroup>
+            </Col>
 
-                <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
-                  <FormGroup controlId="formControlsSectionSelect">
-                    <ControlLabel>To</ControlLabel>
-                    <DateTimePicker
-                      defaultValue={new Date()}
-                      value={this.state.endDateTime}
-                      onChange={this.onEndDateChange.bind(this)}
-                      min={moment().startOf('hour').toDate()}
-                      max={moment().startOf('day').add(1, 'y').toDate()}
-                      step={60}
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Grid>
-          </div>
+            <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+              <FormGroup controlId="formControlsSectionSelect">
+                <ControlLabel>To</ControlLabel>
+                <DateTimePicker
+                  value={this.state.endDateTime}
+                  onChange={this.onEndDateChange.bind(this)}
+                  min={moment().add(1, 'h').startOf('hour').toDate()}
+                  max={moment().add(1, 'y').startOf('day').toDate()}
+                  step={60}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
 
           {/* ImageMap and specific resource */}
-          <div>
-            <Grid>
-              <Row className="show-grid">
-                <Col xs={12} md={8}>
-                  <img role="presentation" src={StaticMapImg} style={{ height: "100%", width: "100%", border: "thin solid black" }} />
-                </Col>
-                <Col xs={6} md={4}>
-                  <div style={{ border: "thin solid black" }}>
-                    <div><b>Available Resources</b></div>
-                    {/* TODO: dynamically allocate size */}
-                    <div style={{ height: "200px", overflowY: "auto" }}>
-                      {
-                        DeskArr.map(function (value) {
-                          return (
-                            <div key={value}>
-                              <label>
-                                <input type="radio" name="optionsRadios" id={value} value={value} />
-                                {value}
-                              </label>
-                            </div>
-                          );
-                        })
-                      }
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </Grid>
-          </div>
-        </div>
+          <Row className="show-grid">
+            <Col xs={12} md={8}>
+              <img role="presentation" src={StaticMapImg} style={{ height: "100%", width: "100%", border: "thin solid black" }} />
+            </Col>
+            <Col xs={6} md={4}>
+              <div style={{ border: "thin solid black" }}>
+                <div><b>Available Resources</b></div>
+                {/* TODO: dynamically allocate size */}
+                <div style={{ height: "200px", overflowY: "auto" }}>
+                  {
+                    DeskArr.map((value) => {
+                      return (
+                        <Radio
+                          key={value}
+                          name="resources"
+                          id={value}
+                          value={value}
+                          checked={this.state.selectedResource === value}
+                          onChange={this.onResourceSelect.bind(this)}>
+                        {value}
+                        </Radio>
+                      );
+                    })
+                  }
+                </div>
+              </div>
+            </Col>
+          </Row>
 
-        {/* Reservation time */}
-        <div style={{ padding: "10px" }}>
-          <Grid>
-            <Row>
-              <Col xs={6} md={4}>
-                <b>Reserve for</b>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
+          {/* Email option */}
+          <Row className="show-grid" style={{ marginTop: '20px' }}>
+            <Col xs={12} md={4}>
+              <ControlLabel>Email (Optional)</ControlLabel>
+              <FormControl type="email" label="Email (Optional)" placeholder="Email">
+              </FormControl>
+            </Col>
+          </Row>
 
-        {/* Email option */}
-        <div style={{ padding: "10px" }}>
-          <Grid>
-            <Row className="show-grid">
-              <Col xs={2} md={2}>Email (Optional)</Col>
-              <Col xs={1} md={1}>
-                <input type="text" />
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-
-        {/* Submit button */}
-        <div style={{ paddingBottom: "10px" }}>
-          <Grid>
-            <Row className="show-grid">
-              <Col xs={2} md={2}>
-                <Button bsStyle="primary" onClick={this.submitClick}>Submit</Button>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-      </div>
+          {/* Submit button */}
+          <Row className="show-grid" style={{ marginTop: '20px' }}>
+            <Col xs={2} md={2}>
+              <ConfirmRequestModal {...this.state} handleSubmit={this.submitClick} />
+            </Col>
+          </Row>
+        </Form>
+      </Grid>
     );
   }
 }
