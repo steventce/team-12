@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { div, button } from 'react-bootstrap';
+import { div, Button, Modal } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './ReservedTable.css';
@@ -54,28 +54,41 @@ class ReservedTable extends Component {
     super(props);
 
     this.state = {
-      reservations: reservations
+      reservations: reservations,
+      showModal: false,
+      cancelIndex: -1
     };
   }
 
   onClickCancel(cell, row, rowIndex){
-    console.log('Cancel', cell, row, rowIndex);
-    console.log(this.state);
+    this.modalOpen(rowIndex);
+  }
+
+  onClickConfirmCancel(){
     this.setState(
-      this.state.reservations.splice(rowIndex, 1)
+      this.state.reservations.splice(this.state.cancelIndex, 1)
     );
+    this.modalClose();
   }
 
   cancelButton(cell, row, enumObject, rowIndex) {
     return (
-       <button 
+       <Button 
           type="button" 
           onClick={() => 
           this.onClickCancel(cell, row, rowIndex)}
        >
        X
-       </button>
+       </Button>
     )
+  }
+
+  modalClose() {
+    this.setState({ showModal: false, cancelIndex: -1});
+  }
+
+  modalOpen(cancelIndex) {
+    this.setState({ showModal: true, cancelIndex: cancelIndex});
   }
 
   render() {
@@ -87,7 +100,19 @@ class ReservedTable extends Component {
 		      <TableHeaderColumn dataField='startTime' dataSort={true}>Start Time (dd/mm/yyy)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='endTime' dataSort={true}>End Time (dd/mm/yyy)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='cancel' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
-		  </BootstrapTable>,
+		  </BootstrapTable>
+      <Modal show={this.state.showModal} onHide={this.modalClose.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Cancellation</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure you want to cancel this reservation?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button bsStyle="primary" onClick={this.onClickConfirmCancel.bind(this)}>Confirm</Button>
+            <Button onClick={this.modalClose.bind(this)}>Cancel</Button>
+          </Modal.Footer>
+      </Modal>
 		</div>
     );
   }
