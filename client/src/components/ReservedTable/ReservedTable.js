@@ -4,49 +4,8 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './ReservedTable.css';
 
-const reservations = 
-    [{
-      resourceId: '1A101',
-      resourceType: 'Desk',
-      startTime: '2:00 pm 01/12/17',
-      endTime: '5:00 pm 01/12/17',
-      cancel: 'X'
-    },
-    {
-      resourceId: '1B102',
-      resourceType: 'Desk',
-      startTime: '2:00 pm 01/13/17',
-      endTime: '5:00 pm 01/13/17',
-      cancel: 'X'
-    },
-    {
-      resourceId: '1C104',
-      resourceType: 'Desk',
-      startTime: '2:00 pm 01/14/17',
-      endTime: '5:00 pm 01/14/17',
-      cancel: 'X'
-    },
-    {
-      resourceId: '1D105',
-      resourceType: 'Desk',
-      startTime: '2:00 pm 01/15/17',
-      endTime: '5:00 pm 01/15/17',
-      cancel: 'X'
-    },
-    {
-      resourceId: '2B111',
-      resourceType: 'Desk',
-      startTime: '2:00 pm 01/16/17',
-      endTime: '5:00 pm 01/16/17',
-      cancel: 'X'
-    },
-    {
-      resourceId: '2C106',
-      resourceType: 'Desk',
-      startTime: '2:00 pm 01/17/17',
-      endTime: '5:00 pm 01/17/17',
-      cancel: 'X'
-    }];
+import { cancelReservation, getReservations } from '../../redux/modules/RequestReducer';
+import { connect } from 'react-redux';
 
 class ReservedTable extends Component {
 
@@ -54,10 +13,11 @@ class ReservedTable extends Component {
     super(props);
 
     this.state = {
-      reservations: reservations,
       showModal: false,
       cancelIndex: -1
     };
+
+    this.props.dispatch(getReservations());
   }
 
   onClickCancel(cell, row, rowIndex){
@@ -65,9 +25,9 @@ class ReservedTable extends Component {
   }
 
   onClickConfirmCancel(){
-    this.setState(
-      this.state.reservations.splice(this.state.cancelIndex, 1)
-    );
+    this.props.dispatch(cancelReservation(this.props.reservations[this.state.cancelIndex].reservationId, () => {
+      this.props.dispatch(getReservations())
+    }));
     this.modalClose();
   }
 
@@ -94,11 +54,11 @@ class ReservedTable extends Component {
   render() {
     return (
     	<div className='container tableContainer'>
-		  <BootstrapTable data={this.state.reservations} striped={true} hover={true}>
+		  <BootstrapTable data={this.props.reservations} striped={true} hover={true}>
 		      <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
 		      <TableHeaderColumn dataField='resourceType' dataSort={true}>Resource Type</TableHeaderColumn>
-		      <TableHeaderColumn dataField='startTime' dataSort={true}>Start Time (dd/mm/yyy)</TableHeaderColumn>
-		      <TableHeaderColumn dataField='endTime' dataSort={true}>End Time (dd/mm/yyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='startDateTime' dataSort={true}>Start Time (dd/mm/yyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='endDateTime' dataSort={true}>End Time (dd/mm/yyy)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='cancel' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
 		  </BootstrapTable>
       <Modal show={this.state.showModal} onHide={this.modalClose.bind(this)}>
@@ -118,4 +78,8 @@ class ReservedTable extends Component {
   }
 }
 
-export default ReservedTable;
+const mapStateToProps = (state) => {
+  return { ...state.db };
+}
+
+export default connect(mapStateToProps)(ReservedTable);

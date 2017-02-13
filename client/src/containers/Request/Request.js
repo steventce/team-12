@@ -18,8 +18,9 @@ import 'react-widgets/dist/css/react-widgets.css';
 import ConfirmRequestModal from './ConfirmRequestModal';
 import { makeReservation } from '../../redux/modules/RequestReducer';
 
-// TODO: remove these and use props
-const SectionArr = ["A", "B", "C", "D", "E"];
+// TODO: remove these and use props from db
+const SectionArr = ['All', 'A', 'B', 'C', 'D', 'E'];
+const ResourceTypeArr = ['Desk']
 
 momentLocalizer(moment);
 
@@ -28,7 +29,9 @@ class Request extends Component {
     super(props);
 
     // TODO: selectedResource should be by db's resourceId field and not index or name
+    // TODO: initial type and floorNum could be based on result returned by db and not hardcoded
     this.state = {
+      resourceType: 'Desk',
       floorNum: 1,
       section: '',
       selectedResource: '-1',
@@ -55,19 +58,21 @@ class Request extends Component {
 
   onResourceSelect(event) {
     this.setState({
-      selectedResource: event.target.value,
-      selectedResourceName: this.props.resources[this.state.floorNum][Number(event.target.value)]
+      selectedResource: event.currentTarget.value,
+      selectedResourceName: this.props.resources[this.state.floorNum-1][Number(event.currentTarget.value)]
     });
   }
 
   onFloorNumChange(event) {
     this.setState({
-      floorNum: event.target.value
+      floorNum: event.target.value,
+      selectedResource: '-1'
     });
   }
 
   submitClick() {
-     this.props.dispatch(makeReservation({...this.state, employeeId: this.props.employeeId}));
+     this.props.dispatch(makeReservation({...this.state, 
+     resourceId: this.state.selectedResourceName/*TODO: use resourceId from server*/}, this.props.employeeId));
   }
 
   render() {
@@ -82,8 +87,22 @@ class Request extends Component {
           <Row className="show-grid">
             <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
               <FormGroup controlId="formControlsFloorSelect">
+                <ControlLabel>Select resource type</ControlLabel>
+                <FormControl componentClass="select" disabled={true}>
+                  {ResourceTypeArr.map(function (type) {
+                    return (
+                      <option key={type} value={type}>{type}</option>
+                    );
+                  })}
+                </FormControl>
+              </FormGroup>
+            </Col>
+          </Row>
+          <Row className="show-grid">
+            <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+              <FormGroup controlId="formControlsFloorSelect">
                 <ControlLabel>Select a Floor</ControlLabel>
-                <FormControl componentClass="select" value={undefined} onChange={this.onFloorNumChange.bind(this)}>
+                <FormControl componentClass="select" onChange={this.onFloorNumChange.bind(this)}>
                   {this.props.resources.map(function (_, index) {
                     return (
                       <option key={index + 1} value={index + 1}>Floor {index + 1}</option>
@@ -95,7 +114,7 @@ class Request extends Component {
             <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
               <FormGroup controlId="formControlsSectionSelect">
                 <ControlLabel>Select a Section</ControlLabel>
-                <FormControl componentClass="select" disabled={true} value={this.state.section} placeholder="select">
+                <FormControl componentClass="select" disabled={true} placeholder="select">
                   {SectionArr.map(function (value) {
                     return (
                       <option key={value} value="other">{value}</option>

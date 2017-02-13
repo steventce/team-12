@@ -9,62 +9,10 @@ import moment from 'moment';
 import './ReservedTable.css';
 import './ReservedTableAdmin.css';
 
-const reservations = 
-    [{
-      resourceId: '1A101',
-      resourceType: 'Desk',
-      employeeId: '123456',
-      startTime: '2:00 PM 01/12/17',
-      endTime: '6:00 PM 01/12/17',
-      edit: 'edit',
-      cancel: 'X'
-    },
-    {
-      resourceId: '1B102',
-      resourceType: 'Desk',
-      employeeId: '142353',
-      startTime: '2:00 PM 01/13/17',
-      endTime: '5:00 PM 01/13/17',
-      edit: 'edit',
-      cancel: 'X'
-    },
-    {
-      resourceId: '1C104',
-      resourceType: 'Desk',
-      employeeId: '326454',      
-      startTime: '2:00 AM 01/14/17',
-      endTime: '5:00 PM 01/14/17',
-      edit: 'edit',
-      cancel: 'X'
-    },
-    {
-      resourceId: '1D105',
-      resourceType: 'Desk',
-      employeeId: '323566',      
-      startTime: '2:00 PM 01/15/17',
-      endTime: '5:00 PM 01/15/17',
-      edit: 'edit',
-      cancel: 'X'
-    },
-    {
-      resourceId: '2B111',
-      resourceType: 'Desk',
-      employeeId: '222564',      
-      startTime: '11:00 AM 01/16/17',
-      endTime: '5:00 PM 01/17/17',
-      edit: 'edit',
-      cancel: 'X'
-    },
-    {
-      resourceId: '2C106',
-      resourceType: 'Desk',
-      employeeId: '231556',      
-      startTime: '2:00 PM 01/17/17',
-      endTime: '5:00 PM 01/17/17',
-      edit: 'edit',
-      cancel: 'X'
-    }];
+import { cancelReservation, editReservation, getAdminReservations } from '../../redux/modules/RequestReducer';
+import { connect } from 'react-redux';
 
+// TODO: Get this from database?
 const resourceTypes = ['Desk', 'Chair', 'Phone'];
 
 class ReservedTableAdmin extends Component {
@@ -85,11 +33,12 @@ class ReservedTableAdmin extends Component {
     }
 
     this.state = {
-      reservations: reservations,
       modalIndex: -1,
       modalType: this.modalEnum.NONE,
       editOptions: this.editOptions
     };
+
+    this.props.dispatch(getAdminReservations());
   }
 
   // Edit Modal
@@ -99,12 +48,12 @@ class ReservedTableAdmin extends Component {
   }
 
   onClickConfirmEdit(){
-    let updatedReservation = this.state.reservations[this.state.modalIndex];
+    let updatedReservation = this.props.reservations[this.state.modalIndex];
     let editedOptions = this.state.editOptions;
     updatedReservation.resourceType = editedOptions.resourceType;
     updatedReservation.startTime = moment(editedOptions.newStartTime).format("h:mm a MM/DD/YY");
     updatedReservation.endTime = moment(editedOptions.newEndTime).format("h:mm a MM/DD/YY");
-    this.state.reservations[this.state.modalIndex] = updatedReservation;
+    this.setState({reservationList: {...this.props.reservations, [this.state.modalIndex] : updatedReservation}})
     this.modalCloseEdit();
   }
 
@@ -127,9 +76,9 @@ class ReservedTableAdmin extends Component {
   modalOpenEdit(modalIndex) {
     this.setState({ modalType: this.modalEnum.EDIT, modalIndex: modalIndex});
     this.setState({ editOptions: 
-      {resourceType: this.state.reservations[modalIndex].resourceType,
-      newStartTime: this.state.reservations[modalIndex].startTime,
-      newEndTime: this.state.reservations[modalIndex].endTime}
+      {resourceType: this.props.reservations[modalIndex].resourceType,
+      newStartTime: this.props.reservations[modalIndex].startTime,
+      newEndTime: this.props.reservations[modalIndex].endTime}
     });
   }
 
@@ -214,9 +163,9 @@ class ReservedTableAdmin extends Component {
   }
 
   onClickConfirmCancel(){
-    this.setState(
-      this.state.reservations.splice(this.state.modalIndex, 1)
-    );
+    this.props.dispatch(cancelReservation(this.props.reservations[this.state.modalIndex].reservationId, () => {
+      this.props.dispatch(getAdminReservations())
+    }));
     this.modalCloseCancel();
   }
 
@@ -245,12 +194,12 @@ class ReservedTableAdmin extends Component {
   render() {
     return (
       <div className='container tableContainer'>
-      <BootstrapTable data={this.state.reservations} striped={true} hover={true}>
+      <BootstrapTable data={this.props.reservations} striped={true} hover={true}>
           <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='resourceType' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='employeeId' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn dataField='startTime' dataSort={true}>Start Time (dd/mm/yyy)</TableHeaderColumn>
-          <TableHeaderColumn dataField='endTime' dataSort={true}>End Time (dd/mm/yyy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='startDateTime' dataSort={true}>Start Time (dd/mm/yyy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='endDateTime' dataSort={true}>End Time (dd/mm/yyy)</TableHeaderColumn>
           <TableHeaderColumn dataField='edit' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
           <TableHeaderColumn dataField='cancel' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>
@@ -286,4 +235,8 @@ class ReservedTableAdmin extends Component {
   }
 }
 
-export default ReservedTableAdmin;
+const mapStateToProps = (state) => {
+  return { ...state.db };
+}
+
+export default connect(mapStateToProps)(ReservedTableAdmin);
