@@ -16,12 +16,10 @@ import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import 'react-widgets/dist/css/react-widgets.css';
 import ConfirmRequestModal from './ConfirmRequestModal';
-import { selectResource } from '../../redux/modules/Request';
+import { makeReservation } from '../../redux/modules/RequestReducer';
 
 // TODO: remove these and use props
-const FloorNumArr = [1, 2, 3, 4, 5];
 const SectionArr = ["A", "B", "C", "D", "E"];
-const DeskArr = ["1.A.101", "1.A.102", "1.A.103", "1.A.104", "1.A.105", "1.A.106", "1.A.107", "1.A.108", "1.A.109", "1.A.110"]
 
 momentLocalizer(moment);
 
@@ -29,10 +27,12 @@ class Request extends Component {
   constructor(props) {
     super(props);
 
+    // TODO: selectedResource should be by db's resourceId field and not index or name
     this.state = {
-      floorNum: '',
+      floorNum: 1,
       section: '',
-      selectedResource: '',
+      selectedResource: '-1',
+      selectedResourceName: '',
       email: '',
       startDateTime: moment().startOf('hour').toDate(),
       endDateTime: moment().add(1, 'h').startOf('hour').toDate()
@@ -55,16 +55,19 @@ class Request extends Component {
 
   onResourceSelect(event) {
     this.setState({
-      selectedResource: event.currentTarget.value
+      selectedResource: event.target.value,
+      selectedResourceName: this.props.resources[this.state.floorNum][Number(event.target.value)]
+    });
+  }
+
+  onFloorNumChange(event) {
+    this.setState({
+      floorNum: event.target.value
     });
   }
 
   submitClick() {
-    // TODO
-  }
-
-  handleClick() {
-    this.props.dispatch(selectResource({ id: 1 }));
+     this.props.dispatch(makeReservation({...this.state, employeeId: this.props.employeeId}));
   }
 
   render() {
@@ -80,20 +83,19 @@ class Request extends Component {
             <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
               <FormGroup controlId="formControlsFloorSelect">
                 <ControlLabel>Select a Floor</ControlLabel>
-                <FormControl componentClass="select">
-                  {FloorNumArr.map(function (value) {
+                <FormControl componentClass="select" value={undefined} onChange={this.onFloorNumChange.bind(this)}>
+                  {this.props.resources.map(function (_, index) {
                     return (
-                      <option key={value} value="other">{value}</option>
+                      <option key={index + 1} value={index + 1}>Floor {index + 1}</option>
                     );
                   })}
                 </FormControl>
               </FormGroup>
             </Col>
-
             <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
               <FormGroup controlId="formControlsSectionSelect">
                 <ControlLabel>Select a Section</ControlLabel>
-                <FormControl componentClass="select" placeholder="select">
+                <FormControl componentClass="select" disabled={true} value={this.state.section} placeholder="select">
                   {SectionArr.map(function (value) {
                     return (
                       <option key={value} value="other">{value}</option>
@@ -144,14 +146,13 @@ class Request extends Component {
                 {/* TODO: dynamically allocate size */}
                 <div style={{ height: "200px", overflowY: "auto" }}>
                   {
-                    DeskArr.map((value) => {
+                    this.props.resources[this.state.floorNum - 1].map((value, index) => {
                       return (
                         <Radio
-                          key={value}
+                          key={index}
                           name="resources"
-                          id={value}
-                          value={value}
-                          checked={this.state.selectedResource === value}
+                          value={String(index)}
+                          checked={String(index) === this.state.selectedResource}
                           onChange={this.onResourceSelect.bind(this)}>
                         {value}
                         </Radio>
@@ -175,7 +176,7 @@ class Request extends Component {
           {/* Submit button */}
           <Row className="show-grid" style={{ marginTop: '20px' }}>
             <Col xs={2} md={2}>
-              <ConfirmRequestModal {...this.state} handleSubmit={this.submitClick} />
+              <ConfirmRequestModal {...this.state} handleSubmit={this.submitClick.bind(this)} />
             </Col>
           </Row>
         </Form>
@@ -185,7 +186,7 @@ class Request extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { ...state };
+  return { ...state.db };
 }
 
 export default connect(mapStateToProps)(Request);

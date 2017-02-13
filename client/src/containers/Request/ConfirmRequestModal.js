@@ -24,12 +24,12 @@ class ConfirmRequestModal extends Component {
   }
 
   render() {
-    const { selectedResource, startDateTime, endDateTime } = this.props;
+    const { selectedResourceName, selectedResource, startDateTime, endDateTime } = this.props;
     return (
       <div>
         <Button
           bsStyle="primary"
-          disabled={selectedResource === ''}
+          disabled={selectedResource === "-1"}
           onClick={this.open.bind(this)}>
           Submit
         </Button>
@@ -41,14 +41,14 @@ class ConfirmRequestModal extends Component {
 
           <Modal.Body>
             <div className="text-center">
-            {`Are you sure you want to reserve ${selectedResource} from
-              ${this.formatDate(startDateTime)} to ${this.formatDate(endDateTime)}?`}
+            Are you sure you want to reserve {selectedResourceName} from
+            {this.formatDate(startDateTime)} to {this.formatDate(endDateTime)}?
             </div>
           </Modal.Body>
 
           <Modal.Footer>
             <Button onClick={this.close}>Cancel</Button>
-            <Button bsStyle="primary" onClick={this.props.handleSubmit}>OK</Button>
+            <Button bsStyle="primary" onClick={() => {this.close() ; this.props.handleSubmit()}}>OK</Button>
           </Modal.Footer>
         </Modal>
       </div>
