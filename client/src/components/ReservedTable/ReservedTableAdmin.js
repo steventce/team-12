@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
-import { div, Button, Modal } from 'react-bootstrap';
+import { 
+  div, 
+  Button, 
+  Modal,
+  Col,
+  Form,
+  ControlLabel,
+  FormControl,
+  FormGroup,
+  Radio,
+  Grid,
+  Row
+} from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { DropdownButton, MenuItem} from 'react-bootstrap';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -14,6 +26,7 @@ import { connect } from 'react-redux';
 
 // TODO: Get this from database?
 const resourceTypes = ['Desk', 'Chair', 'Phone'];
+const BuildingArr = ['Broadway Green Building'];
 
 class ReservedTableAdmin extends Component {
 
@@ -34,6 +47,7 @@ class ReservedTableAdmin extends Component {
 
     this.state = {
       modalIndex: -1,
+      floorNum: -1,
       modalType: this.modalEnum.NONE,
       editOptions: this.editOptions
     };
@@ -194,7 +208,35 @@ class ReservedTableAdmin extends Component {
   render() {
     return (
       <div className='container tableContainer'>
-      <BootstrapTable data={this.props.reservations} striped={true} hover={true}>
+      <Row className="show-grid">
+        <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+          <FormGroup controlId="formControlsBuildingSelect">
+            <ControlLabel>Location</ControlLabel>
+            <FormControl componentClass="select" disabled={true}>
+            {BuildingArr.map(function (building, index) {
+              return (
+                <option key={index} value={index}>{building}</option>
+                );
+            })}
+            </FormControl>
+          </FormGroup>
+        </Col>
+        <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+          <FormGroup controlId="formControlsFloorSelect">
+            <ControlLabel>Floor</ControlLabel>
+            <FormControl componentClass="select" onChange={event=>this.setState({floorNum: event.target.value})}>
+            {this.props.resources.map(function (_, index) {
+              return (
+                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                );
+            })}
+            </FormControl>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row/>
+      <BootstrapTable exportCSV={true} data={this.props.reservations} 
+      striped={true} hover={true}>
           <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='resourceType' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='employeeId' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
