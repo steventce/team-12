@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { div, Button, Modal } from 'react-bootstrap';
+import { dateFormatter } from '../../utils/formatter';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './ReservedTable.css';
@@ -33,9 +34,9 @@ class ReservedTable extends Component {
 
   cancelButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button 
-          type="button" 
-          onClick={() => 
+       <Button
+          type="button"
+          onClick={() =>
           this.onClickCancel(cell, row, rowIndex)}
        >
        X
@@ -57,8 +58,8 @@ class ReservedTable extends Component {
 		  <BootstrapTable data={this.props.reservations} striped={true} hover={true}>
 		      <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
 		      <TableHeaderColumn dataField='resourceType' dataSort={true}>Resource Type</TableHeaderColumn>
-		      <TableHeaderColumn dataField='startDateTime' dataSort={true}>Start Time (dd/mm/yyy)</TableHeaderColumn>
-		      <TableHeaderColumn dataField='endDateTime' dataSort={true}>End Time (dd/mm/yyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='startDateTime' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='endDateTime' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyy)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='cancel' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
 		  </BootstrapTable>
       <Modal show={this.state.showModal} onHide={this.modalClose.bind(this)}>
@@ -79,7 +80,7 @@ class ReservedTable extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { ...state.db };
+  return { ...state.db  };
 }
 
 export default connect(mapStateToProps)(ReservedTable);

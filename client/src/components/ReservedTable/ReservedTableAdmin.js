@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { 
-  div, 
-  Button, 
+import {
+  div,
+  Button,
   Modal,
   Col,
   Form,
@@ -17,6 +17,7 @@ import { DropdownButton, MenuItem} from 'react-bootstrap';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import { dateFormatter } from '../../utils/formatter';
 import moment from 'moment';
 import './ReservedTable.css';
 import './ReservedTableAdmin.css';
@@ -73,9 +74,9 @@ class ReservedTableAdmin extends Component {
 
   editButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button 
-          type="button" 
-          onClick={() => 
+       <Button
+          type="button"
+          onClick={() =>
           this.onClickEdit(cell, row, rowIndex)}
        >
        Edit
@@ -89,7 +90,7 @@ class ReservedTableAdmin extends Component {
 
   modalOpenEdit(modalIndex) {
     this.setState({ modalType: this.modalEnum.EDIT, modalIndex: modalIndex});
-    this.setState({ editOptions: 
+    this.setState({ editOptions:
       {resourceType: this.props.reservations[modalIndex].resourceType,
       newStartTime: this.props.reservations[modalIndex].startTime,
       newEndTime: this.props.reservations[modalIndex].endTime}
@@ -113,7 +114,7 @@ class ReservedTableAdmin extends Component {
         <div className='edit'>
           Type
           <br/>
-          <DropdownButton title={this.state.editOptions.resourceType} id='resourceDropdown' 
+          <DropdownButton title={this.state.editOptions.resourceType} id='resourceDropdown'
           onSelect={this.updateSelectedResource.bind(this)}>
             {resourceMenuItems}
           </DropdownButton>
@@ -148,7 +149,7 @@ class ReservedTableAdmin extends Component {
 
   endTimeOptions() {
     if (this.state.modalIndex === -1) return;
-    
+
     return (
       <div className='edit'>
         EndTime
@@ -185,9 +186,9 @@ class ReservedTableAdmin extends Component {
 
   cancelButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button 
-          type="button" 
-          onClick={() => 
+       <Button
+          type="button"
+          onClick={() =>
           this.onClickCancel(cell, row, rowIndex)}
        >
        X
@@ -235,13 +236,13 @@ class ReservedTableAdmin extends Component {
         </Col>
       </Row>
       <Row/>
-      <BootstrapTable exportCSV={true} data={this.props.reservations} 
+      <BootstrapTable exportCSV={true} data={this.props.reservations}
       striped={true} hover={true}>
           <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='resourceType' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='employeeId' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn dataField='startDateTime' dataSort={true}>Start Time (dd/mm/yyy)</TableHeaderColumn>
-          <TableHeaderColumn dataField='endDateTime' dataSort={true}>End Time (dd/mm/yyy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='startDateTime' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='endDateTime' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyy)</TableHeaderColumn>
           <TableHeaderColumn dataField='edit' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
           <TableHeaderColumn dataField='cancel' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>
