@@ -15,6 +15,7 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import 'react-widgets/dist/css/react-widgets.css';
+import { DATE_TIME_FORMAT } from '../../utils/formatter';
 import ConfirmRequestModal from './ConfirmRequestModal';
 import { makeReservation } from '../../redux/modules/RequestReducer';
 
@@ -71,7 +72,7 @@ class Request extends Component {
   }
 
   submitClick() {
-     this.props.dispatch(makeReservation({...this.state, 
+     this.props.dispatch(makeReservation({...this.state,
      resourceId: this.state.selectedResourceName/*TODO: use resourceId from server*/}, this.props.employeeId));
   }
 
@@ -132,6 +133,7 @@ class Request extends Component {
                 <ControlLabel>From</ControlLabel>
                 <DateTimePicker
                   value={this.state.startDateTime}
+                  format={DATE_TIME_FORMAT}
                   onChange={this.onStartDateChange.bind(this)}
                   min={moment().startOf('hour').toDate()}
                   max={moment().startOf('day').add(1, 'y').toDate()}
@@ -145,6 +147,7 @@ class Request extends Component {
                 <ControlLabel>To</ControlLabel>
                 <DateTimePicker
                   value={this.state.endDateTime}
+                  format={DATE_TIME_FORMAT}
                   onChange={this.onEndDateChange.bind(this)}
                   min={moment().add(1, 'h').startOf('hour').toDate()}
                   max={moment().add(1, 'y').startOf('day').toDate()}

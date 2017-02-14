@@ -20,7 +20,7 @@ class ConfirmRequestModal extends Component {
   }
 
   formatDate(date) {
-    return moment(date).format('MMM D h:mm A');
+    return moment(date).format('h:mm a MMM D');
   }
 
   render() {
@@ -41,8 +41,8 @@ class ConfirmRequestModal extends Component {
 
           <Modal.Body>
             <div className="text-center">
-            Are you sure you want to reserve {selectedResourceName} from
-            {this.formatDate(startDateTime)} to {this.formatDate(endDateTime)}?
+            {`Are you sure you want to reserve ${selectedResourceName} from
+             ${this.formatDate(startDateTime)} to ${this.formatDate(endDateTime)}?`}
             </div>
           </Modal.Body>
 

@@ -1,5 +1,7 @@
 import moment from 'moment';
 
-export function dateFormatter(cell, row) {
-  return moment(cell).format('h:mm a MM/DD/YY');
+export const DATE_TIME_FORMAT = 'h:mm a MM/DD/YY';
+
+export function dateFormatter(date) {
+  return moment(date).format(DATE_TIME_FORMAT);
 }
