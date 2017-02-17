@@ -1,0 +1,21 @@
+{
+  "name": "Server",
+  "version": "0.1.0",
+  "description": "HSBC Resource Booking Server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UBC-CPSC319/team-12.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UBC-CPSC319/team-12/issues"
+  },
+  "homepage": "https://github.com/UBC-CPSC319/team-12#readme",
+  "dependencies": {
+    "express": "^4.14.1",
+    "morgan": "^1.8.1"
+  }
+}
