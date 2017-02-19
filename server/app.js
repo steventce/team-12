@@ -3,7 +3,7 @@ process.chdir(__dirname);
 var express = require('express');
 var path = require('path');
 var homePath = require('os').homedir()
-var dbConfig = require('.db-config.json')
+var dbConfig = require('./.db-config.json')
 
 var app = express();
 
