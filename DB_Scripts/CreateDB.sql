@@ -44,7 +44,7 @@ CREATE TABLE Reservations (
 );
 
 CREATE TABLE Admins(
-	AdminId INT PRIMARY KEY,
+	AdminId VARCHAR(20) PRIMARY KEY,
 	Name VARCHAR(20)
 );
 
