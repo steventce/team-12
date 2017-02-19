@@ -15,6 +15,7 @@
   },
   "homepage": "https://github.com/UBC-CPSC319/team-12#readme",
   "dependencies": {
+    "body-parser": "^1.16.1",
     "express": "^4.14.1",
     "morgan": "^1.8.1",
     "mysql": "github:mysqljs/mysql"
