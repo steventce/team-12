@@ -49,7 +49,11 @@ The above deletes node_modules folders on both client and server, and the build 
 
 ## Note
 - For git pull update to main server instance on AWS EC2, do all of the above except 'Using a local DB' section
-- For brand new deployment, same as above, but do 'Edit .db-config.json' section to set your initial database connection config. Run `chmod 400 .db-config.json` to make sure it's secured and not modified
+- For brand new deployment, same as above, but do 'Edit .db-config.json' section to set your initial database connection config. Then to make sure it's read-only, not tracked by git:
+```
+chmod 400 .db-config.json
+git update-index --assume-unchanged .db-config.json
+```
 
 
 
