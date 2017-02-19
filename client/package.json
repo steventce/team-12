@@ -1,7 +1,7 @@
 {
-  "name": "team-12",
+  "name": "Client",
   "version": "0.1.0",
-  "description": "HSBC Reservation System",
+  "description": "Web client for HSBC Reservation System",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UBC-CPSC319/team-12.git"
