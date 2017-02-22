@@ -33,7 +33,7 @@ SET PASSWORD = PASSWORD('<your new password>')
 - `database`	:	database name to connect to, for RDS instance, it should also be in the RDS console, for localhost the default one should be 'sys', but you can change it from MySQL command line tools or MySQL Workbench
 ### Initialize DB data
 1. Navigate to DB_Scripts folder from project root
-2. Manually Change all 'import-path' keywords in PopulateData.sql to the ABSOLUTE path of Desks.csv, wrapped in single quotations
+2. Manually Change all 'import-path' keywords in PopulateData.sql to the ABSOLUTE path of Desks.csv
 3. We need to run CreateDB.sql then PopulateData.sql to generate the tables and adding the desk resources from Desks.csv. This can be done from the MySQL Workbench, or through commandline.
 ```
 mysql < CreateDB.sql && mysql < PopulateData.sql

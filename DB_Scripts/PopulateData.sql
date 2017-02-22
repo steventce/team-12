@@ -11,14 +11,14 @@ VALUES ('Desk');
 INSERT INTO Admins
 VALUES ('00000000', 'defaultAdmin');
 
-LOAD DATA LOCAL INFILE import-path INTO TABLE Resources
+LOAD DATA LOCAL INFILE 'import-path/Desks.csv' INTO TABLE Resources
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\r' 
 IGNORE 1 LINES
 (@dummy1, @dummy2, @dummy3)
 SET LocationId = 1, ResourceType = 'Desk';
 
-LOAD DATA LOCAL INFILE import-path INTO TABLE Desks
+LOAD DATA LOCAL INFILE 'import-path/Desks.csv' INTO TABLE Desks
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\r' 
 IGNORE 1 LINES
