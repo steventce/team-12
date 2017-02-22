@@ -1,50 +1,56 @@
+/*
+VARCHAR(10) : short data
+VARCHAR(30) : med length data
+VARCHAR(50) : long data
+*/
+
 CREATE DATABASE Resource_Booker;
 
 USE Resource_Booker;
 
 CREATE TABLE Locations(
-	LocationId INT PRIMARY KEY,
-	BuildingName VARCHAR(20),
-	StreetName VARCHAR(20),
-	City VARCHAR(20),
-	ProvinceState VARCHAR(20),
-	PostalCode VARCHAR(20)
+	LocationId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	BuildingName VARCHAR(50),
+	StreetName VARCHAR(50),
+	City VARCHAR(30),
+	ProvinceState VARCHAR(10),
+	PostalCode VARCHAR(10)
 );
 
 CREATE TABLE ResourceTypes(
-	ResourceType VARCHAR(20) PRIMARY KEY
+	ResourceType VARCHAR(10) NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE Resources(
-	ResourceId INT PRIMARY KEY,
+	ResourceId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	LocationId INT,
-	ResourceType VARCHAR(20),
+	ResourceType VARCHAR(10),
 	FOREIGN KEY (LocationId) REFERENCES Locations(LocationId),
 	FOREIGN KEY (ResourceType) REFERENCES ResourceTypes(ResourceType)
 );
 
 CREATE TABLE Desks(
-	ResourceId INT PRIMARY KEY,
-	Floor VARCHAR(20),
-	Section VARCHAR(20),
-	DeskNumber VARCHAR(20),
+	ResourceId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	Floor VARCHAR(10),
+	Section VARCHAR(10),
+	DeskNumber VARCHAR(10),
 	FOREIGN KEY (ResourceId) REFERENCES Resources(ResourceId)
 );
 
 CREATE TABLE Reservations (
-	ReservationId INT PRIMARY KEY, 
+	ReservationId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 	ResourceId INT, 
-	StaffId VARCHAR(20), 
-	StaffName VARCHAR(20), 
-	StaffDepartment VARCHAR(20),
-	StaffEmail VARCHAR(20),
+	StaffId VARCHAR(10), 
+	StaffName VARCHAR(30), 
+	StaffDepartment VARCHAR(30),
+	StaffEmail VARCHAR(50),
 	StartDate DATETIME,
 	EndDate DATETIME,
 	FOREIGN KEY (ResourceId) REFERENCES Resources(ResourceId)
 );
 
 CREATE TABLE Admins(
-	AdminId VARCHAR(20) PRIMARY KEY,
-	Name VARCHAR(20)
+	AdminId VARCHAR(10) NOT NULL PRIMARY KEY,
+	Name VARCHAR(30)
 );
 

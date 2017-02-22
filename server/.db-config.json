@@ -2,5 +2,5 @@
   "host"     : "localhost",
   "user"     : "cs319",
   "password" : "****",
-  "database" : "lasagna"
+  "database" : "Resource_Booker"
 }
