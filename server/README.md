@@ -30,14 +30,22 @@ SET PASSWORD = PASSWORD('<your new password>')
 - `host`	:	URL of the intended database, either an Amazon RDS MySQL instance (eg. dbinstance.cbfzrjzvg8ac.us-west-2.rds.amazonaws.com) or a local DB instance (eg. localhost)
 - `user`	:	user name to connect as, for RDS instance look for it in Amazon RDS console, for localhost it should be 'root' by default
 - `password`	:	user password, for RDS instance it should have been set / reset from the RDS console, for localhost it is the new password set after the above section
-- `database`	:	database name to connect to, for RDS instance, it should also be in the RDS console, for localhost the default one should be 'sys', but you can change it from MySQL command line tools or MySQL Workbench
+- `database`	:	database name to connect to, should be the one mentioned in the CreateDB.sql script (eg. Resource_Booker)
 ### Initialize DB data
 1. Navigate to DB_Scripts folder from project root
 2. Manually Change all 'import-path' keywords in PopulateData.sql to the ABSOLUTE path of Desks.csv
-3. We need to run CreateDB.sql then PopulateData.sql to generate the tables and adding the desk resources from Desks.csv. This can be done from the MySQL Workbench, or through commandline.
+3. 
+We need to connect to the DB and run CreateDB.sql then PopulateData.sql to generate the tables and adding the desk resources from Desks.csv. This can be done from the MySQL Workbench, or through commandline.
 ```
-mysql < CreateDB.sql && mysql < PopulateData.sql
+cd DB_Scripts
+mysql -u <user> -h <host> -P 3306 -p<db password>
+// In mysql console
+source CreateDB.sql;
+source PopulateData.sql;
+quit;
 ```
+Note: The warnings after running PopulateData.sql are due to DeskNumber column in Resources table truncating the Desks.csv DeskNum entries with '- FUTURE' in it into '-'
+
 ## Starting the server
 Start development server on port 3000: 
 ```
