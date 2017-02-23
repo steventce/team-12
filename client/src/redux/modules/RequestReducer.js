@@ -1,12 +1,14 @@
 import { desks } from '../../resources/desks'
 import { reservations } from '../../resources/reservations'
 import { createAction } from 'redux-actions';
+import * as service from '../../service';
 
 const GET_RESERVATIONS = 'GET_RESERVATIONS';
 const GET_ADMIN_RESERVATIONS = 'GET_ADMIN_RESERVATIONS';
 const MAKE_RESERVATION = 'MAKE_RESERVATION';
 const CANCEL_RESERVATION = 'CANCEL_RESERVATION';
 const EDIT_RESERVATION = 'EDIT_RESERVATION';
+const GET_LOCATIONS = 'GET_LOCATIONS';
 
 // Action Creators
 export const getReservations = createAction(GET_RESERVATIONS);
@@ -33,15 +35,23 @@ export const editReservation = createAction(EDIT_RESERVATION, (reservation, call
     callback()
 });
 
+export const getLocations = createAction(GET_LOCATIONS, service.getLocations);
+
 // Reducer
 // TODO: Synchronize with database
 const initialState = {
   employeeId: '00000', 
   resources: desks,
-  reservations: []
+  reservations: [],
+  locations: []
 }
 
 export default function reducer(state = initialState, action) {
+  if (action.error) {
+    console.log("Action has error:" + JSON.stringify(action));
+    return state;
+  }
+
   switch(action.type) {
     //TODO check user permission
     // TODO this stubs the database call by using hardcoded dummy data
@@ -50,6 +60,9 @@ export default function reducer(state = initialState, action) {
     }
     case GET_ADMIN_RESERVATIONS: {
       return { ...state, reservations: getObjValues(reservations)}
+    }
+    case GET_LOCATIONS: {
+      return { ...state, locations: action.payload}
     }
 
     default:

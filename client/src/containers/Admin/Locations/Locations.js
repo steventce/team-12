@@ -4,6 +4,8 @@ import { div, Button, Modal } from 'react-bootstrap';
 import './Locations.css';
 import AddLocationModal from './AddLocationModal.js';
 import EditLocationForm from './EditLocationForm.js'
+import { connect } from 'react-redux';
+import { getLocations } from '../../../redux/modules/RequestReducer';
 
 class Locations extends Component {
   constructor(props){
@@ -19,6 +21,13 @@ class Locations extends Component {
             modalIndex: -1,
             modalType:this.modalEnum.NONE
         }
+
+        this.props.dispatch(getLocations());
+    }
+
+    componentWillReceiveProps(newProps) {
+      if (newProps.locations !== this.props.locations)
+        console.log("New locations: " + JSON.stringify(newProps.locations));
     }
     
     onClickEdit(cell, row, rowIndex){
@@ -134,4 +143,8 @@ class Locations extends Component {
   }
 }
 
-export default Locations;
+const mapStateToProps = (state) => {
+  return { ...state.db };
+}
+
+export default connect(mapStateToProps)(Locations);
