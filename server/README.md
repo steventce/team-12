@@ -5,6 +5,7 @@ Retrieve dependencies and build client and server:
 npm run [--prefix <path-to-root>] build-all
 ```
 Only include the `[...]` part if you are not at the project root, which includes client and server folders (eg. if you are in server folder, then put `--prefix ../`)
+
 ## Setup development environment to develop the server
 ### Using a local DB
 1. Install MySQL Community Server, MySQL command line tools, and optionally MySQL Workbench, take note of 'root' password given after installing MySQL Server
@@ -18,35 +19,41 @@ After connected, reset root password.
 ```
 SET PASSWORD = PASSWORD('<your new password>')
 ```
-### Edit .db-config.json to connect to the DB 
+### <a name="edit-config"></a>Edit config.json in server/config/ to connect to the DB 
 ```
 {
-  "host"     : "localhost",
-  "user"     : "cs319",
-  "password" : "****",
-  "database" : "Resource_Booker"
+  "development": {
+    "username": "username",
+    "password": "password",
+    "database": "Resource_Booker",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  ...config for other envs
 }
 ```
 - `host`	:	URL of the intended database, either an Amazon RDS MySQL instance (eg. dbinstance.cbfzrjzvg8ac.us-west-2.rds.amazonaws.com) or a local DB instance (eg. localhost)
 - `user`	:	user name to connect as, for RDS instance look for it in Amazon RDS console, for localhost it should be 'root' by default
 - `password`	:	user password, for RDS instance it should have been set / reset from the RDS console, for localhost it is the new password set after the above section
-- `database`	:	database name to connect to, should be the one mentioned in the CreateDB.sql script (eg. Resource_Booker)
-### Initialize DB data
+- `database`	:	database name to connect to (eg. if you create a database within MySQL called Resource_Booker, then put Resource_Booker here)
+
+### <a name="init-db-data"></a>Initialize DB data
 1. Navigate to DB_Scripts folder from project root
-2. Manually Change all 'import-path' keywords in PopulateData.sql to the ABSOLUTE path of Desks.csv
-3. 
-We need to connect to the DB and run CreateDB.sql then PopulateData.sql to generate the tables and adding the desk resources from Desks.csv. This can be done from the MySQL Workbench, or through commandline.
+2. Manually change all 'import-path' keywords in PopulateData.sql to the ABSOLUTE path of Desks.csv
+3. **Currently, simply starting the server will automatically generate all of the missing tables in the database. For now, it is unnecessary to manually create tables. Refer to the instructions [below](#starting-the-server) for starting the server** 
+4. Run PopulateData.sql to add in the initial data (including the desk resources from Desks.csv). This can be done from MySQL Workbench, or through the command line.
 ```
 cd DB_Scripts
 mysql -u <user> -h <host> -P 3306 -p<db password>
-// In mysql console
-source CreateDB.sql;
+// In MySQL console
+CREATE DATABASE Resource_Booker;
+USE Resource_Booker;
 source PopulateData.sql;
 quit;
 ```
-Note: The warnings after running PopulateData.sql are due to DeskNumber column in Resources table truncating the Desks.csv DeskNum entries with '- FUTURE' in it into '-'
+Note: The warnings after running PopulateData.sql are due to the DeskNumber column in Resources table truncating the Desks.csv DeskNum entries with '- FUTURE' in it into '-'
 
-## Starting the server
+## <a name="starting-the-server"></a>Starting the server
 Start development server on port 3000: 
 ```
 npm run [--prefix <path-to-root>] serve-dev
@@ -62,11 +69,11 @@ npm run [--prefix <path-to-root>] clean
 The above deletes node_modules folders on both client and server, and the build folder on client
 
 ## Note
-- For git pull update to main server instance on AWS EC2, do all of the above except 'Using a local DB' section
-- For brand new deployment, same as above, but do 'Edit .db-config.json' and 'Initialize DB data' section to set your initial database connection config and data. Then to make sure the config file is read-only, not tracked by git:
+- For git pull update to main server instance on AWS EC2, do all of the above except [Using a local DB](#Using a local DB) section
+- For brand new deployment, same as above, but do the [Edit config.json](#edit-config) and [Initialize DB data](#init-db-data) section to set your initial database connection config and data. Then to make sure the config file is read-only, not tracked by git:
 ```
-chmod 400 .db-config.json
-git update-index --assume-unchanged .db-config.json
+chmod 400 config.json
+git update-index --assume-unchanged config.json
 ```
 
 
