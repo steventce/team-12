@@ -26,9 +26,6 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.resolve(__dirname, '..', 'client', 'build')));
 
 // Always return the main index.html, so react-router renders the route in the client
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
-});
 
 var bodyParser = require('body-parser')
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
@@ -51,6 +48,10 @@ require('./components/admin')(app);
 require('./components/adminReservations')(app);
 require('./components/adminResources')(app);
 require('./components/adminLocations')(app);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+});
 
 app.listen(PORT, () => {
 	console.log('App listening on port ' + PORT)
