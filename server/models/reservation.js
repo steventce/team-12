@@ -5,6 +5,7 @@ var moment = require('moment');
 const MAX_DAYS_IN_ADVANCE = 30;
 const MAX_RANGE_RESERVE_HR = 120;
 
+
 module.exports = function(sequelize, DataTypes) {
   var Reservation = sequelize.define('Reservation', {
     reservation_id: {
@@ -29,23 +30,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(50)
     },
     start_date: {
-      type: DataTypes.DATE
-    },
-    end_date: {
       type: DataTypes.DATE,
-      validate: {
-        maxEndDate: function() {
-          var end_date = moment(this.end_date);
-          var max_end_date = moment().add(MAX_DAYS_IN_ADVANCE, 'd');
-
-          if (end_date.isAfter(max_end_date, 'hour')) {
-            throw new Error(
-              `Reservation cannot be made for more than ${MAX_DAYS_IN_ADVANCE} days in advance`
-            );
-          }
-        }   
-      },
-      
       validate: {
             maxDuration: function(){
               var start_date_ = moment(this.start_date);
@@ -60,7 +45,22 @@ module.exports = function(sequelize, DataTypes) {
                 );
             }
           }
-        }
+      }
+    },
+    end_date: {
+      type: DataTypes.DATE,
+      validate: {
+        maxEndDate: function() {
+          var end_date = moment(this.end_date);
+          var max_end_date = moment().add(MAX_DAYS_IN_ADVANCE, 'd');
+
+          if (end_date.isAfter(max_end_date, 'hour')) {
+            throw new Error(
+              `Reservation cannot be made for more than ${MAX_DAYS_IN_ADVANCE} days in advance`
+            );
+          }
+        }   
+      }
       
     },
     created_at: {
