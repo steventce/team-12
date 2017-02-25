@@ -3,6 +3,7 @@
 var moment = require('moment');
 
 const MAX_DAYS_IN_ADVANCE = 30;
+const MAX_RANGE_RESERVE_HR = 120;
 
 module.exports = function(sequelize, DataTypes) {
   var Reservation = sequelize.define('Reservation', {
@@ -39,11 +40,28 @@ module.exports = function(sequelize, DataTypes) {
 
           if (end_date.isAfter(max_end_date, 'hour')) {
             throw new Error(
-              `Reservation cannot be more than ${MAX_DAYS_IN_ADVANCE} days in advance`
+              `Reservation cannot be made for more than ${MAX_DAYS_IN_ADVANCE} days in advance`
             );
           }
+        }   
+      },
+      
+      validate: {
+            maxDuration: function(){
+              var start_date_ = moment(this.start_date);
+              var end_date_ = moment(this.end_date);
+              
+              var time_diff = moment.duration(end_date_.diff(start_date_));
+              
+              var diff_hour = time_diff.asHours();
+              if (diff_hour > MAX_RANGE_RESERVE_HR){
+                  throw new Error(
+                  `Reservation cannot be made for more than ${MAX_RANGE_RESERVE_HR} hours (5 days)`
+                );
+            }
+          }
         }
-      }
+      
     },
     created_at: {
       type: DataTypes.DATE,
