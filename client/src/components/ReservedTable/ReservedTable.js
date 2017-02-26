@@ -57,10 +57,10 @@ class ReservedTable extends Component {
     	<div className='container tableContainer'>
 		  <BootstrapTable data={this.props.reservations} striped={true} hover={true}>
 		      <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
-		      <TableHeaderColumn dataField='resourceType' dataSort={true}>Resource Type</TableHeaderColumn>
-		      <TableHeaderColumn dataField='startDateTime' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
-		      <TableHeaderColumn dataField='endDateTime' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
-		      <TableHeaderColumn dataField='cancel' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
+		      <TableHeaderColumn dataField='resourceType' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
+		      <TableHeaderColumn dataField='startDateTime' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='endDateTime' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
 		  </BootstrapTable>
       <Modal show={this.state.showModal} onHide={this.modalClose.bind(this)}>
           <Modal.Header closeButton>

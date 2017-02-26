@@ -95,7 +95,7 @@ class Locations extends Component {
               <TableHeaderColumn dataField='locationName' isKey={true} dataAlign='center' dataSort={true}>Name</TableHeaderColumn>
               <TableHeaderColumn dataField='locationAddress' dataAlign='center' dataSort={true}>Address</TableHeaderColumn>
               <TableHeaderColumn dataField='editLocation' dataAlign='center' width='150px' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
-              <TableHeaderColumn dataField='deleteLocation' dataAlign='center' width='100px' dataFormat={this.cancelButton.bind(this)}>Delete?</TableHeaderColumn>
+              <TableHeaderColumn dataField='deleteLocation' dataAlign='center' width='100px' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
           </BootstrapTable>
 
 
