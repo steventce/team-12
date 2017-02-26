@@ -31,10 +31,10 @@ var bodyParser = require('body-parser')
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
-})); 
+}));
 
 // Diabled for now
-// 
+//
 
 // app.use(function(req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
@@ -48,6 +48,7 @@ require('./components/admin')(app);
 require('./components/adminReservations')(app);
 require('./components/adminResources')(app);
 require('./components/adminLocations')(app);
+require('./components/resources')(app);
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
