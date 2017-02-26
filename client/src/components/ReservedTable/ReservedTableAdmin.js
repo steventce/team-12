@@ -22,7 +22,7 @@ import moment from 'moment';
 import './ReservedTable.css';
 import './ReservedTableAdmin.css';
 
-import { cancelReservation, editReservation, getAdminReservations } from '../../redux/modules/RequestReducer';
+import { cancelReservation, editReservation, getAdminReservations } from '../../redux/modules/ReservationReducer';
 import { connect } from 'react-redux';
 
 // TODO: Get this from database?

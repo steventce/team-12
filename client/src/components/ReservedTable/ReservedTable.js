@@ -5,7 +5,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './ReservedTable.css';
 
-import { cancelReservation, getReservations } from '../../redux/modules/RequestReducer';
+import { cancelReservation, getReservations } from '../../redux/modules/ReservationReducer';
 import { connect } from 'react-redux';
 
 class ReservedTable extends Component {

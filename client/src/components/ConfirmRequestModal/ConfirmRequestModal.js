@@ -3,6 +3,13 @@ import moment from 'moment';
 import { Modal, Button } from 'react-bootstrap';
 
 class ConfirmRequestModal extends Component {
+  static propTypes = {
+    selectedResourceName: React.PropTypes.string.isRequired,
+    selectedResource: React.PropTypes.string.isRequired,
+    startDateTime: React.PropTypes.instanceOf(Date).isRequired,
+    endDateTime: React.PropTypes.instanceOf(Date).isRequired
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +31,13 @@ class ConfirmRequestModal extends Component {
   }
 
   render() {
-    const { selectedResourceName, selectedResource, startDateTime, endDateTime } = this.props;
+    const {
+      selectedResourceName,
+      selectedResource,
+      startDateTime,
+      endDateTime
+    } = this.props;
+
     return (
       <div>
         <Button

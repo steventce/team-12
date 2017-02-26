@@ -11,23 +11,18 @@ const EDIT_RESERVATION = 'EDIT_RESERVATION';
 const GET_LOCATIONS = 'GET_LOCATIONS';
 
 // Action Creators
+
 export const getReservations = createAction(GET_RESERVATIONS);
+
 export const getAdminReservations = createAction(GET_ADMIN_RESERVATIONS);
 
-// TODO: Security concern passing in employeeId?
-export const makeReservation = createAction(MAKE_RESERVATION, (reservation, employeeId, callback) => {
-  // TODO: Replace with SQL call
-  const reservationId = String(Date.now());
-  reservations[reservationId] = {...reservation, reservationId, employeeId}
-  if (callback)
-    callback()
-});
 export const cancelReservation = createAction(CANCEL_RESERVATION, (reservationId, callback) => {
   // TODO: Replace with SQL call
   reservations[reservationId] = undefined;
   if (callback)
     callback()
 });
+
 export const editReservation = createAction(EDIT_RESERVATION, (reservation, callback) => {
   // TODO: Replace with SQL call
   reservations[reservation.reservationId] = Object.assign(reservations[reservation.reservationId], reservation)
@@ -37,10 +32,12 @@ export const editReservation = createAction(EDIT_RESERVATION, (reservation, call
 
 export const getLocations = createAction(GET_LOCATIONS, service.getLocations);
 
+export const makeReservation = createAction(MAKE_RESERVATION, service.makeReservation);
+
 // Reducer
-// TODO: Synchronize with database
+
 const initialState = {
-  employeeId: '00000', 
+  employeeId: '00000',
   resources: desks,
   reservations: [],
   locations: []
@@ -53,7 +50,7 @@ export default function reducer(state = initialState, action) {
   }
 
   switch(action.type) {
-    //TODO check user permission
+    // TODO check user permission
     // TODO this stubs the database call by using hardcoded dummy data
     case GET_RESERVATIONS: {
       return { ...state, reservations: getObjValues(reservations).filter(reservation => reservation.employeeId === state.employeeId)}
@@ -64,18 +61,19 @@ export default function reducer(state = initialState, action) {
     case GET_LOCATIONS: {
       return { ...state, locations: action.payload}
     }
-
     default:
       return state;
   }
 }
+
+// Utility
 
 function getObjValues(obj) {
     let values = [];
 
     for (var prop in obj) {
       if (reservations.hasOwnProperty(prop) && obj[prop] !== undefined )
-        values.push(obj[prop]) 
+        values.push(obj[prop])
     }
     return values;
 }
