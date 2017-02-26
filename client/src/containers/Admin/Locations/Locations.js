@@ -5,7 +5,7 @@ import './Locations.css';
 import AddLocationModal from './AddLocationModal.js';
 import EditLocationForm from './EditLocationForm.js'
 import { connect } from 'react-redux';
-import { getLocations } from '../../../redux/modules/ReservationReducer';
+import { getLocations, addLocation, editLocation, deleteLocation } from '../../../redux/modules/ReservationReducer';
 
 class Locations extends Component {
   constructor(props){

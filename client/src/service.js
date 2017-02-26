@@ -8,18 +8,8 @@ const API = {
   RESERVATIONS: '/api/v1/reservations'
 };
 
-export const getLocations = async () => {
-  console.log("Making service call at api " + API.LOCATIONS);
-  const response = await axios({
-    method: 'get',
-      url: API.LOCATIONS,
-      baseURL: SERVER_URL,
-  });
 
-  console.log('Received response ' + JSON.stringify(response));
-
-  return response.data;
-}
+/* Reservations Service */
 
 export const makeReservation = async (reservation, staffId) => {
   console.log(reservation)
@@ -51,4 +41,34 @@ export const makeReservation = async (reservation, staffId) => {
   });
 
   return response.data;
+}
+
+/* Locations Service */
+
+export const getLocations = async () => {
+  console.log("Making service call at api " + API.LOCATIONS);
+  const response = await axios({
+    method: 'get',
+      url: API.LOCATIONS,
+      baseURL: SERVER_URL,
+  });
+
+  console.log('Received response ' + JSON.stringify(response));
+
+  return response.data;
+}
+
+export const addLocation = async (location, staffId) => {
+    const {
+        resource_id,
+        building_name,
+        street_name,
+        city,
+        province_state,
+        postal_code
+    } = location;
+
+// TODO: Update to DB
+
+    return response.data;
 }
