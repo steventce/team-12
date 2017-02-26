@@ -1,5 +1,6 @@
 import { desks } from '../../resources/desks'
 import { reservations } from '../../resources/reservations'
+import { locations } from '../../resources/locations'
 import { createAction } from 'redux-actions';
 import * as service from '../../service';
 
@@ -11,7 +12,7 @@ const EDIT_RESERVATION = 'EDIT_RESERVATION';
 
 const GET_LOCATIONS = 'GET_LOCATIONS';
 const EDIT_LOCATION = 'EDIT_LOCATION';
-const GET_LOCATIONS = 'ADD_LOCATION';
+const ADD_LOCATION = 'ADD_LOCATION';
 const DELETE_LOCATION = 'DELETE_LOCATION';
 
 // Action Creators
@@ -46,11 +47,11 @@ export const editLocation = createAction(EDIT_LOCATION, (location, callback) => 
     callback()
 });
 
-export const addLocation = createAction(MAKE_RESERVATION, service.addLocation);
+export const addLocation = createAction(ADD_LOCATION, service.addLocation);
 
 export const deleteLocation = createAction(DELETE_LOCATION, (locationId, callback) => {
   // TODO: Replace with SQL call
-  reservations[reservationId] = undefined;
+  locations[locationId] = undefined;
   if (callback)
     callback()
 });

@@ -68,6 +68,18 @@ export const addLocation = async (location, staffId) => {
         postal_code
     } = location;
 
+    const response = await axios({
+        method: 'post',
+        url: API.LOCATIONS,
+        baseURL: '',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+        // TODO: Fill in
+        }
+    });
+
 // TODO: Update to DB
 
     return response.data;
