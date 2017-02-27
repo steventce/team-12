@@ -10,9 +10,9 @@ module.exports = function(app) {
     models.Reservation.findAll({
       where: { staff_id: staff_id}
     }).then(function(reservations){
-      res.status(201).send(reservations);
+      res.status(200).send(reservations);
     }).catch(Sequelize.ValidationError, function(err) {
-      res.status(400).send({ errors: err.errors });
+      res.status(401).send({ errors: err.errors });
     });
   });
 
@@ -51,9 +51,9 @@ module.exports = function(app) {
     models.Reservation.destroy({
       where: {reservation_id: reservation_id}
     }).then(function(reservation){
-      res.status(201).send(null);
+      res.status(200).send(null);
     }).catch(Sequelize.ValidationError, function(err) {
-      res.status(400).send({ errors: err.errors });
+      res.status(401).send({ errors: err.errors });
     });
   });
 }
