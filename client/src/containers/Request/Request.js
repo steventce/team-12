@@ -17,19 +17,19 @@ import 'react-widgets/dist/css/react-widgets.css';
 import { DATE_TIME_FORMAT } from '../../utils/formatter';
 import ConfirmRequestModal from '../../components/ConfirmRequestModal';
 
-// TODO: remove these and use props from db
-const sections = ['All', 'A', 'B', 'C', 'D', 'E'];
-const resourceTypes = ['Desk']
-
 momentLocalizer(moment);
 
 class Request extends Component {
   render() {
     const {
-      floorNum,
-      selectedResource,
-      startDateTime,
-      endDateTime
+      floor,
+      floors,
+      sections,
+      selectedResourceId,
+      selectedResourceName,
+      resourceTypes,
+      startDate,
+      endDate,
     } = this.props;
 
     return (
@@ -43,8 +43,8 @@ class Request extends Component {
           <Row className="show-grid">
             <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
               <FormGroup controlId="formControlsFloorSelect">
-                <ControlLabel>Select resource type</ControlLabel>
-                <FormControl componentClass="select" disabled={true}>
+                <ControlLabel>Select Resource Type</ControlLabel>
+                <FormControl componentClass="select" disabled={true} onChange={this.props.onChange} name="resourceType">
                   {resourceTypes.map(function (type) {
                     return (
                       <option key={type} value={type}>{type}</option>
@@ -58,10 +58,10 @@ class Request extends Component {
             <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
               <FormGroup controlId="formControlsFloorSelect">
                 <ControlLabel>Select a Floor</ControlLabel>
-                <FormControl componentClass="select" onChange={this.props.onFloorNumChange}>
-                  {this.props.resources.map(function (_, index) {
+                <FormControl componentClass="select" onChange={this.props.onChange} name="floor">
+                  {floors.map(function (floor) {
                     return (
-                      <option key={index + 1} value={index + 1}>Floor {index + 1}</option>
+                      <option key={floor} value={floor}>Floor {floor}</option>
                     );
                   })}
                 </FormControl>
@@ -70,10 +70,11 @@ class Request extends Component {
             <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
               <FormGroup controlId="formControlsSectionSelect">
                 <ControlLabel>Select a Section</ControlLabel>
-                <FormControl componentClass="select" disabled={true} placeholder="select">
-                  {sections.map(function (value) {
+                <FormControl componentClass="select" placeholder="select" onChange={this.props.onChange} name="section">
+                  <option value="">All</option>
+                  {sections.map(function (section) {
                     return (
-                      <option key={value} value="other">{value}</option>
+                      <option key={section} value={section}>{section}</option>
                     );
                   })}
                 </FormControl>
@@ -87,7 +88,7 @@ class Request extends Component {
               <FormGroup controlId="formControlsFloorSelect">
                 <ControlLabel>From</ControlLabel>
                 <DateTimePicker
-                  value={startDateTime}
+                  value={startDate}
                   format={DATE_TIME_FORMAT}
                   onChange={this.props.onStartDateChange}
                   min={moment().startOf('hour').toDate()}
@@ -101,7 +102,7 @@ class Request extends Component {
               <FormGroup controlId="formControlsSectionSelect">
                 <ControlLabel>To</ControlLabel>
                 <DateTimePicker
-                  value={endDateTime}
+                  value={endDate}
                   format={DATE_TIME_FORMAT}
                   onChange={this.props.onEndDateChange}
                   min={moment().add(1, 'h').startOf('hour').toDate()}
@@ -123,15 +124,16 @@ class Request extends Component {
                 {/* TODO: dynamically allocate size */}
                 <div style={{ height: "200px", overflowY: "auto" }}>
                   {
-                    this.props.resources[floorNum - 1].map((value, index) => {
+                    this.props.availableResources.map((resource, index) => {
+                      const { resource_id } = resource;
                       return (
                         <Radio
-                          key={index}
+                          key={resource_id}
                           name="resources"
-                          value={String(index)}
-                          checked={String(index) === selectedResource}
-                          onChange={this.props.onResourceSelect}>
-                        {value}
+                          value={resource_id}
+                          checked={resource_id === selectedResourceId}
+                          onChange={this.props.onResourceSelect.bind(null, resource)}>
+                          {resource.Desk.desk_number}
                         </Radio>
                       );
                     })

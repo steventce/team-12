@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { getAvailableResources } from '../../redux/modules/ResourceReducer';
 import { makeReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
 
@@ -8,42 +9,89 @@ class RequestContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      resourceTypes: ['Desk'],
       resourceType: 'Desk',
-      floorNum: 1,
+      floor: 1,
       section: '',
-      selectedResource: '-1',
+      selectedResourceId: -1,
       selectedResourceName: '',
       email: '',
-      startDateTime: moment().startOf('hour').toDate(),
-      endDateTime: moment().add(1, 'h').startOf('hour').toDate()
+      startDate: moment().startOf('hour').toDate(),
+      endDate: moment().add(1, 'h').startOf('hour').toDate(),
+      floors: [1, 2, 3, 4],
+      sections: ['A', 'B']
     };
   }
 
-  onStartDateChange(startDateTime) {
-    this.setState({ startDateTime });
+  componentDidMount() {
+    const {
+      resourceType,
+      startDate,
+      endDate,
+      floor,
+      section
+    } = this.state;
+
+    this.props.dispatch(getAvailableResources(1, {
+      resourceType, startDate, endDate, floor, section
+    }));
   }
 
-  onEndDateChange(endDateTime) {
-    this.setState({ endDateTime });
+  onStartDateChange(startDate) {
+    this.setState({ startDate });
+
+    const {
+      resourceType,
+      endDate,
+      floor,
+      section
+    } = this.state;
+
+    this.props.dispatch(getAvailableResources(1, {
+      resourceType, startDate, endDate, floor, section
+    }));
   }
 
-  onResourceSelect(event) {
-    const { value } = event.currentTarget;
+  onEndDateChange(endDate) {
+    this.setState({ endDate });
+
+    const {
+      resourceType,
+      startDate,
+      floor,
+      section
+    } = this.state;
+
+    this.props.dispatch(getAvailableResources(1, {
+      resourceType, startDate, endDate, floor, section
+    }));
+  }
+
+  onResourceSelect(resource, event) {
+    const { resource_id } = resource;
+
     this.setState({
-      selectedResource: value,
-      selectedResourceName: this.props.resources[this.state.floorNum-1][Number(value)]
+      selectedResourceId: resource_id,
+      selectedResourceName: resource.Desk.desk_number
     });
   }
 
-  onFloorNumChange(event) {
+  onChange(event) {
+    const { name, value } = event.target;
+
     this.setState({
-      floorNum: event.target.value,
-      selectedResource: '-1'
+      [name]: value,
+      selectedResourceId: -1,
+      selctedResourceName: ''
     });
+
+    this.props.dispatch(getAvailableResources(1, {
+      ...this.state, [name]: value
+    }));
   }
 
   submitClick() {
-     this.props.dispatch(makeReservation({
+    this.props.dispatch(makeReservation({
       ...this.state,
       resourceId: this.state.selectedResourceName
     }, this.props.employeeId));
@@ -53,11 +101,11 @@ class RequestContainer extends Component {
     return (
       <Request
         {...this.state}
-        resources={this.props.resources}
+        availableResources={this.props.availableResources}
         onStartDateChange={this.onStartDateChange.bind(this)}
         onEndDateChange={this.onEndDateChange.bind(this)}
         onResourceSelect={this.onResourceSelect.bind(this)}
-        onFloorNumChange={this.onFloorNumChange.bind(this)}
+        onChange={this.onChange.bind(this)}
         submitClick={this.submitClick.bind(this)}
       />
     );
@@ -65,7 +113,10 @@ class RequestContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { ...state.db };
+  const { resources } = state;
+  return {
+    availableResources: resources.availableResources
+  };
 }
 
 export default connect(mapStateToProps)(RequestContainer);

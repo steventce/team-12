@@ -5,7 +5,8 @@ const SERVER_URL = "http://localhost";
 
 const API = {
   LOCATIONS: '/api/v1/locations',
-  RESERVATIONS: '/api/v1/reservations'
+  RESERVATIONS: '/api/v1/reservations',
+  RESOURCES: (location_id) => `/api/v1/locations/${location_id}/resources`
 };
 
 
@@ -37,6 +38,32 @@ export const makeReservation = async (reservation, staffId) => {
       start_date: startDate,
       end_date: endDate,
       staff_id: staffId
+    }
+  });
+
+  return response.data;
+}
+
+/* Resources Service */
+
+export const getResources = async (locationId, filters) => {
+  const {
+    resourceType,
+    startDate,
+    endDate,
+    floor,
+    section
+  } = filters;
+
+  const response = await axios({
+    method: 'get',
+    url: API.RESOURCES(locationId),
+    params: {
+      resource_type: resourceType,
+      start_date: startDate,
+      end_date: endDate,
+      floor,
+      section
     }
   });
 

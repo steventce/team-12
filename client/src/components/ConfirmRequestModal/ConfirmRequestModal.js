@@ -5,9 +5,9 @@ import { Modal, Button } from 'react-bootstrap';
 class ConfirmRequestModal extends Component {
   static propTypes = {
     selectedResourceName: React.PropTypes.string.isRequired,
-    selectedResource: React.PropTypes.string.isRequired,
-    startDateTime: React.PropTypes.instanceOf(Date).isRequired,
-    endDateTime: React.PropTypes.instanceOf(Date).isRequired
+    selectedResourceId: React.PropTypes.number.isRequired,
+    startDate: React.PropTypes.instanceOf(Date).isRequired,
+    endDate: React.PropTypes.instanceOf(Date).isRequired
   }
 
   constructor(props) {
@@ -33,16 +33,16 @@ class ConfirmRequestModal extends Component {
   render() {
     const {
       selectedResourceName,
-      selectedResource,
-      startDateTime,
-      endDateTime
+      selectedResourceId,
+      startDate,
+      endDate
     } = this.props;
 
     return (
       <div>
         <Button
           bsStyle="primary"
-          disabled={selectedResource === "-1"}
+          disabled={selectedResourceId === -1}
           onClick={this.open.bind(this)}>
           Submit
         </Button>
@@ -55,7 +55,7 @@ class ConfirmRequestModal extends Component {
           <Modal.Body>
             <div className="text-center">
             {`Are you sure you want to reserve ${selectedResourceName} from
-             ${this.formatDate(startDateTime)} to ${this.formatDate(endDateTime)}?`}
+             ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`}
             </div>
           </Modal.Body>
 

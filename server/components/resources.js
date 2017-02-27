@@ -22,6 +22,10 @@ module.exports = function(app) {
       Desk
     } = models;
 
+    deskQuery = {};
+    if (floor) deskQuery['floor'] = floor;
+    if (section) deskQuery['section'] = section;
+
     // Gets resources where there doesn't exist any reservations
     // for that resource that falls in the desired request's interval
     Resource.findAll({
@@ -50,10 +54,7 @@ module.exports = function(app) {
         // TODO: Change the model dynamically from the resource type
         model: Desk,
         attributes: ['floor', 'section', 'desk_number'],
-        where: {
-          floor,
-          section
-        }
+        where: deskQuery
       }
       ],
       where: {
