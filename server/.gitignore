@@ -12,5 +12,4 @@ coverage
 npm-debug.log
 
 # db config
-.db-config.json
 config/config.json

@@ -3,22 +3,10 @@ process.chdir(__dirname);
 var express = require('express');
 var path = require('path');
 var homePath = require('os').homedir()
-var dbConfig = require('./.db-config.json');
-
 
 var app = express();
 
 var mysql      = require('mysql');
-var connection = mysql.createConnection(dbConfig);
-
-connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
-
-  console.log('connected as id ' + connection.threadId);
-});
 
 const PORT = process.env.PORT || 3000;
 
