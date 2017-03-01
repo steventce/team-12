@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 //const SERVER_URL = "http://mylasagna.ca/";
-const SERVER_URL = "http://localhost";
+const SERVER_URL = "http://localhost:3000";
 
 const API = {
   LOCATIONS: '/api/v1/locations',
