@@ -90,17 +90,19 @@ class ReservedTableAdmin extends Component {
 
   modalOpenEdit(modalIndex) {
     this.setState({ modalType: this.modalEnum.EDIT, modalIndex: modalIndex});
+    let modalStartTime = moment(this.props.reservations[modalIndex].startDateTime);
+    let modalEndTime = moment(this.props.reservations[modalIndex].endDateTime);
     this.setState({ editOptions:
       {resourceType: this.props.reservations[modalIndex].resourceType,
-      newStartTime: this.props.reservations[modalIndex].startTime,
-      newEndTime: this.props.reservations[modalIndex].endTime}
+      newStartTime: modalStartTime,
+      newEndTime: modalEndTime}
     });
   }
 
   updateSelectedResource(option) {
-    let editOptions = this.state.editOptions;
-    editOptions.resourceType = option;
-    this.setState(editOptions: editOption);
+    let newOptions = this.state.editOptions;
+    newOptions.resourceType = option;
+    this.setState({ editOptions: newOptions });
   }
 
   dropDown(title, i) {
@@ -125,13 +127,12 @@ class ReservedTableAdmin extends Component {
 
   startTimeOptions() {
     if (this.state.modalIndex === -1) return;
-    // this.changeStartTime(this.state.startTime);
     return (
       <div className='edit'>
         StartTime
         <br/>
         <DateTimePicker
-          value={new Date(this.state.editOptions.newStartTime)}
+          value={new Date(this.state.editOptions.newStartTime)}       
           onChange={this.changeStartTime.bind(this)}
           min={moment().startOf('hour').toDate()}
           max={moment().startOf('day').add(1, 'y').toDate()}
@@ -142,9 +143,9 @@ class ReservedTableAdmin extends Component {
   }
 
   changeStartTime(time) {
-    let editOptions = this.state.editOptions;
-    editOptions.newStartTime = time;
-    this.setState(editOptions: editOption);
+    let newOptions = this.state.editOptions;
+    newOptions.newStartTime = time;
+    this.setState({ editOptions: newOptions });
   }
 
   endTimeOptions() {
@@ -166,9 +167,9 @@ class ReservedTableAdmin extends Component {
   }
 
   changeEndTime(time) {
-    let editOptions = this.state.editOptions;
-    editOptions.newEndTime = time;
-    this.setState(editOptions: editOption);
+    let newOptions = this.state.editOptions;
+    newOptions.newEndTime = time;
+    this.setState({ editOptions: newOptions });
   }
 
   // Cancel Modal
