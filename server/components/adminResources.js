@@ -26,16 +26,17 @@ module.exports = function(app) {
 	});
 
 	app.put("/api/v1/resources/:resource_id", function(req, res) {
-		// Stub
 		var resource_id = req.params.resource_id;
+		var location_id = req.body.location_id;
+		var resource_type = req.body.resource_type;
 		console.log(resource_id);
-		res.send(resource_id);
-		// TODO: Replace this with real code
 		
-		models.Resource.edit({
-                    where: {resource_id: resource_id}
-                }).then(function(resource){
-                    res.status(200).send(null);
+		var locator = { location_id: location_id };
+		var res_type = { resource_type: resource_type };
+		var selector = { where: { resource_id: resource_id }};
+		
+		models.Resource.update(selector).then(function(resource){
+                    res.status(200).send(resource);
                 }).catch(Sequelize.ValidationError, function(err) {
                     res.status(401).send({ errors: err.errors });
                 });
