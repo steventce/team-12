@@ -93,7 +93,7 @@ class RequestContainer extends Component {
   submitClick() {
     this.props.dispatch(makeReservation({
       ...this.state,
-      resourceId: this.state.selectedResourceName
+      resourceId: this.state.selectedResourceId
     }, this.props.employeeId));
   }
 
