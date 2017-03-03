@@ -82,7 +82,7 @@ class RequestContainer extends Component {
     this.setState({
       [name]: value,
       selectedResourceId: -1,
-      selctedResourceName: ''
+      selectedResourceName: ''
     });
 
     this.props.dispatch(getAvailableResources(1, {
