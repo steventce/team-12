@@ -40,6 +40,9 @@ class RequestContainer extends Component {
 
   onStartDateChange(startDate) {
     this.setState({ startDate });
+    let newEndDate = moment(startDate).add(1, 'h').startOf('hour').toDate();
+    this.setState({ endDate: newEndDate });
+    this.setState({ selectedResourceId: -1 });
 
     const {
       resourceType,
@@ -55,6 +58,7 @@ class RequestContainer extends Component {
 
   onEndDateChange(endDate) {
     this.setState({ endDate });
+    this.setState({ selectedResourceId: -1 });
 
     const {
       resourceType,

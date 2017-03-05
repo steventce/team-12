@@ -105,7 +105,7 @@ class Request extends Component {
                   value={endDate}
                   format={DATE_TIME_FORMAT}
                   onChange={this.props.onEndDateChange}
-                  min={moment().add(1, 'h').startOf('hour').toDate()}
+                  min={endDate}
                   max={moment().add(1, 'y').startOf('day').toDate()}
                   step={60}
                 />
@@ -120,9 +120,9 @@ class Request extends Component {
             </Col>
             <Col xs={6} md={4}>
               <div style={{ border: "thin solid black" }}>
-                <div><b>Available Resources</b></div>
+                <div style={{ paddingLeft: "10px", paddingTop: "5px" }}><b>Available Resources</b></div>
                 {/* TODO: dynamically allocate size */}
-                <div style={{ height: "200px", overflowY: "auto" }}>
+                <div style={{ height: "200px", overflowY: "auto", paddingLeft: "10px" }}>
                   {
                     this.props.availableResources.map((resource, index) => {
                       const { resource_id } = resource;
