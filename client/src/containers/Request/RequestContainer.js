@@ -3,6 +3,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
 import { makeReservation } from '../../redux/modules/ReservationReducer';
+import { getReservations } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
 
 class RequestContainer extends Component {

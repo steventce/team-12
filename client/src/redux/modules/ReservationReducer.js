@@ -17,7 +17,7 @@ const DELETE_LOCATION = 'DELETE_LOCATION';
 
 // Action Creators
 
-export const getReservations = createAction(GET_RESERVATIONS);
+export const getReservations = createAction(GET_RESERVATIONS, service.getReservations);
 
 export const getAdminReservations = createAction(GET_ADMIN_RESERVATIONS);
 
