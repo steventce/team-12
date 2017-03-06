@@ -14,11 +14,11 @@ if (config.use_env_variable) {
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-// Drop and recreate tables
-// sequelize.sync({ force: true });
-
-// Create tables that don't exist
-sequelize.sync();
+// Pass { force: true } in sequelize to drop and recreate tables
+// Otherwise, sequelize will create missing tables.
+if (env === 'development') {
+  sequelize.sync();
+}
 
 fs
   .readdirSync(__dirname)

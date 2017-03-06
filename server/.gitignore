@@ -13,3 +13,6 @@ npm-debug.log
 
 # db config
 config/config.json
+
+# seed data dump
+*.seed.json

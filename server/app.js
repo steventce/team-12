@@ -6,7 +6,7 @@ var homePath = require('os').homedir()
 
 var app = express();
 
-var mysql      = require('mysql');
+var mysql = require('mysql');
 
 const PORT = process.env.PORT || 3000;
 
@@ -42,6 +42,10 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 });
 
-app.listen(PORT, () => {
-	console.log('App listening on port ' + PORT)
-});
+if (!module.parent) {
+  app.listen(PORT, () => {
+    console.log('App listening on port ' + PORT)
+  });
+}
+
+module.exports.app = app;
