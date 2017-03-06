@@ -75,7 +75,9 @@ The above deletes node_modules folders on both client and server, and the build 
 chmod 400 config.json
 git update-index --assume-unchanged config.json
 ```
-
+## Testing
+1. Create a database devoted for testing and fill in the required information in the test section of the config.json file
+2. Inside the server directory, run `npm run test` - seed files will be generated in the data directory and files with a `.test.js` extension will run as a test
 
 
 
