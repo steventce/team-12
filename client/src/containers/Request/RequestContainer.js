@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
-import { makeReservation } from '../../redux/modules/ReservationReducer';
-import { getReservations } from '../../redux/modules/ReservationReducer';
+import { getReservations, makeReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
 
 class RequestContainer extends Component {
@@ -40,8 +39,10 @@ class RequestContainer extends Component {
 
   onStartDateChange(startDate) {
     this.setState({ startDate });
-    let newEndDate = moment(startDate).add(1, 'h').startOf('hour').toDate();
-    this.setState({ endDate: newEndDate });
+    if (moment(startDate).isSameOrAfter(moment(this.state.endDate))) {
+      let newEndDate = moment(startDate).add(1, 'h').startOf('hour').toDate();
+      this.setState({ endDate: newEndDate });
+    }
     this.setState({ selectedResourceId: -1 });
 
     const {

@@ -106,7 +106,7 @@ class Request extends Component {
                     value={endDate}
                     format={DATE_TIME_FORMAT}
                     onChange={this.props.onEndDateChange}
-                    min={startDate}
+                    min={moment(startDate).add(1, 'h').toDate()}
                     max={moment().add(1, 'y').startOf('day').toDate()}
                     step={60}
                   />
