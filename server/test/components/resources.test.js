@@ -1,34 +1,19 @@
-var app           = require('../../').app,
-    moment        = require('moment'),
-    assert        = require('chai').assert,
-    request       = require('supertest'),
-    models        = require('../../models/'),
-    desks         = require('../../data/desks.seed.json'),
-    resources     = require('../../data/resources.seed.json'),
-    locations     = require('../../data/locations.seed.json'),
-    resourceTypes = require('../../data/resourceTypes.seed.json');
+var app        = require('../../').app,
+    assert     = require('chai').assert,
+    request    = require('supertest'),
+    models     = require('../../models/'),
+    populateDb = require('../utils/dbUtils');
 
 describe('Resources', function() {
   beforeEach(function() {
-    return models.sequelize.sync({ force: true }).then(function() {
-      const { Resource, Desk, Location, ResourceType } = models;
-      return Location.bulkCreate(locations)
-      .then(function(response) {
-        return ResourceType.bulkCreate(resourceTypes);
-      })
-      .then(function() {
-        return Resource.bulkCreate(resources);
-      })
-      .then(function() {
-        return Desk.bulkCreate(desks);
-      });
-    });
+    return populateDb(models);
   });
 
   describe('GET /api/v1/locations/:location_id/resources', function() {
     it('should only get resources from the specified location', function(done) {
       const { Resource, Desk, Location, ResourceType } = models;
       const numData = 5;
+      const id = 1;
       let newResources = [];
 
       for (var i = 0; i < numData; i++) {
@@ -44,15 +29,23 @@ describe('Resources', function() {
         include: [ Resource ]
       })
       .then(function() {
+        return Resource.findAndCountAll({
+          where: { location_id: id }
+        })
+        .then(function(result) {
+          return result.count;
+        })
+      })
+      .then(function(count) {
         return request(app)
-          .get('/api/v1/locations/1/resources')
+          .get(`/api/v1/locations/${id}/resources`)
           .query({
             resource_type: 'Desk'
           })
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(function(res) {
-            assert.equal(res.body.length, resources.length);
+            assert.equal(res.body.length, count);
           })
           .expect(200)
       })

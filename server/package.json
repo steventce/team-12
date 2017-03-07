@@ -4,7 +4,7 @@
   "description": "Server for HSBC Resource Booking",
   "main": "app.js",
   "scripts": {
-    "test": "node test/utils/utils.js && NODE_ENV=test mocha $(find test -name '*test.js') --timeout 15000"
+    "test": "node test/utils/generateSeeds.js && NODE_ENV=test mocha $(find test -name '*test.js') --timeout 15000"
   },
   "repository": {
     "type": "git",
