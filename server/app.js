@@ -33,9 +33,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 require('./components/reservations')(app);
 require('./components/locations')(app);
 require('./components/admin')(app);
-require('./components/adminReservations')(app);
-require('./components/adminResources')(app);
-require('./components/adminLocations')(app);
 require('./components/resources')(app);
 
 app.get('*', (req, res) => {
