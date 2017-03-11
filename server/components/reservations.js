@@ -1,8 +1,24 @@
 var Sequelize = require('sequelize'),
   moment = require('moment'),
-  models = require('../models');
+  models = require('../models'),
+  nodemailer = require('nodemailer');
 
 module.exports = function (app) {
+
+  //SMTP Setup
+  // var transporter = nodemailer.createTransport({
+  //   transport: 'ses', // loads nodemailer-ses-transport
+  //   accessKeyId: 'AWSACCESSKEY',
+  //   secretAccessKey: 'AWS/Secret/key' //provided by HSBC?
+  // });
+  //temp for testing
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'hsbc.resource.booker@gmail.com',  //Using gmail for testing
+        pass: 'mylasagna'
+    }
+  });
 
 
   //GET by staff_id
@@ -82,10 +98,24 @@ module.exports = function (app) {
           res.location(`/api/v1/reservations/${reservation.reservation_id}`);
           res.status(201).send(null);
         }).then(function(){
-            
-            //TODO
-            //SMTP CALL
-
+          if(staff_email !== null){
+            var mailData = {
+              from: 'hsbc.resource.booker@gmail.com', // sender address TODO
+              to: staff_email, // receiver
+              subject: 'HSBC Reservation Confirmation', // Subject line
+              html: '<p>Your reservation has been made successfully.</p>'+
+                    '<p>Start time: ' + moment(start_date).format("dddd, MMMM Do YYYY, h:mm:ss a") + '</p>' +
+                    '<p>End time: ' + moment(end_date).format("dddd, MMMM Do YYYY, h:mm:ss a") + '</p>' // html body
+            };
+            transporter.sendMail(mailData, function(err, info){
+              if(err){
+                console.log(err);
+              }
+              else{
+                console.log('Message %s sent: %s', info.messageId, info.response);
+              }
+            });            
+          }
         });        
       }
     }).catch(Sequelize.ValidationError, function (err) {
