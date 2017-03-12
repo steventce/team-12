@@ -10,13 +10,12 @@ import { getLocations, addLocation, editLocation, deleteLocation } from '../../.
 class Locations extends Component {
 
   constructor(props) {
-
     super(props);
 
     this.modalEnum = {
-    NONE: -1,
-    CANCEL: 0,
-    EDIT: 1,
+      NONE: -1,
+      CANCEL: 0,
+      EDIT: 1,
     }
 
     this.state = {
@@ -32,12 +31,18 @@ class Locations extends Component {
         console.log("New locations: " + JSON.stringify(newProps.locations));
     }
 
-    onClickEdit(cell, row, rowIndex){
-      this.modalEditOpen(rowIndex);
+    // Edit Modal
+
+    modalEditOpen() {
+      this.setState({modalType: this.modalEnum.EDIT});
     }
 
-    onClickCancel(cell,row,rowIndex){
-      this.modalCancelOpen(rowIndex);
+    modalEditClose() {
+      this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
+    }
+
+    onClickEdit(cell, row, rowIndex){
+      this.modalEditOpen(rowIndex);
     }
 
     editButton(cell, row, enumObject, rowIndex) {
@@ -52,6 +57,12 @@ class Locations extends Component {
       )
     }
 
+    // Cancel Modal
+
+    onClickCancel(cell, row, rowIndex){
+      this.modalCancelOpen(rowIndex);
+    }
+
     cancelButton(cell, row, enumObject, rowIndex) {
       return (
         <Button
@@ -64,19 +75,22 @@ class Locations extends Component {
       )
     }
 
-    modalEditOpen() {
-      this.setState({modalType: this.modalEnum.EDIT});
+    modalCancelOpen(modalIndex) {
+      this.setState({ modalType: this.modalEnum.CANCEL, modalIndex: modalIndex});
     }
 
-    modalEditClose() {
-      this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
-    }
-    modalCancelOpen() {
-      this.setState({modalType: this.modalEnum.CANCEL});
-    }
     modalCancelClose() {
       this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
     }
+
+    onClickDeleteLocation() {
+        this.props.dispatch(deleteLocation(this.props.locations[this.state.modalIndex].locationId, () => {
+          this.props.dispatch(getLocations())
+        }));
+        this.modalCancelClose();
+    }
+
+
 
     formattedLocations (locations) {
       return locations.map((location) => {
@@ -120,7 +134,7 @@ class Locations extends Component {
         </Modal>
 
 
-        <Modal show={this.state.modalType === this.modalEnum.CANCEL} onHide={this.modalEditClose.bind(this)}>
+        <Modal show={this.state.modalType === this.modalEnum.CANCEL} onHide={this.modalCancelClose.bind(this)}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm Cancellation</Modal.Title>
           </Modal.Header>
@@ -130,7 +144,7 @@ class Locations extends Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button bsStyle="primary" onClick={this.modalEditClose.bind(this)}>Confirm</Button>
+            <Button bsStyle="primary" onClick={this.onClickDeleteLocation.bind(this)}>Confirm</Button>
             <Button onClick={this.modalCancelClose.bind(this)}>Cancel</Button>
           </Modal.Footer>
         </Modal>
