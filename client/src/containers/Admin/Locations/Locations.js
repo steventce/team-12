@@ -8,21 +8,23 @@ import { connect } from 'react-redux';
 import { getLocations, addLocation, editLocation, deleteLocation } from '../../../redux/modules/ReservationReducer';
 
 class Locations extends Component {
-  constructor(props){
-        super(props);
 
-        this.modalEnum = {
-        NONE: -1,
-        CANCEL: 0,
-        EDIT: 1,
-        }
+  constructor(props) {
 
-        this.state = {
-            modalIndex: -1,
-            modalType:this.modalEnum.NONE
-        }
+    super(props);
 
-        this.props.dispatch(getLocations());
+    this.modalEnum = {
+    NONE: -1,
+    CANCEL: 0,
+    EDIT: 1,
+    }
+
+    this.state = {
+      modalIndex: -1,
+      modalType:this.modalEnum.NONE
+    }
+
+    this.props.dispatch(getLocations());
     }
 
     componentWillReceiveProps(newProps) {
@@ -31,71 +33,74 @@ class Locations extends Component {
     }
 
     onClickEdit(cell, row, rowIndex){
-        this.modalEditOpen(rowIndex);
+      this.modalEditOpen(rowIndex);
     }
 
     onClickCancel(cell,row,rowIndex){
-        this.modalCancelOpen(rowIndex);
+      this.modalCancelOpen(rowIndex);
     }
 
     editButton(cell, row, enumObject, rowIndex) {
-    return (
-       <Button
-          type="button"
-          onClick={() =>
-          this.onClickEdit(cell, row, rowIndex)}
-       >
-       Edit
+      return (
+         <Button
+            type="button"
+            onClick={() =>
+            this.onClickEdit(cell, row, rowIndex)}
+         >
+         Edit
        </Button>
-    )
+      )
     }
 
     cancelButton(cell, row, enumObject, rowIndex) {
-    return (
-       <Button
+      return (
+        <Button
           type="button"
           onClick={() =>
           this.onClickCancel(cell, row, rowIndex)}
-       >
-       X
+        >
+        X
        </Button>
-    )
+      )
     }
 
     modalEditOpen() {
-        this.setState({modalType: this.modalEnum.EDIT});
+      this.setState({modalType: this.modalEnum.EDIT});
     }
+
     modalEditClose() {
-        this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
+      this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
     }
     modalCancelOpen() {
-        this.setState({modalType: this.modalEnum.CANCEL});
+      this.setState({modalType: this.modalEnum.CANCEL});
     }
     modalCancelClose() {
-        this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
+      this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
     }
+
+    formattedLocations (locations) {
+      return locations.map((location) => {
+        return {
+          locationName: location.building_name,
+          locationAddress: location.street_name +  ", " +  location.city + ", " + location.province_state + ", " + location.postal_code,
+          editLocation: "Edit",
+          deleteLocation: "x"
+        };
+      });
+    }
+
   render() {
-
-
-
-    var locations =
-    [{
-      locationName: 'Broadway Building Green',
-      locationAddress: '2910 Virtual Way, Vancouver, BC, V5M 0B2',
-      editLocation: 'Edit',
-      deleteLocation: 'x'
-    }];
 
     return (
       <div>
         <h1 style={{textAlign: 'center'}}>Locations</h1>
 
         <div className='container tableContainer'>
-          <BootstrapTable data={locations} striped={true} hover={true}>
-              <TableHeaderColumn dataField='locationName' isKey={true} dataAlign='center' dataSort={true}>Name</TableHeaderColumn>
-              <TableHeaderColumn dataField='locationAddress' dataAlign='center' dataSort={true}>Address</TableHeaderColumn>
-              <TableHeaderColumn dataField='editLocation' dataAlign='center' width='150px' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
-              <TableHeaderColumn dataField='deleteLocation' dataAlign='center' width='100px' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
+          <BootstrapTable data={this.formattedLocations(this.props.locations)} striped={true} hover={true}>
+            <TableHeaderColumn dataField='locationName' isKey={true} dataAlign='center' dataSort={true}>Name</TableHeaderColumn>
+            <TableHeaderColumn dataField='locationAddress' dataAlign='center' dataSort={true}>Address</TableHeaderColumn>
+            <TableHeaderColumn dataField='editLocation' dataAlign='center' width='150px' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
+            <TableHeaderColumn dataField='deleteLocation' dataAlign='center' width='100px' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
           </BootstrapTable>
 
 
@@ -130,11 +135,7 @@ class Locations extends Component {
           </Modal.Footer>
         </Modal>
 
-
         </div>
-
-
-
 
         <AddLocationModal></AddLocationModal>
 
