@@ -40,30 +40,25 @@ export const makeReservation = async (reservation, staffId) => {
     endDate
   } = reservation;
   
-  try {
-      const response = await axios({
-        method: 'post',
-        url: API.RESERVATIONS,
-        baseURL: '',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        data: {
-        resource_id: resourceId, // TODO: Populate from database
-        staff_name: staffName,
-        staff_department: staffDepartment,
-        staff_email: staffEmail,
-        start_date: startDate,
-        end_date: endDate,
-        staff_id: staffId
-        }
-    });
-    
-      return response.data;
-  }catch(err){
-      console.log("this is api call error");
-      // TODO: HANDLE THE ERROR
-  }
+  const response = await axios({
+    method: 'post',
+    url: API.RESERVATIONS,
+    baseURL: '',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    data: {
+    resource_id: resourceId, // TODO: Populate from database
+    staff_name: staffName,
+    staff_department: staffDepartment,
+    staff_email: staffEmail,
+    start_date: startDate,
+    end_date: endDate,
+    staff_id: staffId
+    }
+  });
+
+  return response.data;
 }
 
 /* Resources Service */

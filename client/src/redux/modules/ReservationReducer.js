@@ -63,13 +63,20 @@ const initialState = {
   employeeId: '00000',
   resources: desks,
   reservations: [],
-  locations: []
+  locations: [],
+  status: '',
 }
 
 export default function reducer(state = initialState, action) {
   if (action.error) {
     console.log("Action has error:" + JSON.stringify(action));
-    return state;
+    switch(action.type) {
+      case MAKE_RESERVATION: {
+        return { ...state, status: '409' }
+      }
+      default:
+        return state;
+    }
   }
 
   switch(action.type) {
@@ -83,6 +90,9 @@ export default function reducer(state = initialState, action) {
     }
     case GET_LOCATIONS: {
       return { ...state, locations: action.payload}
+    }
+    case MAKE_RESERVATION: {
+      return { ...state, status: '201' };
     }
     default:
       return state;
