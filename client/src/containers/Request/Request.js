@@ -16,6 +16,7 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import 'react-widgets/dist/css/react-widgets.css';
 import { DATE_TIME_FORMAT } from '../../utils/formatter';
 import ConfirmRequestModal from '../../components/ConfirmRequestModal';
+import AlertMessage from '../../components/AlertMessage';
 
 momentLocalizer(moment);
 
@@ -30,10 +31,12 @@ class Request extends Component {
       resourceTypes,
       startDate,
       endDate,
+      status,
     } = this.props;
 
     return (
       <div>
+        <AlertMessage alertVisible={ status }/>
         <Grid>
           <Row>
             <h1 className="text-center">Request a Resource</h1>
