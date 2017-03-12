@@ -97,7 +97,7 @@ export const getLocations = async () => {
       baseURL: SERVER_URL,
   });
 
-  console.log('Received response ' + JSON.stringify(response));
+//  console.log('Received response ' + JSON.stringify(response));
 
   return response.data;
 }
