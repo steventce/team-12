@@ -5,7 +5,7 @@ import './Locations.css';
 import AddLocationModal from './AddLocationModal.js';
 import EditLocationForm from './EditLocationForm.js'
 import { connect } from 'react-redux';
-import { getLocations, addLocation, editLocation, deleteLocation } from '../../../redux/modules/ReservationReducer';
+import { getLocations, addLocation, editLocation, deleteLocation } from '../../../redux/modules/LocationReducer';
 
 class Locations extends Component {
 
@@ -24,11 +24,6 @@ class Locations extends Component {
     }
 
     this.props.dispatch(getLocations());
-    }
-
-    componentWillReceiveProps(newProps) {
-      if (newProps.locations !== this.props.locations)
-        console.log("New locations: " + JSON.stringify(newProps.locations));
     }
 
     // Edit Modal
@@ -159,7 +154,7 @@ class Locations extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { ...state.db };
+  return { ...state.locations };
 }
 
 export default connect(mapStateToProps)(Locations);
