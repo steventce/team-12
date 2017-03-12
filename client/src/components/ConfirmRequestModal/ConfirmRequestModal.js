@@ -37,6 +37,17 @@ class ConfirmRequestModal extends Component {
     var time_diff = moment.duration(end_date_.diff(start_date_));
     return time_diff.asHours();
   }
+  
+  dateAdvanced(end_date){
+    var end_date_ = moment(end_date);
+    var max_end_date_ = moment().add(30, 'd');
+    
+    if (end_date_.isAfter(max_end_date_, 'hour')) {
+        return true;
+    }else{
+        return false;
+    }
+  }
 
   render() {
     const {
@@ -50,17 +61,21 @@ class ConfirmRequestModal extends Component {
     let text = null;
     let confirmButton = null;
     let cancelButton = null;
-    if (this.dateDuration(startDate, endDate) <= 120){
+    if (this.dateDuration(startDate, endDate) <= 120 && this.dateAdvanced(endDate) === false){
         title = `Confirm Reservation`;
         text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
         cancelButton = <Button onClick={this.close}>Cancel</Button>;
         confirmButton = <Button bsStyle="primary" onClick={() => {this.close() ; this.props.handleSubmit()}}>OK</Button>;
-    }else{
+    }else if (this.dateDuration(startDate, endDate) >= 120){
         title = `Request Error`;
         text = `Reservation range cannot be more than 120 hours (5 days). Your current selected dates are from
                 ${this.formatDate(startDate)} to ${this.formatDate(endDate)}, which is ${this.dateDuration(startDate,endDate)} hours.`;
         cancelButton = <Button onClick={this.close}>Ok</Button>;
+    }else{
+        title = `Request Error`;
+        text = `Reservation cannot be made 30 days in advanced.`;
+        cancelButton = <Button onClick={this.close}>Ok</Button>; 
     }    
     
     return (
