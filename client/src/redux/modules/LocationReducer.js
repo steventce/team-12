@@ -21,8 +21,7 @@ export const editLocation = createAction(EDIT_LOCATION, (location, callback) => 
 export const addLocation = createAction(ADD_LOCATION, service.addLocation);
 
 export const deleteLocation = createAction(DELETE_LOCATION, (locationId, callback) => {
-  // TODO: Replace with SQL call
-  locations[locationId] = undefined;
+  service.deleteLocation(locationId);
   if (callback)
     callback()
 });

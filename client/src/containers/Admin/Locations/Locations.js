@@ -14,7 +14,7 @@ class Locations extends Component {
 
     this.modalEnum = {
       NONE: -1,
-      CANCEL: 0,
+      DELETE: 0,
       EDIT: 1,
     }
 
@@ -52,37 +52,37 @@ class Locations extends Component {
       )
     }
 
-    // Cancel Modal
+    // Delete Modal
 
-    onClickCancel(cell, row, rowIndex){
-      this.modalCancelOpen(rowIndex);
+    onClickDelete(cell, row, rowIndex){
+      this.modalDeleteOpen(rowIndex);
     }
 
-    cancelButton(cell, row, enumObject, rowIndex) {
+    deleteButton(cell, row, enumObject, rowIndex) {
       return (
         <Button
           type="button"
           onClick={() =>
-          this.onClickCancel(cell, row, rowIndex)}
+          this.onClickDelete(cell, row, rowIndex)}
         >
         X
        </Button>
       )
     }
 
-    modalCancelOpen(modalIndex) {
-      this.setState({ modalType: this.modalEnum.CANCEL, modalIndex: modalIndex});
+    modalDeleteOpen(modalIndex) {
+      this.setState({ modalType: this.modalEnum.DELETE, modalIndex: modalIndex});
     }
 
-    modalCancelClose() {
+    modalDeleteClose() {
       this.setState({modalType: this.modalEnum.NONE, modalIndex: -1});
     }
 
     onClickDeleteLocation() {
-        this.props.dispatch(deleteLocation(this.props.locations[this.state.modalIndex].locationId, () => {
+        this.props.dispatch(deleteLocation(this.props.locations[this.state.modalIndex].location_id, () => {
           this.props.dispatch(getLocations())
         }));
-        this.modalCancelClose();
+        this.modalDeleteClose();
     }
 
 
@@ -109,7 +109,7 @@ class Locations extends Component {
             <TableHeaderColumn dataField='locationName' isKey={true} dataAlign='center' dataSort={true}>Name</TableHeaderColumn>
             <TableHeaderColumn dataField='locationAddress' dataAlign='center' dataSort={true}>Address</TableHeaderColumn>
             <TableHeaderColumn dataField='editLocation' dataAlign='center' width='150px' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
-            <TableHeaderColumn dataField='deleteLocation' dataAlign='center' width='100px' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
+            <TableHeaderColumn dataField='deleteLocation' dataAlign='center' width='100px' dataFormat={this.deleteButton.bind(this)}>Delete</TableHeaderColumn>
           </BootstrapTable>
 
 
@@ -124,23 +124,23 @@ class Locations extends Component {
 
           <Modal.Footer>
             <Button bsStyle="primary" onClick={this.modalEditClose.bind(this)}>Save Changes</Button>
-            <Button onClick={this.modalEditClose.bind(this)}>Cancel</Button>
+            <Button onClick={this.modalEditClose.bind(this)}>Delete</Button>
           </Modal.Footer>
         </Modal>
 
 
-        <Modal show={this.state.modalType === this.modalEnum.CANCEL} onHide={this.modalCancelClose.bind(this)}>
+        <Modal show={this.state.modalType === this.modalEnum.DELETE} onHide={this.modalDeleteClose.bind(this)}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Cancellation</Modal.Title>
+            <Modal.Title>Confirm Deleting Location</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-                Are you sure you want to cancel this location?
+                Are you sure you want to delete this location?
           </Modal.Body>
 
           <Modal.Footer>
             <Button bsStyle="primary" onClick={this.onClickDeleteLocation.bind(this)}>Confirm</Button>
-            <Button onClick={this.modalCancelClose.bind(this)}>Cancel</Button>
+            <Button onClick={this.modalDeleteClose.bind(this)}>Delete</Button>
           </Modal.Footer>
         </Modal>
 

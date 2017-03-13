@@ -5,6 +5,7 @@ const SERVER_URL = "http://localhost:3000";
 
 const API = {
   LOCATIONS: '/api/v1/locations',
+  LOCATION_DELETE: (location_id) => `/api/v1/locations/${location_id}`,
   RESERVATIONS: '/api/v1/reservations',
   RESERVATIONS_GET: (staff_id) => `/api/v1/${staff_id}/reservations`,
   RESERVATIONS_DELETE: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
@@ -96,9 +97,19 @@ export const getLocations = async () => {
       url: API.LOCATIONS,
       baseURL: SERVER_URL,
   });
-
 //  console.log('Received response ' + JSON.stringify(response));
+  return response.data;
+}
 
+export const deleteLocation = async (locationId) => {
+  const response = await axios({
+    method: 'delete',
+      url: API.LOCATION_DELETE(locationId),
+      baseURL: SERVER_URL,
+      params: {
+        location_id: locationId
+      }
+  });
   return response.data;
 }
 
