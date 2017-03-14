@@ -20,13 +20,17 @@ class RequestContainer extends Component {
       endDate: moment().add(1, 'h').startOf('hour').toDate(),
       floors: [1, 2, 3, 4],
       sections: ['A', 'B'],
-      status: null
+      status: null,
+      employeeId: '',
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.status) {
-      this.setState({ status: nextProps.status });
+      this.setState({ status: nextProps.status});
+    }
+    if (nextProps.employeeId) {
+      this.setState({ employeeId: nextProps.employeeId });
     }
   }
 
@@ -115,6 +119,7 @@ class RequestContainer extends Component {
       resourceId: this.state.selectedResourceId,
       staffEmail: this.state.email
     }, this.props.employeeId));
+
   }
 
   render() {
@@ -137,7 +142,8 @@ const mapStateToProps = (state) => {
   const { db, resources } = state;
   return {
     availableResources: resources.availableResources,
-    status: db.status
+    status: db.status,
+    employeeId: db.employeeId,
   };
 }
 
