@@ -151,7 +151,7 @@ class Request extends Component {
             <Row className="show-grid" style={{ marginTop: '20px' }}>
               <Col xs={12} md={4}>
                 <ControlLabel>Email (Optional)</ControlLabel>
-                <FormControl type="email" label="Email (Optional)" placeholder="Email">
+                <FormControl type="email" label="Email (Optional)" placeholder="Email" onChange={this.props.onEmailChange.bind(this)}>
                 </FormControl>
               </Col>
             </Row>
