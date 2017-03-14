@@ -35,7 +35,6 @@ class AlertMessage extends Component {
   }
 
   render() {
-    console.log(this.state.alertVisible);
     if (this.state.alertVisible) {
       return (
         <div style={{ position: 'absolute', top: "50px", left: '20px', right: "20px" }} >
