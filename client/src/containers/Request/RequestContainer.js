@@ -103,10 +103,17 @@ class RequestContainer extends Component {
     }));
   }
 
+  onEmailChange(e) {
+    this.setState({
+      email: e.target.value
+    });
+  }
+
   submitClick() {
     this.props.dispatch(makeReservation({
       ...this.state,
-      resourceId: this.state.selectedResourceId
+      resourceId: this.state.selectedResourceId,
+      staffEmail: this.state.email
     }, this.props.employeeId));
   }
 
@@ -119,6 +126,7 @@ class RequestContainer extends Component {
         onEndDateChange={this.onEndDateChange.bind(this)}
         onResourceSelect={this.onResourceSelect.bind(this)}
         onChange={this.onChange.bind(this)}
+        onEmailChange={this.onEmailChange.bind(this)}
         submitClick={this.submitClick.bind(this)}
       />
     );

@@ -125,7 +125,7 @@ class Request extends Component {
 
                 {/* Enter email for confirmation  */}
                 <ControlLabel>Email (Optional)</ControlLabel>
-                <FormControl type="email" label="Email (Optional)" placeholder="Email">
+                <FormControl type="email" label="Email (Optional)" placeholder="Email" onChange={this.props.onEmailChange.bind(this)}>
                 </FormControl>
 
               </Col>
@@ -163,6 +163,7 @@ class Request extends Component {
             <Row className="show-grid">
               <Col xs={12} md={8} style={{ height: "650px" }} >
                 <ReactImageZoom {...imgProps} />
+
               </Col>
             </Row>
 

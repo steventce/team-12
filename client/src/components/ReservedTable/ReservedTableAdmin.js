@@ -70,9 +70,6 @@ class ReservedTableAdmin extends Component {
     updatedReservation.startDateTime = moment(editedOptions.newStartTime).format("h:mm a MM/DD/YY");
     updatedReservation.endDateTime = moment(editedOptions.newEndTime).format("h:mm a MM/DD/YY");
 
-    console.log(updatedReservation.startTime);
-    console.log(updatedReservation.endTime);
-
     this.setState({reservationList: {...this.props.reservations, [this.state.modalIndex] : updatedReservation}})
     this.modalCloseEdit();
   }
