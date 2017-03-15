@@ -57,8 +57,8 @@ class ReservedTable extends Component {
     return (
     	<div className='container tableContainer'>
 		  <BootstrapTable data={this.props.reservations} striped={true} hover={true}>
-		      <TableHeaderColumn dataField='resource_id' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
-		      <TableHeaderColumn dataField='resourceType' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
+		      <TableHeaderColumn dataField='Resource.Desk.desk_number' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
+		      <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
 		      <TableHeaderColumn dataField='start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
