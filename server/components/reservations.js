@@ -61,7 +61,8 @@ module.exports = function (app) {
     var resource_id = req.body.resource_id,
         start_date = req.body.start_date,
         end_date = req.body.end_date,
-        staff_email = req.body.staff_email;
+        staff_email = req.body.staff_email,
+        staff_id = req.body.staff_id;
 
     var reservation = {
       resource_id: resource_id,
@@ -76,22 +77,22 @@ module.exports = function (app) {
     // Check if the reservation conflicts with other reservations
     // Translates to:
     //      Where 
-    //      start_date <= reservation.end_date AND start_date >= resource.start_date
+    //      start_date <= reservation.end_date AND start_date >= reservation.start_date
     //      OR
-    //      end_date >= resource.start_date AND end_date <= resource.end_date
+    //      end_date >= reservation.start_date AND end_date <= reservation.end_date
     models.Reservation.findAll({      
     where:{
-      resource_id: resource_id,
+      staff_id: staff_id,
       $or: [
-        {$and: [{'$reservation.end_date$': {$gte: start_date}},
+        {$and: [{'$reservation.end_date$': {$gt: start_date}},
                 {'$reservation.start_date$': {$lte: start_date}}]},
-        {$and: [{'$reservation.start_date$': {$lte: end_date}},
+        {$and: [{'$reservation.start_date$': {$lt: end_date}},
                 {'$reservation.end_date$': {$gte: end_date}}]}
       ]}
     }).then(function (reservations) {    
       if (reservations.length > 0) { //findAll returns an empty array not null if nothing is found.
         // Reservation already exists
-        res.status(409).send("This resource is already booked during the given time period.");
+        res.status(409).send("You cannot book multiple desks for overlapping time period");
       }
       else{
         models.Reservation.create(reservation).then(function (reservation) {
@@ -157,9 +158,9 @@ module.exports = function (app) {
     // Check if the reservation conflicts with other reservations
     // Translates to:
     //      Where 
-    //      start_date <= reservation.end_date AND start_date >= resource.start_date
+    //      start_date <= reservation.end_date AND start_date >= reservation.start_date
     //      OR
-    //      end_date >= resource.start_date AND end_date <= resource.end_date
+    //      end_date >= reservation.start_date AND end_date <= reservation.end_date
     models.Reservation.findAll({      
       where:{
         resource_id: resource_id,
