@@ -82,6 +82,7 @@ class ConfirmRequestModal extends Component {
       <div>
         <Button
           bsStyle="primary"
+          bsSize="large"
           disabled={selectedResourceId === -1}
           onClick={this.open.bind(this)}>
           Submit

@@ -36,7 +36,7 @@ class Request extends Component {
       status,
     } = this.props;
 
-    const imgProps = {width: 750, height: 618, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 5}};
+    const imgProps = {width: 750, height: 618, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 8}};
 
     return (
       <div>
@@ -49,10 +49,10 @@ class Request extends Component {
           <Form>
             <Row className="show-grid">
             {/* Column for selecting options/entering inputs */}
-            <Col xs={6} md={12} >
+            <Col xs={12} md={12} >
 
               {/* Column for selecting a resource type, floor, and section */}
-              <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+              <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
 
                 {/* Select a resource type */}
                 <FormGroup controlId="formControlsFloorSelect">
@@ -124,9 +124,11 @@ class Request extends Component {
                 </FormGroup>
 
                 {/* Enter email for confirmation  */}
-                <ControlLabel>Email (Optional)</ControlLabel>
-                <FormControl type="email" label="Email (Optional)" placeholder="Email" onChange={this.props.onEmailChange.bind(this)}>
-                </FormControl>
+                <FormGroup controlId="formControlsEmail">
+                  <ControlLabel>Email (Optional)</ControlLabel>
+                  <FormControl type="email" label="Email (Optional)" placeholder="Email" onChange={this.props.onEmailChange.bind(this)}>
+                  </FormControl>
+                </FormGroup>
 
               </Col>
 
@@ -167,7 +169,7 @@ class Request extends Component {
             </Row>
 
             {/* Submit button */}
-            <Row className="show-grid" style={{ marginTop: '20px' }}>
+            <Row className="show-grid" style={{ margin: '20px 10px 30px 10px' }}>
               <Col xs={2} md={2}>
                 <ConfirmRequestModal {...this.props} handleSubmit={this.props.submitClick} />
               </Col>
