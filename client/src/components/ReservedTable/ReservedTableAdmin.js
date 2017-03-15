@@ -53,7 +53,11 @@ class ReservedTableAdmin extends Component {
       editOptions: this.editOptions
     };
 
-    this.props.dispatch(getAdminReservations());
+    this.props.dispatch(getAdminReservations()).then(function(response) {
+      // console.log(response.payload);
+    });
+    
+    
   }
 
   // Edit Modal
@@ -63,14 +67,27 @@ class ReservedTableAdmin extends Component {
   }
 
   onClickConfirmEdit(){
-    let updatedReservation = this.props.reservations[this.state.modalIndex];
+    let updatedReservation = {};
+    let currentReservation = this.props.reservations[this.state.modalIndex];
     let editedOptions = this.state.editOptions;
-    updatedReservation.resourceType = editedOptions.resourceType;
 
-    updatedReservation.startDateTime = moment(editedOptions.newStartTime).format("h:mm a MM/DD/YY");
-    updatedReservation.endDateTime = moment(editedOptions.newEndTime).format("h:mm a MM/DD/YY");
+    console.log(currentReservation);
 
-    this.setState({reservationList: {...this.props.reservations, [this.state.modalIndex] : updatedReservation}})
+    // updatedReservation.resourceType = editedOptions.resourceType;
+    updatedReservation.reservationId = currentReservation.reservation_id,
+    updatedReservation.resourceId = currentReservation.resource_id,
+    updatedReservation.staffName = currentReservation.staff_name,
+    updatedReservation.staffDepartment = currentReservation.staff_department,
+    updatedReservation.staffEmail = currentReservation.staff_email,
+    updatedReservation.staffId = currentReservation.staff_id,
+    updatedReservation.startDate = moment(editedOptions.newStartTime).format("h:mm a MM/DD/YY");
+    updatedReservation.endDate = moment(editedOptions.newEndTime).format("h:mm a MM/DD/YY");
+    let that = this;
+    this.props.dispatch(editReservation(updatedReservation)).then(function(response) {
+      console.log("response is: " +  response);
+      that.props.dispatch(getAdminReservations());
+    });
+    // this.setState({reservationList: {...this.props.reservations, [this.state.modalIndex] : updatedReservation}})
     this.modalCloseEdit();
   }
 
@@ -92,10 +109,10 @@ class ReservedTableAdmin extends Component {
 
   modalOpenEdit(modalIndex) {
     this.setState({ modalType: this.modalEnum.EDIT, modalIndex: modalIndex});
-    let modalStartTime = moment(this.props.reservations[modalIndex].startDateTime);
-    let modalEndTime = moment(this.props.reservations[modalIndex].endDateTime);
+    let modalStartTime = moment(this.props.reservations[modalIndex].start_date);
+    let modalEndTime = moment(this.props.reservations[modalIndex].end_date);
     this.setState({ editOptions:
-      {resourceType: this.props.reservations[modalIndex].resourceType,
+      {resourceType: this.props.reservations[modalIndex]["Resource.resource_type"],
       newStartTime: modalStartTime,
       newEndTime: modalEndTime}
     });
@@ -241,11 +258,11 @@ class ReservedTableAdmin extends Component {
       <Row/>
       <BootstrapTable exportCSV={true} data={this.props.reservations}
       striped={true} hover={true}>
-          <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='resourceType' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
-          <TableHeaderColumn dataField='employeeId' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn dataField='startDateTime' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
-          <TableHeaderColumn dataField='endDateTime' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='resource_id' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
+          <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
+          <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
+          <TableHeaderColumn dataField='start_date' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='end_date' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
           <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
           <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>

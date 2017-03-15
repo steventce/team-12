@@ -13,7 +13,7 @@ const EDIT_RESERVATION = 'EDIT_RESERVATION';
 
 export const getReservations = createAction(GET_RESERVATIONS, service.getReservations);
 
-export const getAdminReservations = createAction(GET_ADMIN_RESERVATIONS);
+export const getAdminReservations = createAction(GET_ADMIN_RESERVATIONS, service.getAllReservations);
 
 export const cancelReservation = createAction(CANCEL_RESERVATION, (reservationId, callback) => {
   // TODO: Replace with SQL call
@@ -22,12 +22,7 @@ export const cancelReservation = createAction(CANCEL_RESERVATION, (reservationId
     callback()
 });
 
-export const editReservation = createAction(EDIT_RESERVATION, (reservation, callback) => {
-  // TODO: Replace with SQL call
-  reservations[reservation.reservationId] = Object.assign(reservations[reservation.reservationId], reservation)
-  if (callback)
-    callback()
-});
+export const editReservation = createAction(EDIT_RESERVATION, service.editReservation);
 
 export const makeReservation = createAction(MAKE_RESERVATION, service.makeReservation);
 
@@ -60,7 +55,8 @@ export default function reducer(state = initialState, action) {
       return { ...state, reservations: getObjValues(reservations).filter(reservation => reservation.employeeId === state.employeeId)}
     }
     case GET_ADMIN_RESERVATIONS: {
-      return { ...state, reservations: getObjValues(reservations)}
+      // return parseAdminReservations(action.payload);
+      return { ...state, reservations: getObjValues(action.payload)}
     }
     case MAKE_RESERVATION: {
       return { ...state, status: '201' };

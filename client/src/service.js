@@ -9,11 +9,25 @@ const API = {
   RESERVATIONS: '/api/v1/reservations',
   RESERVATIONS_GET: (staff_id) => `/api/v1/${staff_id}/reservations`,
   RESERVATIONS_DELETE: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
+  RESERVATIONS_PUT: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
   RESOURCES: (location_id) => `/api/v1/locations/${location_id}/resources`
 };
 
 
 /* Reservations Service */
+
+export const getAllReservations = async () => {
+  console.log("Making service call at api " + API.RESERVATIONS);
+
+  const response = await axios({
+    method: 'get',
+    url: API.RESERVATIONS,
+    params: {
+    }
+  });
+
+  return response.data;
+}
 
 export const getReservations = async (staffId) => {
   console.log("Making service call at api " + API.RESERVATIONS_GET);
@@ -29,9 +43,45 @@ export const getReservations = async (staffId) => {
   return response.data;
 }
 
+export const editReservation = async (reservation) => {
+  const {
+    reservationId,
+    resourceId,
+    staffName,
+    staffDepartment,
+    staffEmail,
+    staffId,
+    startDate,
+    endDate
+  } = reservation;
+  
+  console.log(reservationId);
+
+  console.log(staffName);
+
+  const response = await axios({
+    method: 'put',
+    url: API.RESERVATIONS_PUT(reservationId),
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    data: {
+      reservation_id: reservationId,
+      resource_id: resourceId,
+      staff_name: staffName,
+      staff_department: staffDepartment,
+      staff_email: staffEmail,
+      start_date: startDate,
+      end_date: endDate,
+      staff_id: staffId
+    }
+  });
+
+  return response.data;
+}
+
 
 export const makeReservation = async (reservation, staffId) => {
-  console.log(reservation)
   const {
     resourceId,
     staffName,
