@@ -69,7 +69,7 @@ class Request extends Component {
                 {/* Select a floor */}
                 <FormGroup controlId="formControlsFloorSelect">
                   <ControlLabel>Select a Floor</ControlLabel>
-                  <FormControl componentClass="select" onChange={this.props.onFloorChange.bind(this)} name="floor">
+                  <FormControl componentClass="select" onChange={this.props.onFloorChange} name="floor">
                     {floors.map(function (floor) {
                       return (
                         <option key={floor} value={floor}>Floor {floor}</option>
@@ -133,7 +133,7 @@ class Request extends Component {
               {/* Column map image and zoomed in image */}
               <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
 
-                <div style={{ border: "thin solid black" }}>
+                <div style={{ border: "thin solid lightgrey" }}>
                   <div style={{ paddingLeft: "10px", paddingTop: "10px" }}><b>Available Resources</b></div>
                   {/* TODO: dynamically allocate size */}
                   <div style={{ height: "180px", overflowY: "auto", paddingLeft: "10px" }}>
