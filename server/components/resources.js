@@ -2,25 +2,44 @@ var Sequelize = require('sequelize'),
     moment    = require('moment'),
     models    = require('../models');
 
+var RESOURCE_TYPE = {
+  DESK: 'Desk'
+}
+
 module.exports = function(app) {
 
-  // Get all the available resources in a location
+  /**
+   * Get all the resources in a location (reserved or unreserved)
+   * @param {Number} location_id - The location id of the HSBC building
+   */
   app.get('/api/v1/locations/:location_id/resources', function(req, res) {
-    const { location_id } = req.params;
+    var location_id = req.params.location_id;
+    models.Resource.findAll({
+      where: {
+        location_id
+      }
+    }).then(function(resources) {
+      res.status(200).send(resources);
+    });
+  });
 
-    const {
-      resource_type,
-      start_date,
-      end_date,
-      floor,
-      section
-    } = req.query;
-
-    const {
-      Resource,
-      Reservation,
-      Desk
-    } = models;
+  /**
+   * Get all the available resources in a location (not reserved at a particular time)
+   * according to the filters
+   * @param {Number} location_id - The location id of the HSBC building
+   * @param {String} resource_type - The type of resource (i.e 'Desk')
+   * @param {Number} floor - The floor the resource is located in
+   * @param {String} section - The section the resource is located in
+   * @param {Date} start_date - The starting date of the desired reservation
+   * @param {Date} end_date - The ending date of the desired reservation
+   */
+  app.get('/api/v1/locations/:location_id/resources', function(req, res) {
+    var location_id = req.params.location_id;
+    var resource_type = req.query.resource_type;
+    var floor = req.query.floor;
+    var section = req.query.section;
+    var start_date = req.query.start_date;
+    var end_date = req.query.end_date;
 
     deskQuery = {};
     if (floor) deskQuery['floor'] = floor;
@@ -28,11 +47,11 @@ module.exports = function(app) {
 
     // Gets resources where there doesn't exist any reservations
     // for that resource that falls in the desired request's interval
-    Resource.findAll({
+    models.Resource.findAll({
       attributes: ['resource_id', 'location_id', 'resource_type'],
       include: [
       {
-        model: Reservation,
+        model: models.Reservation,
         required: false,
         attributes: [],
         where: {
@@ -52,7 +71,7 @@ module.exports = function(app) {
       },
       {
         // TODO: Change the model dynamically from the resource type
-        model: Desk,
+        model: models.Desk,
         attributes: ['floor', 'section', 'desk_number'],
         where: deskQuery
       }
@@ -64,50 +83,99 @@ module.exports = function(app) {
       }
     }).then(function(resources) {
        res.status(200).send(resources);
+    }).catch(Sequelize.ValidationError, function(err) {
+      res.status(400).send({ errors: err.errors });
     });
   });
 
-  app.post("/api/v1/resources", function(req, res) {
-    var resource_type = req.body.resource_type;
-    var location_id = req.body.location_id;
-    var floor_id = req.body.floor_id;
-    var section_id = req.body.section_id;
-    console.log(location_id);
-    
+  /**
+   * Add a new resource to a location
+   * @param {Number} location_id - Location id of the building
+   * @param {String} resource_type - The type of the resource to be edited
+   * @param {Object} resource - The resource object containing the below fields
+   * - @param {Number} floor - The floor of the resource
+   * - @param {String} section - The section of the resource
+   * - @param {Number} desk_number - Only the new desk number
+   */
+  app.post('/api/v1/locations/:location_id/resources', function(req, res) {
+    var location_id = req.params.location_id;
+    var floor = req.body.resource.floor;
+    var section = req.body.resource.section;
+    var desk_number = req.body.resource.desk_number;
+
+    var desk = {
+      floor,
+      section,
+      desk_number: `${floor}.${section}.${desk_number}`
+    }
     var resource = {
-        location_id,
-        resource_type,
-        floor_id,
-        section_id
+      location_id,
+      resource_type: req.body.resource_type,
+      Desk: desk
     };
-    
-    models.Resource.create(resource).then(function(resource) {
-                    res.location(`/api/v1/resources/${resource.resource_id}`);
-                    res.status(201).send(null);
-                }).catch(Sequelize.ValidationError, function(err) {
-                    res.status(400).send({ errors: err.errors });
-                });
+
+    if (req.body.resource_type === RESOURCE_TYPE.DESK) {
+      models.Resource.create(resource, {
+        include: [ models.Desk ]
+      }).then(function(resource) {
+        res.location(`/api/v1/locations/${location_id}/resources/${resource.resource_id}`);
+        res.status(201).send(null);
+      }).catch(Sequelize.ValidationError, function(err) {
+        res.status(400).send({ errors: err.errors });
+      });
+    } else {
+      res.status(400).send(null);
+    }
   });
 
-  app.put("/api/v1/resources/:resource_id", function(req, res) {
+  /**
+   * Edit a particular resource
+   * @param {Number} resource_id - The id of the resource to be edited
+   * @param {String} resource_type - The type of the resource to be edited
+   * @param {Object} resource - The resource object containing the below fields
+   * - @param {Number} floor - The floor of the resource
+   * - @param {String} section - The section of the resource
+   * - @param {Number} desk_number - Only the new desk number
+   */
+  app.put('/api/v1/resources/:resource_id', function(req, res) {
     var resource_id = req.params.resource_id;
-    var location_id = req.body.location_id;
-    var resource_type = req.body.resource_type;
-    console.log(resource_id);
-    
-    var locator = { location_id: location_id };
-    var res_type = { resource_type: resource_type };
-    var selector = { where: { resource_id: resource_id }};
-    
-    models.Resource.update(selector).then(function(resource){
-                    res.status(200).send(resource);
-                }).catch(Sequelize.ValidationError, function(err) {
-                    res.status(401).send({ errors: err.errors });
-                });
+    var resource = req.body.resource || {};
+
+    var fieldsToUpdate = {
+      resource_id: resource_id, // Used for model validation
+      floor: resource.floor,
+      section: resource.section,
+      desk_number: `${resource.floor}.${resource.section}.${resource.desk_number}`
+    }
+    var selector = { where: { resource_id } };
+
+    if (req.body.resource_type === RESOURCE_TYPE.DESK) {
+      models.Desk
+        .update(fieldsToUpdate, selector)
+        .then(function(desks) {
+          res.status(200).send(null);
+        }).catch(Sequelize.ValidationError, function(err) {
+          res.status(400).send({ errors: err.errors });
+        });
+    } else {
+      res.status(400).send(null);
+    }
   });
 
-  //TODO 
-  app.delete("/api/v1/resources/:resource_id", function(req, res){
-    
+  /**
+   * Delete a particular resource
+   * @param {Number} resource_id - The resource id of the resource to be deleted
+   */
+  app.delete('/api/v1/resources/:resource_id', function(req, res) {
+    var resource_id = req.params.resource_id;
+    models.Resource.destroy({
+      where: {
+        resource_id
+      }
+    }).then(function(affectedRows) {
+      res.status(200).send(null);
+    }).catch(Sequelize.ValidationError, function(err) {
+      res.status(400).send({ errors: err.errors });
+    });;
   });
 }
