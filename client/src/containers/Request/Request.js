@@ -56,7 +56,7 @@ class Request extends Component {
 
                 {/* Select a resource type */}
                 <FormGroup controlId="formControlsFloorSelect">
-                  <ControlLabel>Select Resource Type</ControlLabel>
+                  <ControlLabel>Resource Type</ControlLabel>
                   <FormControl componentClass="select" disabled={true} onChange={this.props.onChange} name="resourceType">
                     {resourceTypes.map(function (type) {
                       return (
@@ -68,7 +68,7 @@ class Request extends Component {
 
                 {/* Select a floor */}
                 <FormGroup controlId="formControlsFloorSelect">
-                  <ControlLabel>Select a Floor</ControlLabel>
+                  <ControlLabel>Floor</ControlLabel>
                   <FormControl componentClass="select" onChange={this.props.onFloorChange} name="floor">
                     {floors.map(function (floor) {
                       return (
@@ -80,7 +80,7 @@ class Request extends Component {
 
                 {/* Select a section */}
                 <FormGroup controlId="formControlsSectionSelect">
-                  <ControlLabel>Select a Section</ControlLabel>
+                  <ControlLabel>Section</ControlLabel>
                   <FormControl componentClass="select" placeholder="select" onChange={this.props.onChange} name="section">
                     <option value="">All</option>
                     {sections.map(function (section) {
