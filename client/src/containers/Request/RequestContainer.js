@@ -118,13 +118,14 @@ class RequestContainer extends Component {
     });
   }
 
-  onFloorChange(e, floorMapImg) {
+  onFloorChange(event, floorMapImg) {
+    let newFloor = event.target.value;
     this.setState({
-      floor: e.target.value
+      floor: newFloor
     });
 
     // TODO: need to refactor this to not use switch statement
-    switch(e.target.value) {
+    switch(newFloor) {
       case "1": {
         this.setState({ floorMapImgSrc: floor1 });
       break;
@@ -146,6 +147,9 @@ class RequestContainer extends Component {
       break;
       }
     }
+    this.props.dispatch(getAvailableResources(1, {
+      ...this.state, floor: newFloor
+    }));
   }
 
   submitClick() {
