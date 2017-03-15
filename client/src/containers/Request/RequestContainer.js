@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
 import { getReservations, makeReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
+import floor1 from '../../images/1_floor.PNG';
+import floor2 from '../../images/2_floor.PNG';
+import floor3 from '../../images/3_floor.PNG';
+import floor4 from '../../images/4_floor.PNG';
 
 class RequestContainer extends Component {
   constructor(props) {
@@ -19,6 +23,7 @@ class RequestContainer extends Component {
       startDate: moment().startOf('hour').toDate(),
       endDate: moment().add(1, 'h').startOf('hour').toDate(),
       floors: [1, 2, 3, 4],
+      floorMapImgSrc: floor1,
       sections: ['A', 'B'],
       status: null,
       employeeId: '',
@@ -113,6 +118,36 @@ class RequestContainer extends Component {
     });
   }
 
+  onFloorChange(e, floorMapImg) {
+    this.setState({
+      floor: e.target.value
+    });
+
+    // TODO: need to refactor this to not use switch statement
+    switch(e.target.value) {
+      case "1": {
+        this.setState({ floorMapImgSrc: floor1 });
+      break;
+      }
+      case "2": {
+        this.setState({ floorMapImgSrc: floor2 });
+      break;
+      }
+      case "3": {
+        this.setState({ floorMapImgSrc: floor3 });
+      break;
+      }
+      case "4": {
+        this.setState({ floorMapImgSrc: floor4 });
+      break;
+      }
+      default: {
+        this.setState({ floorMapImgSrc: floor1 });
+      break;
+      }
+    }
+  }
+
   submitClick() {
     this.props.dispatch(makeReservation({
       ...this.state,
@@ -131,6 +166,7 @@ class RequestContainer extends Component {
         onResourceSelect={this.onResourceSelect.bind(this)}
         onChange={this.onChange.bind(this)}
         onEmailChange={this.onEmailChange.bind(this)}
+        onFloorChange={this.onFloorChange.bind(this)}
         submitClick={this.submitClick.bind(this)}
       />
     );

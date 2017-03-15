@@ -9,7 +9,6 @@ import {
   Grid,
   Row
 } from 'react-bootstrap';
-import StaticMapImg from '../../images/Capture.PNG';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -27,6 +26,7 @@ class Request extends Component {
     const {
       floor,
       floors,
+      floorMapImgSrc,
       sections,
       selectedResourceId,
       selectedResourceName,
@@ -36,7 +36,7 @@ class Request extends Component {
       status,
     } = this.props;
 
-    const imgProps = {width: 750, height: 618, zoomWidth: 200, img: StaticMapImg, offset: {vertical: 0, horizontal: 5}};
+    const imgProps = {width: 750, height: 618, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 5}};
 
     return (
       <div>
@@ -69,7 +69,7 @@ class Request extends Component {
                 {/* Select a floor */}
                 <FormGroup controlId="formControlsFloorSelect">
                   <ControlLabel>Select a Floor</ControlLabel>
-                  <FormControl componentClass="select" onChange={this.props.onChange} name="floor">
+                  <FormControl componentClass="select" onChange={this.props.onFloorChange.bind(this)} name="floor">
                     {floors.map(function (floor) {
                       return (
                         <option key={floor} value={floor}>Floor {floor}</option>
@@ -163,7 +163,6 @@ class Request extends Component {
             <Row className="show-grid">
               <Col xs={12} md={8} style={{ height: "650px" }} >
                 <ReactImageZoom {...imgProps} />
-
               </Col>
             </Row>
 
