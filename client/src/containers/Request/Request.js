@@ -16,7 +16,6 @@ import 'react-widgets/dist/css/react-widgets.css';
 import { DATE_TIME_FORMAT } from '../../utils/formatter';
 import ConfirmRequestModal from '../../components/ConfirmRequestModal';
 import AlertMessage from '../../components/AlertMessage';
-import ReactDOM from 'react-dom';
 import ReactImageZoom from 'react-image-zoom';
 
 momentLocalizer(moment);

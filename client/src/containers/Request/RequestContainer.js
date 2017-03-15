@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
-import { makeReservation } from '../../redux/modules/ReservationReducer';
+import { resetStatus, makeReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
 import floor1 from '../../images/1_floor.png';
 import floor2 from '../../images/2_floor.png';
@@ -51,6 +51,11 @@ class RequestContainer extends Component {
     this.props.dispatch(getAvailableResources(1, {
       resourceType, startDate, endDate, floor, section
     }));
+  }
+
+  componentWillUnmount() {
+    // reset status in store
+    this.props.dispatch(resetStatus());
   }
 
   onStartDateChange(startDate) {
