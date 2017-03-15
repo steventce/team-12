@@ -16,8 +16,7 @@ export const getReservations = createAction(GET_RESERVATIONS, service.getReserva
 export const getAdminReservations = createAction(GET_ADMIN_RESERVATIONS);
 
 export const cancelReservation = createAction(CANCEL_RESERVATION, (reservationId, callback) => {
-  // TODO: Replace with SQL call
-  reservations[reservationId] = undefined;
+  service.deleteReservation(reservationId);
   if (callback)
     callback()
 });
@@ -57,7 +56,7 @@ export default function reducer(state = initialState, action) {
     // TODO check user permission
     // TODO this stubs the database call by using hardcoded dummy data
     case GET_RESERVATIONS: {
-      return { ...state, reservations: getObjValues(reservations).filter(reservation => reservation.employeeId === state.employeeId)}
+      return { ...state, reservations: getObjValues(action.payload).filter(reservation => reservation.staff_id === state.employeeId)}
     }
     case GET_ADMIN_RESERVATIONS: {
       return { ...state, reservations: getObjValues(reservations)}

@@ -31,7 +31,6 @@ export const getReservations = async (staffId) => {
   return response.data;
 }
 
-
 export const makeReservation = async (reservation, staffId) => {
   console.log(reservation)
   const {
@@ -62,6 +61,18 @@ export const makeReservation = async (reservation, staffId) => {
   });
 
   return response.data;
+}
+
+export const deleteReservation = async (reservationId) => {
+  console.log(reservationId);
+  const response = await axios({
+    method: 'delete',
+    url: API.RESERVATIONS_DELETE(reservationId),
+    baseURL: SERVER_URL,
+    params: {
+      reservation_id: reservationId
+    }
+  });
 }
 
 /* Resources Service */
