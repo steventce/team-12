@@ -46,7 +46,7 @@ module.exports = function(app) {
             // start before the row's end date and
             { '$Reservations.end_date$': { $gt: start_date } },
             // end after the row's start date
-            { '$Reservations.start_date$': { $lte: end_date } }
+            { '$Reservations.start_date$': { $lt: end_date } }
           ]
         }
       },
