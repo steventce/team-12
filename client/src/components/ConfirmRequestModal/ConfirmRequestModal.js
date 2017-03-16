@@ -13,9 +13,17 @@ class ConfirmRequestModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false
+      showModal: false,
+      wait: false
     }
+    this.submit = this.submit.bind(this);
     this.close = this.close.bind(this);
+  }
+
+  submit() {
+    //this.props.handleSubmit();
+    console.log('submit');
+    this.setState({ waiting: true });
   }
 
   close() {
@@ -50,6 +58,7 @@ class ConfirmRequestModal extends Component {
   }
 
   render() {
+    console.log(this.state.wait);
     const {
       selectedResourceName,
       selectedResourceId,
@@ -66,7 +75,7 @@ class ConfirmRequestModal extends Component {
         text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
         cancelButton = <Button onClick={this.close}>Cancel</Button>;
-        confirmButton = <Button bsStyle="primary" onClick={() => {this.close() ; this.props.handleSubmit()}}>OK</Button>;
+        confirmButton = <Button bsStyle="primary" onClick={this.submit}>OK</Button>;
     }else if (this.dateDuration(startDate, endDate) >= 120){
         title = `Request Error`;
         text = `Reservation range cannot be more than 120 hours (5 days). Your current selected dates are from
@@ -76,7 +85,49 @@ class ConfirmRequestModal extends Component {
         title = `Request Error`;
         text = `Reservation cannot be made 30 days in advanced.`;
         cancelButton = <Button onClick={this.close}>Ok</Button>; 
-    }    
+    }
+
+   const testStyle = {
+        border: '16px solid #f3f3f3', /* Light grey */
+        borderTop: '16px solid #3498db', /* Blue */
+        borderRadius: '50%',
+        width: '120px',
+        height: '120px',
+        animation: 'spin 2s linear infinite'
+      };
+
+    let modalContent;
+    if (!this.state.wait) {
+      modalContent = (
+        <Modal show={this.state.showModal} onHide={this.close}>
+          <Modal.Header closeButton> 
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <div style={testStyle}/>
+          </Modal.Body>
+
+          <Modal.Footer>
+            {cancelButton}
+            {confirmButton}
+          </Modal.Footer>
+        </Modal>
+      )
+    } else {
+      modalContent = (
+        <Modal show={this.state.showModal} onHide={this.close}>
+          <Modal.Header closeButton> 
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <div style/>
+            <div><Text>test</Text></div>
+          </Modal.Body>
+        </Modal>
+      )
+    }
     
     return (
       <div>
@@ -88,22 +139,7 @@ class ConfirmRequestModal extends Component {
           Submit
         </Button>
 
-        <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton> 
-            <Modal.Title>{title}</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <div className="text-center">
-            {text}
-            </div>
-          </Modal.Body>
-
-          <Modal.Footer>
-            {cancelButton}
-            {confirmButton}
-          </Modal.Footer>
-        </Modal>
+        {modalContent}
         
       </div>
     );
