@@ -10,7 +10,8 @@ const API = {
   RESERVATIONS_GET: (staff_id) => `/api/v1/users/${staff_id}/reservations`,
   RESERVATIONS_DELETE: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
   RESERVATIONS_PUT: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
-  RESOURCES: (location_id) => `/api/v1/locations/${location_id}/resources`
+  RESOURCES: (location_id) => `/api/v1/locations/${location_id}/resources`,
+  ADMIN_GET: (staff_id) => '/api/v1/admin/users/$(staff_id)'
 };
 
 
@@ -39,8 +40,6 @@ export const getReservations = async (staffId) => {
       staff_id: staffId
     }
   });
-
-  console.log(API.RESERVATIONS_GET(staffId));
 
   return response.data;
 }
@@ -114,7 +113,6 @@ export const makeReservation = async (reservation, staffId) => {
 }
 
 export const deleteReservation = async (reservationId) => {
-  console.log(reservationId);
   const response = await axios({
     method: 'delete',
     url: API.RESERVATIONS_DELETE(reservationId),
@@ -201,4 +199,17 @@ export const addLocation = async (location, staffId) => {
 // TODO: Update to DB
 
     return response.data;
+}
+
+/* Admin */
+
+export const getAdmin = async (staffId) => {
+  console.log('getAdmin ' + staffId);
+  const response = await axios({
+    method: 'get',
+    url: API.ADMIN_GET(staffId),
+    baseURL: SERVER_URL,
+  });
+
+  return response.data;
 }
