@@ -90,10 +90,11 @@ module.exports = function (app) {
     //      start_date <= reservation.end_date AND start_date >= reservation.start_date
     //      OR
     //      end_date >= reservation.start_date AND end_date <= reservation.end_date
-    models.Reservation.findAll({      
+    models.Reservation.findAll({                
     where:{
-      // resource_id: resource_id,
-      staff_id: staff_id,
+      resource_id: resource_id,
+      
+      
       $or: [
         {$and: [{'$reservation.end_date$': {$gt: start_date}},
                 {'$reservation.start_date$': {$lte: start_date}}]},
@@ -104,7 +105,7 @@ module.exports = function (app) {
       console.log("reservations are: " + reservations);
       if (reservations.length > 0) { //findAll returns an empty array not null if nothing is found.
         // Reservation already exists
-        res.status(409).send("You cannot book multiple desks for overlapping time period");
+        res.status(409).send("Resource cannot be booked for more than one user at the same time");
       }
       else{
         models.Resource.findOne({
