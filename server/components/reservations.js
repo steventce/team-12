@@ -92,8 +92,8 @@ module.exports = function (app) {
     //      end_date >= reservation.start_date AND end_date <= reservation.end_date
     models.Reservation.findAll({      
     where:{
-      resource_id: resource_id,
-      //staff_id: staff_id,
+      // resource_id: resource_id,
+      staff_id: staff_id,
       $or: [
         {$and: [{'$reservation.end_date$': {$gt: start_date}},
                 {'$reservation.start_date$': {$lte: start_date}}]},
