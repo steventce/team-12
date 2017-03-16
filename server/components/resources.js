@@ -9,15 +9,41 @@ var RESOURCE_TYPE = {
 module.exports = function(app) {
 
   /**
-   * Get all the resources in a location (reserved or unreserved)
+   * Get all the resources in a location (reserved or unreserved). If reserved,
+   * get the current reservation information.
    * @param {Number} location_id - The location id of the HSBC building
    */
-  app.get('/api/v1/locations/:location_id/resources', function(req, res) {
+  app.get('/api/v1/locations/:location_id/admin/resources', function(req, res) {
     var location_id = req.params.location_id;
     models.Resource.findAll({
+      raw: true,
       where: {
         location_id
-      }
+      },
+      include: [
+        {
+          model: models.Desk,
+          required: false,
+          attributes: {
+            exclude: ['created_at', 'updated_at', 'resource_id']
+          }
+        },
+        {
+          model: models.Reservation,
+          required: false,
+          attributes: {
+            exclude: ['updated_at', 'reservation_id']
+          },
+          where: {
+            start_date: {
+              $lte: moment().toDate()
+            },
+            end_Date: {
+              $gt: moment().toDate()
+            }
+          }
+        }
+      ]
     }).then(function(resources) {
       res.status(200).send(resources);
     });
