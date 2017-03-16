@@ -26,6 +26,7 @@ module.exports = function (app) {
     var staff_id = req.params.staff_id;
 
     models.Reservation.findAll({
+      where: { staff_id: staff_id },
       include: [{
         model: models.Resource,
         include: [models.Desk]
