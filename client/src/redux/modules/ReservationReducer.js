@@ -43,6 +43,7 @@ export default function reducer(state = initialState, action) {
     console.log("Action has error:" + JSON.stringify(action));
     switch(action.type) {
       case MAKE_RESERVATION: {
+        console.log(action.payload.response.data);
         return { ...state, status: '409' }
       }
       default:
