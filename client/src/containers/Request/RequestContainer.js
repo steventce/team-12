@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
-import { getReservations, makeReservation } from '../../redux/modules/ReservationReducer';
+import { resetStatus, makeReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
+import floor1 from '../../images/1_floor.png';
+import floor2 from '../../images/2_floor.png';
+import floor3 from '../../images/3_floor.png';
+import floor4 from '../../images/4_floor.png';
 
 class RequestContainer extends Component {
   constructor(props) {
@@ -19,6 +23,7 @@ class RequestContainer extends Component {
       startDate: moment().startOf('hour').toDate(),
       endDate: moment().add(1, 'h').startOf('hour').toDate(),
       floors: [1, 2, 3, 4],
+      floorMapImgSrc: floor1,
       sections: ['A', 'B'],
       status: null,
       employeeId: '',
@@ -46,6 +51,11 @@ class RequestContainer extends Component {
     this.props.dispatch(getAvailableResources(1, {
       resourceType, startDate, endDate, floor, section
     }));
+  }
+
+  componentWillUnmount() {
+    // reset status in store
+    this.props.dispatch(resetStatus());
   }
 
   onStartDateChange(startDate) {
@@ -113,6 +123,40 @@ class RequestContainer extends Component {
     });
   }
 
+  onFloorChange(event, floorMapImg) {
+    let newFloor = event.target.value;
+    this.setState({
+      floor: newFloor
+    });
+
+    // TODO: need to refactor this to not use switch statement
+    switch(newFloor) {
+      case "1": {
+        this.setState({ floorMapImgSrc: floor1 });
+      break;
+      }
+      case "2": {
+        this.setState({ floorMapImgSrc: floor2 });
+      break;
+      }
+      case "3": {
+        this.setState({ floorMapImgSrc: floor3 });
+      break;
+      }
+      case "4": {
+        this.setState({ floorMapImgSrc: floor4 });
+      break;
+      }
+      default: {
+        this.setState({ floorMapImgSrc: floor1 });
+      break;
+      }
+    }
+    this.props.dispatch(getAvailableResources(1, {
+      ...this.state, floor: newFloor
+    }));
+  }
+
   submitClick() {
     this.props.dispatch(makeReservation({
       ...this.state,
@@ -132,6 +176,7 @@ class RequestContainer extends Component {
         onResourceSelect={this.onResourceSelect.bind(this)}
         onChange={this.onChange.bind(this)}
         onEmailChange={this.onEmailChange.bind(this)}
+        onFloorChange={this.onFloorChange.bind(this)}
         submitClick={this.submitClick.bind(this)}
       />
     );

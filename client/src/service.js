@@ -7,7 +7,7 @@ const API = {
   LOCATIONS: '/api/v1/locations',
   LOCATION_DELETE: (location_id) => `/api/v1/locations/${location_id}`,
   RESERVATIONS: '/api/v1/reservations',
-  RESERVATIONS_GET: (staff_id) => `/api/v1/${staff_id}/reservations`,
+  RESERVATIONS_GET: (staff_id) => `/api/v1/users/${staff_id}/reservations`,
   RESERVATIONS_DELETE: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
   RESERVATIONS_PUT: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
   RESOURCES: (location_id) => `/api/v1/locations/${location_id}/resources`
@@ -39,6 +39,8 @@ export const getReservations = async (staffId) => {
       staff_id: staffId
     }
   });
+
+  console.log(API.RESERVATIONS_GET(staffId));
 
   return response.data;
 }
@@ -80,7 +82,6 @@ export const editReservation = async (reservation) => {
   return response.data;
 }
 
-
 export const makeReservation = async (reservation, staffId) => {
   const {
     resourceId,
@@ -110,6 +111,18 @@ export const makeReservation = async (reservation, staffId) => {
   });
 
   return response.data;
+}
+
+export const deleteReservation = async (reservationId) => {
+  console.log(reservationId);
+  const response = await axios({
+    method: 'delete',
+    url: API.RESERVATIONS_DELETE(reservationId),
+    baseURL: SERVER_URL,
+    params: {
+      reservation_id: reservationId
+    }
+  });
 }
 
 /* Resources Service */

@@ -248,7 +248,7 @@ class ReservedTableAdmin extends Component {
             <FormControl componentClass="select" onChange={event=>this.setState({floorNum: event.target.value})}>
             {this.props.resources.map(function (_, index) {
               return (
-                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                <option key={index + 1} value={index + 1  }>{index + 1}</option>
                 );
             })}
             </FormControl>

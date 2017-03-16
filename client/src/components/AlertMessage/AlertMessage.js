@@ -39,7 +39,7 @@ class AlertMessage extends Component {
       return (
         <div style={{ position: 'absolute', top: "50px", left: '20px', right: "20px" }} >
           {/* TODO: maybe change to enum so it can be more resuable */}
-          { (this.state.alertVisible == '409') ? this.renderError() : this.renderSuccess() }
+          { (this.state.alertVisible === '201') ? this.renderSuccess() : this.renderError() }
         </div>
       );
     } else {

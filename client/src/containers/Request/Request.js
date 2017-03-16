@@ -9,7 +9,6 @@ import {
   Grid,
   Row
 } from 'react-bootstrap';
-import StaticMapImg from '../../images/Capture.PNG';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -17,6 +16,7 @@ import 'react-widgets/dist/css/react-widgets.css';
 import { DATE_TIME_FORMAT } from '../../utils/formatter';
 import ConfirmRequestModal from '../../components/ConfirmRequestModal';
 import AlertMessage from '../../components/AlertMessage';
+import ReactImageZoom from 'react-image-zoom';
 
 momentLocalizer(moment);
 
@@ -25,6 +25,7 @@ class Request extends Component {
     const {
       floor,
       floors,
+      floorMapImgSrc,
       sections,
       selectedResourceId,
       selectedResourceName,
@@ -33,6 +34,8 @@ class Request extends Component {
       endDate,
       status,
     } = this.props;
+
+    const imgProps = {width: 750, height: 618, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 8}};
 
     return (
       <div>
@@ -43,11 +46,16 @@ class Request extends Component {
           </Row>
 
           <Form>
-            {/* Select floor and section */}
             <Row className="show-grid">
-              <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+            {/* Column for selecting options/entering inputs */}
+            <Col xs={12} md={12} >
+
+              {/* Column for selecting a resource type, floor, and section */}
+              <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+
+                {/* Select a resource type */}
                 <FormGroup controlId="formControlsFloorSelect">
-                  <ControlLabel>Select Resource Type</ControlLabel>
+                  <ControlLabel>Resource Type</ControlLabel>
                   <FormControl componentClass="select" disabled={true} onChange={this.props.onChange} name="resourceType">
                     {resourceTypes.map(function (type) {
                       return (
@@ -56,13 +64,11 @@ class Request extends Component {
                     })}
                   </FormControl>
                 </FormGroup>
-              </Col>
-            </Row>
-            <Row className="show-grid">
-              <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+
+                {/* Select a floor */}
                 <FormGroup controlId="formControlsFloorSelect">
-                  <ControlLabel>Select a Floor</ControlLabel>
-                  <FormControl componentClass="select" onChange={this.props.onChange} name="floor">
+                  <ControlLabel>Floor</ControlLabel>
+                  <FormControl componentClass="select" onChange={this.props.onFloorChange} name="floor">
                     {floors.map(function (floor) {
                       return (
                         <option key={floor} value={floor}>Floor {floor}</option>
@@ -70,10 +76,10 @@ class Request extends Component {
                     })}
                   </FormControl>
                 </FormGroup>
-              </Col>
-              <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+
+                {/* Select a section */}
                 <FormGroup controlId="formControlsSectionSelect">
-                  <ControlLabel>Select a Section</ControlLabel>
+                  <ControlLabel>Section</ControlLabel>
                   <FormControl componentClass="select" placeholder="select" onChange={this.props.onChange} name="section">
                     <option value="">All</option>
                     {sections.map(function (section) {
@@ -83,12 +89,14 @@ class Request extends Component {
                     })}
                   </FormControl>
                 </FormGroup>
-              </Col>
-            </Row>
 
-            {/* Choose date and time */}
-            <Row className="show-grid">
+              </Col>
+
+
+              {/* Column for start date, end date, and email */}
               <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+
+                {/* Select a start date */}
                 <FormGroup controlId="formControlsFloorSelect">
                   <ControlLabel>From</ControlLabel>
                   <DateTimePicker
@@ -100,9 +108,8 @@ class Request extends Component {
                     step={60}
                   />
                 </FormGroup>
-              </Col>
 
-              <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+                {/* Select an end date */}
                 <FormGroup controlId="formControlsSectionSelect">
                   <ControlLabel>To</ControlLabel>
                   <DateTimePicker
@@ -114,19 +121,23 @@ class Request extends Component {
                     step={60}
                   />
                 </FormGroup>
-              </Col>
-            </Row>
 
-            {/* ImageMap and specific resource */}
-            <Row className="show-grid">
-              <Col xs={12} md={8}>
-                <img role="presentation" src={StaticMapImg} style={{ height: "100%", width: "100%", border: "thin solid black" }} />
+                {/* Enter email for confirmation  */}
+                <FormGroup controlId="formControlsEmail">
+                  <ControlLabel>Email (Optional)</ControlLabel>
+                  <FormControl type="email" label="Email (Optional)" placeholder="Email" onChange={this.props.onEmailChange.bind(this)}>
+                  </FormControl>
+                </FormGroup>
+
               </Col>
-              <Col xs={6} md={4}>
-                <div style={{ border: "thin solid black" }}>
-                  <div style={{ paddingLeft: "10px", paddingTop: "5px" }}><b>Available Resources</b></div>
+
+              {/* Column map image and zoomed in image */}
+              <Col xs={12} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
+
+                <div style={{ border: "thin solid lightgrey" }}>
+                  <div style={{ paddingLeft: "10px", paddingTop: "10px" }}><b>Available Resources</b></div>
                   {/* TODO: dynamically allocate size */}
-                  <div style={{ height: "200px", overflowY: "auto", paddingLeft: "10px" }}>
+                  <div style={{ height: "180px", overflowY: "auto", paddingLeft: "10px" }}>
                     {
                       this.props.availableResources.map((resource, index) => {
                         const { resource_id } = resource;
@@ -145,24 +156,26 @@ class Request extends Component {
                   </div>
                 </div>
               </Col>
-            </Row>
 
-            {/* Email option */}
-            <Row className="show-grid" style={{ marginTop: '20px' }}>
-              <Col xs={12} md={4}>
-                <ControlLabel>Email (Optional)</ControlLabel>
-                <FormControl type="email" label="Email (Optional)" placeholder="Email" onChange={this.props.onEmailChange.bind(this)}>
-                </FormControl>
+            </Col>
+
+            {/* ImageMap and specific resource */}
+            <Row className="show-grid">
+              <Col xs={12} md={8} style={{ height: "650px" }} >
+                <ReactImageZoom {...imgProps} />
               </Col>
             </Row>
 
             {/* Submit button */}
-            <Row className="show-grid" style={{ marginTop: '20px' }}>
+            <Row className="show-grid" style={{ margin: '20px 10px 30px 10px' }}>
               <Col xs={2} md={2}>
                 <ConfirmRequestModal {...this.props} handleSubmit={this.props.submitClick} />
               </Col>
             </Row>
+
+            </Row>
           </Form>
+
         </Grid>
       </div>
     );

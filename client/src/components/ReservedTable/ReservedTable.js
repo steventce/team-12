@@ -15,10 +15,11 @@ class ReservedTable extends Component {
 
     this.state = {
       showModal: false,
-      cancelIndex: -1
+      cancelIndex: -1,
+      employeeId: this.props.employeeId,
     };
 
-    this.props.dispatch(getReservations());
+    this.props.dispatch(getReservations(this.state.employeeId));
   }
 
   onClickCancel(cell, row, rowIndex){
@@ -26,9 +27,9 @@ class ReservedTable extends Component {
   }
 
   onClickConfirmCancel(){
-    this.props.dispatch(cancelReservation(this.props.reservations[this.state.cancelIndex].reservationId, () => {
-      this.props.dispatch(getReservations())
-    }));
+    this.props.dispatch(cancelReservation(this.props.reservations[this.state.cancelIndex].reservation_id,
+      () => this.props.dispatch(getReservations(this.state.employeeId))
+    ));
     this.modalClose();
   }
 
@@ -56,10 +57,10 @@ class ReservedTable extends Component {
     return (
     	<div className='container tableContainer'>
 		  <BootstrapTable data={this.props.reservations} striped={true} hover={true}>
-		      <TableHeaderColumn dataField='resourceId' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
-		      <TableHeaderColumn dataField='resourceType' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
-		      <TableHeaderColumn dataField='startDateTime' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
-		      <TableHeaderColumn dataField='endDateTime' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='Resource.Desk.desk_number' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
+		      <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
+		      <TableHeaderColumn dataField='start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
+		      <TableHeaderColumn dataField='end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
 		  </BootstrapTable>
       <Modal show={this.state.showModal} onHide={this.modalClose.bind(this)}>
@@ -80,7 +81,7 @@ class ReservedTable extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { ...state.db  };
+  return { ...state.db };
 }
 
 export default connect(mapStateToProps)(ReservedTable);

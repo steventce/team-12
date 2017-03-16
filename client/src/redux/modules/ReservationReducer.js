@@ -9,6 +9,8 @@ const MAKE_RESERVATION = 'MAKE_RESERVATION';
 const CANCEL_RESERVATION = 'CANCEL_RESERVATION';
 const EDIT_RESERVATION = 'EDIT_RESERVATION';
 
+const RESET_STATUS = 'RESET_STATUS';
+
 // Action Creators
 
 export const getReservations = createAction(GET_RESERVATIONS, service.getReservations);
@@ -16,8 +18,7 @@ export const getReservations = createAction(GET_RESERVATIONS, service.getReserva
 export const getAdminReservations = createAction(GET_ADMIN_RESERVATIONS, service.getAllReservations);
 
 export const cancelReservation = createAction(CANCEL_RESERVATION, (reservationId, callback) => {
-  // TODO: Replace with SQL call
-  reservations[reservationId] = undefined;
+  service.deleteReservation(reservationId);
   if (callback)
     callback()
 });
@@ -26,6 +27,7 @@ export const editReservation = createAction(EDIT_RESERVATION, service.editReserv
 
 export const makeReservation = createAction(MAKE_RESERVATION, service.makeReservation);
 
+export const resetStatus = createAction(RESET_STATUS);
 
 // Reducer
 
@@ -52,7 +54,7 @@ export default function reducer(state = initialState, action) {
     // TODO check user permission
     // TODO this stubs the database call by using hardcoded dummy data
     case GET_RESERVATIONS: {
-      return { ...state, reservations: getObjValues(reservations).filter(reservation => reservation.employeeId === state.employeeId)}
+      return { ...state, reservations: getObjValues(action.payload).filter(reservation => reservation.staff_id === state.employeeId)}
     }
     case GET_ADMIN_RESERVATIONS: {
       // return parseAdminReservations(action.payload);
@@ -60,6 +62,9 @@ export default function reducer(state = initialState, action) {
     }
     case MAKE_RESERVATION: {
       return { ...state, status: '201' };
+    }
+    case RESET_STATUS: {
+      return { ...state, status: null };
     }
     default:
       return state;
