@@ -10,7 +10,6 @@ module.exports = function(sequelize, DataTypes) {
   var Reservation = sequelize.define('Reservation', {
     reservation_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       autoIncrement: true,
       primaryKey: true
     },
@@ -35,9 +34,9 @@ module.exports = function(sequelize, DataTypes) {
             maxDuration: function(){
               var start_date_ = moment(this.start_date);
               var end_date_ = moment(this.end_date);
-              
+
               var time_diff = moment.duration(end_date_.diff(start_date_));
-              
+
               var diff_hour = time_diff.asHours();
               if (diff_hour > MAX_RANGE_RESERVE_HR){
                   throw new Error(
@@ -59,9 +58,9 @@ module.exports = function(sequelize, DataTypes) {
               `Reservation cannot be made for more than ${MAX_DAYS_IN_ADVANCE} days in advance`
             );
           }
-        }   
+        }
       }
-      
+
     },
     created_at: {
       type: DataTypes.DATE,

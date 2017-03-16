@@ -10,9 +10,12 @@ const API = {
   RESERVATIONS_GET: (staff_id) => `/api/v1/users/${staff_id}/reservations`,
   RESERVATIONS_DELETE: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
   RESERVATIONS_PUT: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
-  RESOURCES: (location_id) => `/api/v1/locations/${location_id}/resources`
+  ADMIN_RESOURCES_POST: (location_id) => `/api/v1/locations/${location_id}/resources`,
+  ADMIN_RESOURCES_PUT: (resource_id) => `/api/v1/resources/${resource_id}`,
+  ADMIN_RESOURCES_DELETE: (resource_id) => `/api/v1/resources/${resource_id}`,
+  ADMIN_RESOURCES_GET: (location_id) => `/api/v1/locations/${location_id}/admin/resources`,
+  RESOURCES_GET: (location_id) => `/api/v1/locations/${location_id}/resources`
 };
-
 
 /* Reservations Service */
 
@@ -56,7 +59,7 @@ export const editReservation = async (reservation) => {
     startDate,
     endDate
   } = reservation;
-  
+
   console.log(reservationId);
 
   console.log(staffName);
@@ -91,22 +94,22 @@ export const makeReservation = async (reservation, staffId) => {
     startDate,
     endDate
   } = reservation;
-  
+
   const response = await axios({
     method: 'post',
     url: API.RESERVATIONS,
     baseURL: '',
     headers: {
-    'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     },
     data: {
-    resource_id: resourceId, // TODO: Populate from database
-    staff_name: staffName,
-    staff_department: staffDepartment,
-    staff_email: staffEmail,
-    start_date: startDate,
-    end_date: endDate,
-    staff_id: staffId
+      resource_id: resourceId, // TODO: Populate from database
+      staff_name: staffName,
+      staff_department: staffDepartment,
+      staff_email: staffEmail,
+      start_date: startDate,
+      end_date: endDate,
+      staff_id: staffId
     }
   });
 
@@ -127,7 +130,7 @@ export const deleteReservation = async (reservationId) => {
 
 /* Resources Service */
 
-export const getResources = async (locationId, filters) => {
+export const getAvailableResources = async (locationId, filters) => {
   const {
     resourceType,
     startDate,
@@ -138,7 +141,7 @@ export const getResources = async (locationId, filters) => {
 
   const response = await axios({
     method: 'get',
-    url: API.RESOURCES(locationId),
+    url: API.RESOURCES_GET(locationId),
     params: {
       resource_type: resourceType,
       start_date: startDate,
@@ -149,6 +152,61 @@ export const getResources = async (locationId, filters) => {
   });
 
   return response.data;
+}
+
+export const getAllResources = async (locationId) => {
+  const response = await axios({
+    method: 'get',
+    url: API.ADMIN_RESOURCES_GET(locationId)
+  });
+
+  return response.data;
+}
+
+export const addResource = async (location_id, resource) => {
+  const { resourceType, floor, section, deskNumber } = resource;
+  const response = await axios({
+    method: 'post',
+    url: API.ADMIN_RESOURCES_POST(location_id),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify({
+      resource_type: resourceType,
+      resource: {
+        floor,
+        section,
+        desk_number: deskNumber
+      }
+    })
+  });
+}
+
+export const editResource = async (resourceId, resource) => {
+  const { resourceType, floor, section, deskNumber } = resource;
+
+  const response = await axios({
+    method: 'put',
+    url: API.ADMIN_RESOURCES_PUT(resourceId),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify({
+      resource_type: resourceType,
+      resource: {
+        floor,
+        section,
+        desk_number: deskNumber
+      }
+    })
+  });
+}
+
+export const deleteResource = async (resourceId) => {
+  const response = await axios({
+    method: 'delete',
+    url: API.ADMIN_RESOURCES_DELETE(resourceId)
+  });
 }
 
 /* Locations Service */

@@ -173,6 +173,7 @@ module.exports = function(app) {
       section: resource.section,
       desk_number: `${resource.floor}.${resource.section}.${resource.desk_number}`
     }
+
     var selector = { where: { resource_id } };
 
     if (req.body.resource_type === RESOURCE_TYPE.DESK) {
