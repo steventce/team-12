@@ -40,6 +40,10 @@ class ConfirmRequestModal extends Component {
 
   close() {
     this.setState({ showModal: false });
+    if (this.state.modalType === this.modalEnum.ERROR)
+      window.location.reload();
+    else if (this.state.modalType === this.modalEnum.OK)
+      this.props.router.push('/reservations');
   }
 
   open() {
@@ -87,7 +91,6 @@ class ConfirmRequestModal extends Component {
       selectedResourceId,
       startDate,
       endDate,
-      status
     } = this.props;
     
     let title = `Confirm Reservation`;

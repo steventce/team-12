@@ -182,6 +182,7 @@ class RequestContainer extends Component {
         onEmailChange={this.onEmailChange.bind(this)}
         onFloorChange={this.onFloorChange.bind(this)}
         submitClick={this.submitClick.bind(this)}
+        router={this.props.router}
       />
     );
   }

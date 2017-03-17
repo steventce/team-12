@@ -22,16 +22,15 @@ momentLocalizer(moment);
 class Request extends Component {
   render() {
     const {
-      floor,
+      //floor,
       floors,
       floorMapImgSrc,
       sections,
       selectedResourceId,
-      selectedResourceName,
+      //selectedResourceName,
       resourceTypes,
       startDate,
       endDate,
-      status,
     } = this.props;
 
     const imgProps = {width: 750, height: 618, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 8}};
