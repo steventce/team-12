@@ -84,26 +84,11 @@ class ConfirmRequestModal extends Component {
       status
     } = this.props;
     
-    let title = null;
-    let text = null;
-    let confirmButton = null;
-    let cancelButton = null;
-    if (this.dateDuration(startDate, endDate) <= 120 && this.dateAdvanced(endDate) === false){
-        title = `Confirm Reservation`;
-        text = `Are you sure you want to reserve ${selectedResourceName} from
+    let title = `Confirm Reservation`;
+    let text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
-        cancelButton = <Button onClick={this.close}>Cancel</Button>;
-        confirmButton = <Button bsStyle="primary" onClick={this.submit}>OK</Button>;
-    }else if (this.dateDuration(startDate, endDate) >= 120){
-        title = `Request Error`;
-        text = `Reservation range cannot be more than 120 hours (5 days). Your current selected dates are from
-                ${this.formatDate(startDate)} to ${this.formatDate(endDate)}, which is ${this.dateDuration(startDate,endDate)} hours.`;
-        cancelButton = <Button onClick={this.close}>Ok</Button>;
-    }else{
-        title = `Request Error`;
-        text = `Reservation cannot be made 30 days in advanced.`;
-        cancelButton = <Button onClick={this.close}>Ok</Button>; 
-    }
+    let confirmButton = <Button bsStyle="primary" onClick={this.submit}>OK</Button>;
+    let cancelButton = <Button onClick={this.close}>Cancel</Button>;
 
     let modalContent;
     if (this.state.modalType === this.modalEnum.NONE) {

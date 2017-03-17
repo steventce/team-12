@@ -31,38 +31,12 @@ module.exports = function(sequelize, DataTypes) {
     },
     start_date: {
       type: DataTypes.DATE,
-      validate: {
-            maxDuration: function(){
-              var start_date_ = moment(this.start_date);
-              var end_date_ = moment(this.end_date);
-              
-              var time_diff = moment.duration(end_date_.diff(start_date_));
-              
-              var diff_hour = time_diff.asHours();
-              if (diff_hour > MAX_RANGE_RESERVE_HR){
-                  throw new Error(
-                  `Reservation cannot be made for more than ${MAX_RANGE_RESERVE_HR} hours (5 days)`
-                );
-            }
-          }
-      }
     },
+    
     end_date: {
-      type: DataTypes.DATE,
-      validate: {
-        maxEndDate: function() {
-          var end_date = moment(this.end_date);
-          var max_end_date = moment().add(MAX_DAYS_IN_ADVANCE, 'd');
-
-          if (end_date.isAfter(max_end_date, 'hour')) {
-            throw new Error(
-              `Reservation cannot be made for more than ${MAX_DAYS_IN_ADVANCE} days in advance`
-            );
-          }
-        }   
-      }
-      
+      type: DataTypes.DATE,      
     },
+    
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
