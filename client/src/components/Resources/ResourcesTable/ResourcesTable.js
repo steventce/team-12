@@ -99,14 +99,14 @@ class ResourcesTable extends Component {
             striped
             hover
             pagination>
-            <TableHeaderColumn dataField='resource_id' isKey dataAlign='center' dataSort>Resource ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='Desk.desk_number' isKey dataAlign='center' dataSort>Resource ID</TableHeaderColumn>
             <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort>Resource Type</TableHeaderColumn>
-            <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort>Floor</TableHeaderColumn>
-            <TableHeaderColumn dataField='Desk.section' dataAlign='center' dataSort>Section</TableHeaderColumn>
-            <TableHeaderColumn dataField='Desk.desk_number' dataAlign='center' dataSort>Desk Number</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.staff_name' dataAlign='center' dataSort>Current User</TableHeaderColumn>
-            <TableHeaderColumn dataField='created_at' dataAlign='center' dataSort dataFormat={dateFormatter}>Created On (dd/mm/yyyy)</TableHeaderColumn>
-            <TableHeaderColumn dataField='updated_at' dataAlign='center' dataSort dataFormat={dateFormatter}>Last Updated On (dd/mm/yyyy)</TableHeaderColumn>
+            <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort hidden>Floor</TableHeaderColumn>
+            <TableHeaderColumn dataField='Desk.section' dataAlign='center' dataSort hidden>Section</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.staff_id' dataAlign='center' dataSort>Staff Id</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.staff_name' dataAlign='center' dataSort>Staff Name</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
             <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
             <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Cancel</TableHeaderColumn>
           </BootstrapTable>
