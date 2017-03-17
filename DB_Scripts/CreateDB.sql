@@ -46,7 +46,7 @@ CREATE TABLE Desks(
 );
 
 CREATE TABLE Reservations (
-	reservation_id INT AUTO_INCREMENT PRIMARY KEY,
+	reservation_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	resource_id INT,
 	staff_id VARCHAR(10),
 	staff_name VARCHAR(30),

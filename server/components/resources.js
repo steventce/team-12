@@ -231,6 +231,6 @@ module.exports = function(app) {
       res.status(200).send(null);
     }).catch(Sequelize.ValidationError, function(err) {
       res.status(400).send({ errors: err.errors });
-    });;
+    });
   });
 }

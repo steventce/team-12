@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
   var Reservation = sequelize.define('Reservation', {
     reservation_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       autoIncrement: true,
       primaryKey: true
     },
@@ -76,7 +77,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Reservation.belongsTo(models.Resource, {
-          foreignKey: 'resource_id'
+          foreignKey: 'resource_id', onDelete: 'cascade'
         });
       }
     },
