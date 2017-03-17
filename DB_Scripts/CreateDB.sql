@@ -5,7 +5,7 @@ VARCHAR(50) : long data
 */
 
 CREATE DATABASE resource_booker;
-
+/*
 USE resource_booker;
 
 CREATE TABLE Locations(
@@ -65,4 +65,4 @@ CREATE TABLE Admins(
 	created_at DATETIME,
 	updated_at DATETIME
 );
-
+*/

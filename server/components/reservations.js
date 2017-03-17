@@ -26,6 +26,7 @@ module.exports = function (app) {
     var staff_id = req.params.staff_id;
 
     models.Reservation.findAll({
+      where: { staff_id: staff_id },
       include: [{
         model: models.Resource,
         include: [models.Desk]
@@ -83,6 +84,18 @@ module.exports = function (app) {
       start_date: moment(start_date).toDate(),
       end_date: moment(end_date).toDate()
     };
+    
+    var start_date_ = moment(start_date);
+    var end_date_ = moment(end_date);
+    var max_end_date = moment().add(30, 'd'); 
+    var time_diff = moment.duration(end_date_.diff(start_date_));
+    var diff_hour = time_diff.asHours();
+    if (diff_hour > 120){
+        console.log("can i execute here");
+        res.status(409).send("Reservation cannot be made for more than 120 hours (5 days)");
+    } else if (end_date_.isAfter(max_end_date, 'hour')){
+        res.status(409).send("Reservation cannot be made for more than 30 days in advance");
+    } else {
 
     // Check if the reservation conflicts with other reservations
     // Translates to:
@@ -93,14 +106,8 @@ module.exports = function (app) {
     models.Reservation.findAll({                
     where:{
       resource_id: resource_id,
-      
-      
-      $or: [
-        {$and: [{'$reservation.end_date$': {$gt: start_date}},
-                {'$reservation.start_date$': {$lte: start_date}}]},
-        {$and: [{'$reservation.start_date$': {$lt: end_date}},
-                {'$reservation.end_date$': {$gte: end_date}}]}
-      ]}
+        $and: [{'$end_date$': {$gt: start_date}},
+               {'$start_date$': {$lt: end_date}}]}
     }).then(function (reservations) {    
       console.log("reservations are: " + reservations);
       if (reservations.length > 0) { //findAll returns an empty array not null if nothing is found.
@@ -141,6 +148,8 @@ module.exports = function (app) {
     }).catch(Sequelize.ValidationError, function (err) {
       res.status(400).send({ errors: err.errors });
     });
+    
+    }
   });
 
   //DELETE

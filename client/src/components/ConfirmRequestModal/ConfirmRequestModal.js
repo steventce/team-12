@@ -4,6 +4,8 @@ import { Modal, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './ConfirmRequestModal.css';
 
+const default_error_string = 'Please check your input and try again.';
+
 class ConfirmRequestModal extends Component {
   static propTypes = {
     selectedResourceName: React.PropTypes.string.isRequired,
@@ -24,7 +26,8 @@ class ConfirmRequestModal extends Component {
 
     this.state = {
       showModal: false,
-      modalType: this.modalEnum.NONE
+      modalType: this.modalEnum.NONE,
+      errorMsg: ''
     }
     this.submit = this.submit.bind(this);
     this.close = this.close.bind(this);
@@ -37,6 +40,10 @@ class ConfirmRequestModal extends Component {
 
   close() {
     this.setState({ showModal: false });
+    if (this.state.modalType === this.modalEnum.ERROR)
+      window.location.reload();
+    else if (this.state.modalType === this.modalEnum.OK)
+      this.props.router.push('/reservations');
   }
 
   open() {
@@ -67,11 +74,14 @@ class ConfirmRequestModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.status){
-      if (nextProps.status === '201')
+    if (nextProps.status) {
+      if (nextProps.status === 201)
         this.setState({ modalType: this.modalEnum.OK });
-      else if (nextProps.status === '409')
+      else if (nextProps.status === 409)
         this.setState({ modalType: this.modalEnum.ERROR });
+    }
+    if (nextProps.errorMsg) {
+      this.setState({ errorMsg: nextProps.errorMsg })
     }
   }
 
@@ -81,29 +91,13 @@ class ConfirmRequestModal extends Component {
       selectedResourceId,
       startDate,
       endDate,
-      status
     } = this.props;
     
-    let title = null;
-    let text = null;
-    let confirmButton = null;
-    let cancelButton = null;
-    if (this.dateDuration(startDate, endDate) <= 120 && this.dateAdvanced(endDate) === false){
-        title = `Confirm Reservation`;
-        text = `Are you sure you want to reserve ${selectedResourceName} from
+    let title = `Confirm Reservation`;
+    let text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
-        cancelButton = <Button onClick={this.close}>Cancel</Button>;
-        confirmButton = <Button bsStyle="primary" onClick={this.submit}>OK</Button>;
-    }else if (this.dateDuration(startDate, endDate) >= 120){
-        title = `Request Error`;
-        text = `Reservation range cannot be more than 120 hours (5 days). Your current selected dates are from
-                ${this.formatDate(startDate)} to ${this.formatDate(endDate)}, which is ${this.dateDuration(startDate,endDate)} hours.`;
-        cancelButton = <Button onClick={this.close}>Ok</Button>;
-    }else{
-        title = `Request Error`;
-        text = `Reservation cannot be made 30 days in advanced.`;
-        cancelButton = <Button onClick={this.close}>Ok</Button>; 
-    }
+    let confirmButton = <Button bsStyle="primary" onClick={this.submit}>OK</Button>;
+    let cancelButton = <Button onClick={this.close}>Cancel</Button>;
 
     let modalContent;
     if (this.state.modalType === this.modalEnum.NONE) {
@@ -145,7 +139,7 @@ class ConfirmRequestModal extends Component {
           </Modal.Header>
 
           <Modal.Body>
-            Please check your input and try again.
+            {(this.state.errorMsg) ? this.state.errorMsg : default_error_string }
           </Modal.Body>
 
           <Modal.Footer>
