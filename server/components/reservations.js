@@ -106,13 +106,8 @@ module.exports = function (app) {
     models.Reservation.findAll({                
     where:{
       resource_id: resource_id,
-    
-      $or: [
-        {$and: [{'$reservation.end_date$': {$gt: start_date}},
-                {'$reservation.start_date$': {$lte: start_date}}]},
-        {$and: [{'$reservation.start_date$': {$lt: end_date}},
-                {'$reservation.end_date$': {$gte: end_date}}]}
-      ]}
+        $and: [{'$end_date$': {$gt: start_date}},
+               {'$start_date$': {$lt: end_date}}]}
     }).then(function (reservations) {    
       console.log("reservations are: " + reservations);
       if (reservations.length > 0) { //findAll returns an empty array not null if nothing is found.
