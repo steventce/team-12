@@ -89,6 +89,9 @@ class ResourcesTable extends Component {
 
   render() {
     const { modal } = this.state;
+    const options = {
+      hideSizePerPage: true
+    };
     return (
       <div>
         <h1 style={{textAlign: 'center'}}>Resources</h1>
@@ -98,7 +101,8 @@ class ResourcesTable extends Component {
             data={this.props.resources}
             striped
             hover
-            pagination>
+            pagination
+            options={options}>
             <TableHeaderColumn dataField='Desk.desk_number' isKey dataAlign='center' dataSort>Resource ID</TableHeaderColumn>
             <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort>Resource Type</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort hidden>Floor</TableHeaderColumn>
