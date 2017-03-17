@@ -51,7 +51,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Reservation.belongsTo(models.Resource, {
-          foreignKey: 'resource_id'
+          foreignKey: 'resource_id', onDelete: 'cascade'
         });
       }
     },
