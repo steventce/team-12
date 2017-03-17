@@ -25,8 +25,9 @@ class RequestContainer extends Component {
       floors: [1, 2, 3, 4],
       floorMapImgSrc: floor1,
       sections: ['A', 'B'],
-      status: null,
       employeeId: '',
+      status: null,
+      errorMsg: '',      
     };
   }
 
@@ -36,6 +37,9 @@ class RequestContainer extends Component {
     }
     if (nextProps.employeeId) {
       this.setState({ employeeId: nextProps.employeeId });
+    }
+    if (nextProps.errorMsg) {
+      this.setState({ errorMsg: nextProps.errorMsg });
     }
   }
 
@@ -188,6 +192,7 @@ const mapStateToProps = (state) => {
   return {
     availableResources: resources.availableResources,
     status: db.status,
+    errorMsg: db.errorMsg,
     employeeId: db.employeeId,
   };
 }

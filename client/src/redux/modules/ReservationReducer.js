@@ -36,6 +36,7 @@ const initialState = {
   resources: desks,
   reservations: [],
   status: '',
+  errorMsg: '',
 }
 
 export default function reducer(state = initialState, action) {
@@ -43,8 +44,7 @@ export default function reducer(state = initialState, action) {
     console.log("Action has error:" + JSON.stringify(action));
     switch(action.type) {
       case MAKE_RESERVATION: {
-        console.log(action.payload.response.data);
-        return { ...state, status: '409' }
+        return { ...state, status: action.payload.response.status, errorMsg: action.payload.response.data }
       }
       default:
         return state;
@@ -62,10 +62,10 @@ export default function reducer(state = initialState, action) {
       return { ...state, reservations: getObjValues(action.payload)}
     }
     case MAKE_RESERVATION: {
-      return { ...state, status: '201' };
+      return { ...state, status: 201 };
     }
     case RESET_STATUS: {
-      return { ...state, status: null };
+      return { ...state, status: null, errorMsg: '' };
     }
     default:
       return state;

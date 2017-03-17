@@ -4,6 +4,8 @@ import { Modal, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './ConfirmRequestModal.css';
 
+const default_error_string = 'Please check your input and try again.';
+
 class ConfirmRequestModal extends Component {
   static propTypes = {
     selectedResourceName: React.PropTypes.string.isRequired,
@@ -24,7 +26,8 @@ class ConfirmRequestModal extends Component {
 
     this.state = {
       showModal: false,
-      modalType: this.modalEnum.NONE
+      modalType: this.modalEnum.NONE,
+      errorMsg: ''
     }
     this.submit = this.submit.bind(this);
     this.close = this.close.bind(this);
@@ -67,11 +70,14 @@ class ConfirmRequestModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.status){
-      if (nextProps.status === '201')
+    if (nextProps.status) {
+      if (nextProps.status === 201)
         this.setState({ modalType: this.modalEnum.OK });
-      else if (nextProps.status === '409')
+      else if (nextProps.status === 409)
         this.setState({ modalType: this.modalEnum.ERROR });
+    }
+    if (nextProps.errorMsg) {
+      this.setState({ errorMsg: nextProps.errorMsg })
     }
   }
 
@@ -130,7 +136,7 @@ class ConfirmRequestModal extends Component {
           </Modal.Header>
 
           <Modal.Body>
-            Please check your input and try again.
+            {(this.state.errorMsg) ? this.state.errorMsg : default_error_string }
           </Modal.Body>
 
           <Modal.Footer>
