@@ -21,33 +21,32 @@ module.exports = function(sequelize, DataTypes) {
         isUnique: function(value, next) {
           var Resource = require('./').Resource;
           var resource_id = this.resource_id
-          if (value) {
-            Desk.findAll({
-              where: {
-                desk_number: value
-              },
-              include: [Resource]
-            }).then(function(desks) {
-              // Get the taken location ids
-              return desks.map(function(desk) {
-                return desk.Resource.location_id;
-              });
-            }).then(function(location_ids) {
-              return Resource.find({
-                where: {
-                  $and: [
-                    { resource_id },
-                    { location_id: { $in: location_ids }}
-                  ]
+
+          if (!this.isNewRecord) {
+            this.getResource()
+              .then(function(resource) {
+                if (value) {
+                  return Desk.findAll({
+                    where: {
+                      desk_number: value
+                    },
+                    include: [{
+                      model: Resource,
+                      where: {
+                        location_id: resource.location_id
+                      }
+                    }]
+                  });
+                }
+              }).then(function(desks) {
+                if (desks.length > 0) {
+                  next('Desk number already exists at this location');
+                } else {
+                  next();
                 }
               });
-            }).then(function(resource) {
-              if (resource) {
-                next('Desk number already exists at this location');
-              } else {
-                next();
-              }
-            });
+          } else {
+            next();
           }
         }
       }

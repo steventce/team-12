@@ -141,8 +141,29 @@ module.exports = function(app) {
     };
 
     if (req.body.resource_type === RESOURCE_TYPE.DESK) {
-      models.Resource.create(resource, {
-        include: [ models.Desk ]
+      models.Resource.find({
+        where: {
+          location_id
+        },
+        include: [{
+          model: models.Desk,
+          where: {
+            desk_number: desk.desk_number
+          }
+        }]
+      }).then(function(db_resource) {
+        if (db_resource) {
+          throw new Sequelize.ValidationError('', [
+            {
+              message: 'Desk number already exists at this location',
+              path: 'desk_number',
+              type: 'Validation error'
+            }
+          ]);
+        }
+        return models.Resource.create(resource, {
+          include: [ models.Desk ]
+        });
       }).then(function(resource) {
         res.location(`/api/v1/locations/${location_id}/resources/${resource.resource_id}`);
         res.status(201).send(null);
@@ -178,8 +199,15 @@ module.exports = function(app) {
 
     if (req.body.resource_type === RESOURCE_TYPE.DESK) {
       models.Desk
-        .update(fieldsToUpdate, selector)
-        .then(function(desks) {
+        .find(selector)
+        .then(function(desk) {
+          if (desk) {
+            return desk.updateAttributes(fieldsToUpdate);
+          } else {
+            res.status(400).send(null);
+          }
+        })
+        .then(function(desk) {
           res.status(200).send(null);
         }).catch(Sequelize.ValidationError, function(err) {
           res.status(400).send({ errors: err.errors });
