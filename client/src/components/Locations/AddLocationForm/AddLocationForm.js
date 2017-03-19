@@ -1,33 +1,26 @@
 import React, { Component } from 'react';
-import { div, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
-const AddLocationForm = React.createClass({
-  getInitialState() {
-    return {
-      value: ''
-    };
-  },
+class AddLocationForm extends Component {
 
   getValidationState() {
-    const length = this.state.value.length;
-    if (length > 10) return 'success';
-    else if (length > 5) return 'warning';
-    else if (length > 0) return 'error';
-  },
-
-  handleChange(e) {
-    this.setState({ value: e.target.value });
-  },
+//    const length = this.state.value.length;
+//    if (length > 10) return 'success';
+//    else if (length > 5) return 'warning';
+//    else if (length > 0) return 'error';
+  }
 
   render() {
+    const { building_name, street_name, city, province_state, postal_code, handleChange } = this.props;
     return (
       <form>
-        <FormGroup controlId="newLocationName" validationState={this.getValidationState()}>
+        <FormGroup controlId="newBuildingName" validationState={this.getValidationState()}>
           <ControlLabel>Name</ControlLabel>
           <FormControl
             type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
+            name="building_name"
+            value={building_name}
+            onChange={handleChange}
           />
           <FormControl.Feedback />
         </FormGroup>
@@ -36,8 +29,9 @@ const AddLocationForm = React.createClass({
           <ControlLabel>Street Address</ControlLabel>
           <FormControl
             type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
+            name="street_name"
+            value={street_name}
+            onChange={handleChange}
           />
           <FormControl.Feedback />
         </FormGroup>
@@ -46,8 +40,9 @@ const AddLocationForm = React.createClass({
           <ControlLabel>City</ControlLabel>
           <FormControl
             type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
+            name="city"
+            value={city}
+            onChange={handleChange}
           />
           <FormControl.Feedback />
         </FormGroup>
@@ -56,25 +51,26 @@ const AddLocationForm = React.createClass({
           <ControlLabel>Province/State</ControlLabel>
           <FormControl
             type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
+            name="province_state"
+            value={province_state}
+            onChange={handleChange}
           />
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="newLocationProvinceState" validationState={this.getValidationState()}>
+        <FormGroup controlId="newLocationPostalZIPCode" validationState={this.getValidationState()}>
           <ControlLabel>Postal/ZIP Code</ControlLabel>
           <FormControl
             type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
+            name="postal_code"
+            value={postal_code}
+            onChange={handleChange}
           />
           <FormControl.Feedback />
         </FormGroup>
-
       </form>
     );
   }
-});
+};
 
 export default AddLocationForm;

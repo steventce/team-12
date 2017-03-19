@@ -11,14 +11,17 @@ const DELETE_LOCATION = 'DELETE_LOCATION';
 
 export const getLocations = createAction(GET_LOCATIONS, service.getLocations);
 
-export const editLocation = createAction(EDIT_LOCATION, (location, callback) => {
-  // TODO: Replace with SQL call
-  locations[location.locationId] = Object.assign(locations[location.locationId], location)
+export const editLocation = createAction(EDIT_LOCATION, (locationId, location, callback) => {
+  service.editLocation(locationId, location);
   if (callback)
     callback()
 });
 
-export const addLocation = createAction(ADD_LOCATION, service.addLocation);
+export const addLocation = createAction(ADD_LOCATION, (location, callback) => {
+  service.addLocation(location);
+  if (callback)
+    callback()
+});
 
 export const deleteLocation = createAction(DELETE_LOCATION, (locationId, callback) => {
   service.deleteLocation(locationId);

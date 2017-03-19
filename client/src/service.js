@@ -6,15 +6,20 @@ const SERVER_URL = "http://localhost:3000";
 const API = {
   LOCATIONS: '/api/v1/locations',
   LOCATION_DELETE: (location_id) => `/api/v1/locations/${location_id}`,
+  LOCATION_POST: '/api/v1/locations',
+  LOCATION_PUT: (location_id) => `/api/v1/locations/${location_id}`,
+
   RESERVATIONS: '/api/v1/reservations',
   RESERVATIONS_GET: (staff_id) => `/api/v1/users/${staff_id}/reservations`,
   RESERVATIONS_DELETE: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
   RESERVATIONS_PUT: (reservation_id) => `/api/v1/reservations/${reservation_id}`,
+
   ADMIN_RESOURCES_POST: (location_id) => `/api/v1/locations/${location_id}/resources`,
   ADMIN_RESOURCES_PUT: (resource_id) => `/api/v1/resources/${resource_id}`,
   ADMIN_RESOURCES_DELETE: (resource_id) => `/api/v1/resources/${resource_id}`,
   ADMIN_RESOURCES_GET: (location_id) => `/api/v1/locations/${location_id}/admin/resources`,
   RESOURCES_GET: (location_id) => `/api/v1/locations/${location_id}/resources`,
+
   ADMIN_GET: (staff_id) => '/api/v1/admin/users/$(staff_id)'
 };
 
@@ -232,31 +237,46 @@ export const deleteLocation = async (locationId) => {
   return response.data;
 }
 
-export const addLocation = async (location, staffId) => {
-    const {
-        resource_id,
-        building_name,
-        street_name,
-        city,
-        province_state,
-        postal_code
-    } = location;
+export const addLocation = async (location) => {
+  const response = await axios({
+    method: 'post',
+    url: API.LOCATION_POST,
+    baseURL: '',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    data: JSON.stringify({
+      location: {
+      building_name: location.building_name,
+      street_name: location.street_name,
+      city: location.city,
+      province_state: location.province_state,
+      postal_code: location.postal_code
+      }
+    })
+  });
+  return response.data;
+}
 
-    const response = await axios({
-        method: 'post',
-        url: API.LOCATIONS,
-        baseURL: '',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: {
-        // TODO: Fill in
-        }
-    });
-
-// TODO: Update to DB
-
-    return response.data;
+export const editLocation = async (locationId, location) => {
+  const response = await axios({
+    method: 'put',
+    url: API.LOCATION_PUT(locationId),
+    baseURL: '',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    data: JSON.stringify({
+      location: {
+      building_name: location.building_name,
+      street_name: location.street_name,
+      city: location.city,
+      province_state: location.province_state,
+      postal_code: location.postal_code
+      }
+    })
+  });
+  return response.data;
 }
 
 /* Admin */

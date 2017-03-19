@@ -23,44 +23,34 @@ module.exports = function(app) {
 	});
 
 	app.post("/api/v1/locations", function(req, res) {
-		var location_id = req.body.location_id;
 		var location = {
-			location_id: location_id,
-			building_name: req.body.building_name,
-			street_name: req.body.street_name,
-			city: req.body.city,
-			province_state: req.body.province_state,
-			postal_code: req.body.postal_code
+			building_name: req.body.location.building_name,
+			street_name: req.body.location.street_name,
+			city: req.body.location.city,
+			province_state: req.body.location.province_state,
+			postal_code: req.body.location.postal_code
 		};
 
-		models.Location.find({where: {location_id: location_id}
-			}).then(function(loc){
-				if(loc !== null){
-					res.status(409).send(null);
-				}
-				else{
-					models.Location.create(location).then(function(){
-						res.status(201).send(null);
-					});					
-				}
-			}).catch(Sequelize.ValidationError, function (err) {
-	     		 res.status(400).send({ errors: err.errors });
-	    	});
+        models.Location.create(location).then(function() {
+            res.status(201).send(null);
+        }).catch(Sequelize.ValidationError, function(err) {
+            res.status(400).send({ errors: err.errors });
+        });
 	});	
 
 	app.put("/api/v1/locations/:location_id", function(req, res) {
-
 		var location_id = req.params.location_id;
 		var location = {
 			location_id: location_id,
-			building_name: req.body.building_name,
-			street_name: req.body.street_name,
-			city: req.body.city,
-			province_state: req.body.province_state,
-			postal_code: req.body.postal_code
+			building_name: req.body.location.building_name,
+			street_name: req.body.location.street_name,
+			city: req.body.location.city,
+			province_state: req.body.location.province_state,
+			postal_code: req.body.location.postal_code
 		};
 	    
-	    models.Location.update(location, {where: {location_id: location_id}}).then(function(loc){
+	    models.Location.update(location, {where: {location_id: location_id}
+	    }).then(function(loc){
             res.status(200).send(null);
         }).catch(Sequelize.ValidationError, function(err) {
             res.status(401).send({ errors: err.errors });
