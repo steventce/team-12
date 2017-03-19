@@ -33,7 +33,7 @@ class Request extends Component {
       endDate,
     } = this.props;
 
-    const imgProps = {width: 750, height: 618, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 8}};
+    const imgProps = {width: 900, height: 740, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 8}};
 
     return (
       <div>
@@ -158,7 +158,7 @@ class Request extends Component {
 
             {/* ImageMap and specific resource */}
             <Row className="show-grid">
-              <Col xs={12} md={8} style={{ height: "650px" }} >
+              <Col xs={12} md={8} style={{ height: "750px" }} >
                 <ReactImageZoom {...imgProps} />
               </Col>
             </Row>

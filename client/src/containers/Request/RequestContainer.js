@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
 import { resetStatus, makeReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
-import floor1 from '../../images/1_floor.png';
-import floor2 from '../../images/2_floor.png';
-import floor3 from '../../images/3_floor.png';
-import floor4 from '../../images/4_floor.png';
+import floor1 from '../../images/floor_1.png';
+import floor2 from '../../images/floor_2.png';
+import floor3 from '../../images/floor_3.png';
+import floor4 from '../../images/floor_4.png';
 
 class RequestContainer extends Component {
   constructor(props) {
