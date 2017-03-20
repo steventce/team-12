@@ -14,11 +14,11 @@ if (config.use_env_variable) {
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-// Pass { force: true } in sequelize to drop and recreate tables
-// Otherwise, sequelize will create missing tables.
-if (env === 'development') {
-  sequelize.sync();
-}
+// Migrations are used to modify the database instead of sequelize.sync()
+// If necessary, to create missing tables:
+// sequelize.sync();
+// To always drop the tables and recreate them:
+// sequelize.sync({ force: true });
 
 fs
   .readdirSync(__dirname)
