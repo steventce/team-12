@@ -33,6 +33,10 @@ require('./components/locations')(app);
 require('./components/admin')(app);
 require('./components/resources')(app);
 
+app.get('/login.js', (req, res)=> {
+	res.sendFile(path.resolve(__dirname, 'config', 'login.js'));
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 });

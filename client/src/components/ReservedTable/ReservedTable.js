@@ -5,8 +5,10 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './ReservedTable.css';
 
-import { cancelReservation, getReservations } from '../../redux/modules/ReservationReducer';
+import { cancelReservation, getReservations} from '../../redux/modules/ReservationReducer';
 import { connect } from 'react-redux';
+
+/*global staffDetails_empid:true*/
 
 class ReservedTable extends Component {
 
@@ -16,7 +18,7 @@ class ReservedTable extends Component {
     this.state = {
       showModal: false,
       cancelIndex: -1,
-      employeeId: this.props.employeeId,
+      employeeId: staffDetails_empid,
     };
 
     this.props.dispatch(getReservations(this.state.employeeId));

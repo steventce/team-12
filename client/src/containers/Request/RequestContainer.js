@@ -9,6 +9,8 @@ import floor2 from '../../images/floor_2.png';
 import floor3 from '../../images/floor_3.png';
 import floor4 from '../../images/floor_4.png';
 
+/*global staffDetails_empid:true*/
+
 class RequestContainer extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +27,7 @@ class RequestContainer extends Component {
       floors: [1, 2, 3, 4],
       floorMapImgSrc: floor1,
       sections: ['A', 'B'],
-      employeeId: '',
+      employeeId: staffDetails_empid,
       status: null,
       errorMsg: '',      
     };
@@ -34,9 +36,6 @@ class RequestContainer extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.status) {
       this.setState({ status: nextProps.status});
-    }
-    if (nextProps.employeeId) {
-      this.setState({ employeeId: nextProps.employeeId });
     }
     if (nextProps.errorMsg) {
       this.setState({ errorMsg: nextProps.errorMsg });
@@ -166,8 +165,7 @@ class RequestContainer extends Component {
       ...this.state,
       resourceId: this.state.selectedResourceId,
       staffEmail: this.state.email
-    }, this.props.employeeId));
-
+    }, this.state.employeeId));
   }
 
   render() {
@@ -189,12 +187,12 @@ class RequestContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state);
   const { db, resources } = state;
   return {
     availableResources: resources.availableResources,
     status: db.status,
     errorMsg: db.errorMsg,
-    employeeId: db.employeeId,
   };
 }
 

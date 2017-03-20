@@ -55,7 +55,7 @@ export default function reducer(state = initialState, action) {
     // TODO check user permission
     // TODO this stubs the database call by using hardcoded dummy data
     case GET_RESERVATIONS: {
-      return { ...state, reservations: getObjValues(action.payload).filter(reservation => reservation.staff_id === state.employeeId)}
+      return { ...state, reservations: getObjValues(action.payload)}
     }
     case GET_ADMIN_RESERVATIONS: {
       // return parseAdminReservations(action.payload);

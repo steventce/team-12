@@ -3,7 +3,10 @@ import { Link } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
+/*global staffDetails_name:true*/
+
 class HeaderNavbar extends Component {
+
   render() {
     return (
       <Navbar collapseOnSelect>
@@ -23,7 +26,7 @@ class HeaderNavbar extends Component {
           </Nav>
           <Nav pullRight>
             <Navbar.Brand>
-              <a href="#">Welcome, John Doe</a>
+              <a href="#">Welcome, {staffDetails_name.toLowerCase()}</a>
             </Navbar.Brand>
           </Nav>
         </Navbar.Collapse>
