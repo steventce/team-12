@@ -37,11 +37,15 @@ SET PASSWORD = PASSWORD('<your new password>')
 - `password`	:	user password, for RDS instance it should have been set / reset from the RDS console, for localhost it is the new password set after the above section
 - `database`	:	database name to connect to (eg. if you create a database within MySQL called Resource_Booker, then put Resource_Booker here)
 
+### Generating the DB schema
+1. Ensure sequelize-cli is installed
+2. In the /server/ directory, run `sequelize db:migrate`
+3. Changes to the existing schema should be done by writing a new database migration, see [Sequelize CLI](https://github.com/sequelize/cli) for more information
+
 ### <a name="init-db-data"></a>Initialize DB data
 1. Navigate to DB_Scripts folder from project root
 2. Manually change all 'import-path' keywords in PopulateData.sql to the ABSOLUTE path of Desks.csv
-3. **Currently, simply starting the server will automatically generate all of the missing tables in the database. For now, it is unnecessary to manually create tables. Refer to the instructions [below](#starting-the-server) for starting the server** 
-4. Run PopulateData.sql to add in the initial data (including the desk resources from Desks.csv). This can be done from MySQL Workbench, or through the command line.
+3. Run PopulateData.sql to add in the initial data (including the desk resources from Desks.csv). This can be done from MySQL Workbench, or through the command line.
 ```
 cd DB_Scripts
 mysql -u <user> -h <host> -P 3306 -p<db password>
