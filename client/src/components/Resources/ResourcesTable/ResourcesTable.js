@@ -18,7 +18,12 @@ class ResourcesTable extends Component {
 
     this.addButton = this.addButton.bind(this);
     this.renderModal = this.renderModal.bind(this);
-    this.closeModal = this.setModalProps.bind(this, false, {}, modalTypes.NONE.name);
+    this.setModalProps = this.setModalProps.bind(this);
+    this.closeModal = () => {
+      this.props.resetStatus();
+      this.setModalProps(false, {}, modalTypes.NONE.name);
+      this.props.getResources(locationId);
+    };
   }
 
   componentDidMount() {
@@ -60,19 +65,20 @@ class ResourcesTable extends Component {
 
   renderModal(modal) {
     const { modalType } = modal;
+    const { addResource, editResource, deleteResource, status, errors } = this.props;
     let okHandler = () => {};
 
     switch (modalType) {
       case modalTypes.ADD.name: {
-        okHandler = this.props.addResource;
+        okHandler = addResource;
         break;
       }
       case modalTypes.EDIT.name: {
-        okHandler = this.props.editResource;
+        okHandler = editResource;
         break;
       }
       case modalTypes.DELETE.name: {
-        okHandler = this.props.deleteResource;
+        okHandler = deleteResource;
         break;
       }
     }
@@ -81,8 +87,10 @@ class ResourcesTable extends Component {
       <ResourcesModal
         locationId={locationId}
         {...modal}
+        status={status}
         closeModal={this.closeModal}
         okHandler={okHandler}
+        errors={errors}
       />
     );
   }

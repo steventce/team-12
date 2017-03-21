@@ -6,6 +6,8 @@ const GET_ALL_RESOURCES = 'GET_ALL_RESOURCES';
 const ADD_RESOURCE = 'ADD_RESOURCE';
 const EDIT_RESOURCE = 'EDIT_RESOURCE';
 const DELETE_RESOURCE = 'DELETE_RESOURCE';
+const RESET_STATUS = 'RESET_STATUS';
+const SET_STATUS = 'SET_STATUS';
 
 // Action Creators
 
@@ -34,25 +36,59 @@ export const deleteResource = createAction(
   service.deleteResource
 );
 
+export const resetStatus = createAction(
+  RESET_STATUS
+);
+
+export const setStatus = createAction(
+  SET_STATUS,
+  (status) => { return status; }
+);
+
 // Reducer
 
 const initialState = {
   availableResources: [],
-  resources: []
+  resources: [],
+  status: '',
+  errors: []
 };
 
 export default function reducer(state = initialState, action) {
   if (action.error) {
     console.log("Action has error:" + JSON.stringify(action));
-    return state;
   }
 
   switch(action.type) {
     case GET_AVAILABLE_RESOURCES: {
-      return { ...state, availableResources: action.payload }
+      return { ...state, availableResources: action.payload };
     }
     case GET_ALL_RESOURCES: {
-      return { ...state, resources: action.payload }
+      return { ...state, resources: action.payload };
+    }
+    case ADD_RESOURCE:
+    case EDIT_RESOURCE:
+    case DELETE_RESOURCE: {
+      if (action.error) {
+        const { status, data } = action.payload.response;
+        return {
+          ...state,
+          status: 'error',
+          errors: data.errors || []
+        }
+      }
+      return {
+        ...state,
+        status: 'success',
+        errors: initialState.errors
+      };
+    }
+    case RESET_STATUS: {
+      const { status, errors } = initialState;
+      return { ...state, status, errors };
+    }
+    case SET_STATUS: {
+      return { ...state, status: action.payload };
     }
     default:
       return state;

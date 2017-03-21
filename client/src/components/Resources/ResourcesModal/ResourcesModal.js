@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import AddResourceForm from '../AddResourceForm';
 import EditResourceForm from '../EditResourceForm';
+import Loader from '../../Loader';
 
 export const modalTypes = {
   NONE: {
@@ -10,18 +11,21 @@ export const modalTypes = {
   ADD: {
     name: 'ADD',
     title: 'Add New Resource',
+    titleSuccess: 'Resource created',
     body: (props) => <AddResourceForm {...props} />,
     okText: 'Add Resource'
   },
   EDIT: {
     name: 'EDIT',
     title: 'Edit Resource',
+    titleSuccess: 'Resource changes saved',
     body: (props) => <EditResourceForm {...props} />,
     okText: 'Save Changes'
   },
   DELETE: {
     name: 'DELETE',
     title: 'Confirm Delete Resource',
+    titleSuccess: 'Resource deleted',
     body: () => <div>Are you sure you want to delete this resource?</div>,
     okText: 'Delete'
   }
@@ -39,6 +43,7 @@ class ResourcesModal extends Component {
     this.setData = this.setData.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.renderConfirmModal = this.renderConfirmModal.bind(this);
   }
 
   setData() {
@@ -76,23 +81,83 @@ class ResourcesModal extends Component {
         break;
       }
     }
-    closeModal();
   }
 
-  render() {
-    const { show, modalType, closeModal } = this.props;
+  renderConfirmModal(props) {
+    const { show, modalType, closeModal, status, errors } = props;
+    const modalData = modalTypes[modalType];
 
-    if (modalType === modalTypes.NONE.name) {
-      return <Modal show={false} />
+    let title = null;
+    let body = null;
+    let footer = (
+      <Modal.Footer>
+        <Button bsStyle="primary" onClick={closeModal}>
+          Ok
+        </Button>
+      </Modal.Footer>
+    );
+
+    switch (status) {
+      case 'success': {
+        title = modalData.titleSuccess;
+        // No body
+        break;
+      }
+      case 'error': {
+        title = 'Error';
+        body = (
+          <Modal.Body>
+            {errors.map((error, i) => {
+              return (
+                <p key={i}>{error.message}</p>
+              );
+            })}
+          </Modal.Body>
+        );
+        break;
+      }
+      case 'loading': {
+        title = 'Loading';
+        body = (
+          <Modal.Body>
+            <Loader />
+          </Modal.Body>
+        );
+        footer = null;
+        break;
+      }
     }
 
     return (
       <Modal show={show} onHide={closeModal} onEnter={this.setData}>
         <Modal.Header closeButton>
-          <Modal.Title>{modalTypes[modalType].title}</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        {body}
+        {footer}
+      </Modal>
+    );
+  }
+
+  render() {
+    const { show, modalType, closeModal, status, errors } = this.props;
+    const modalData = modalTypes[modalType];
+
+    if (modalType === modalTypes.NONE.name) {
+      return <Modal show={false} />
+    }
+
+    if (status) {
+      return this.renderConfirmModal(this.props);
+    }
+
+    return (
+      <Modal show={show} onHide={closeModal} onEnter={this.setData}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalData.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {modalTypes[modalType].body({
+          {modalData.body({
             ...this.state,
             handleChange: this.handleChange
           })}
@@ -100,7 +165,7 @@ class ResourcesModal extends Component {
         <Modal.Footer>
           <Button onClick={closeModal}>Cancel</Button>
           <Button bsStyle="primary" onClick={this.handleSubmit}>
-            {modalTypes[modalType].okText}
+            {modalData.okText}
           </Button>
         </Modal.Footer>
       </Modal>

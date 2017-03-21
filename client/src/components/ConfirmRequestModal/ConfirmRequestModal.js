@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Modal, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './ConfirmRequestModal.css';
+import Loader from '../Loader';
 
 const default_error_string = 'Please check your input and try again.';
 
@@ -53,19 +54,19 @@ class ConfirmRequestModal extends Component {
   formatDate(date) {
     return moment(date).format('h:mm a MMM D');
   }
-  
+
   dateDuration(start_date, end_date){
     var start_date_ = moment(start_date);
     var end_date_ = moment(end_date);
-    
+
     var time_diff = moment.duration(end_date_.diff(start_date_));
     return time_diff.asHours();
   }
-  
+
   dateAdvanced(end_date){
     var end_date_ = moment(end_date);
     var max_end_date_ = moment().add(30, 'd');
-    
+
     if (end_date_.isAfter(max_end_date_, 'hour')) {
         return true;
     }else{
@@ -92,7 +93,7 @@ class ConfirmRequestModal extends Component {
       startDate,
       endDate,
     } = this.props;
-    
+
     let title = `Confirm Reservation`;
     let text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
@@ -103,7 +104,7 @@ class ConfirmRequestModal extends Component {
     if (this.state.modalType === this.modalEnum.NONE) {
       modalContent = (
         <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton> 
+          <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
 
@@ -122,19 +123,19 @@ class ConfirmRequestModal extends Component {
     } else if (this.state.modalType === this.modalEnum.WAIT) {
       modalContent = (
         <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton> 
+          <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
-            <div className="loader"/>
+            <Loader />
           </Modal.Body>
         </Modal>
       )
     } else if (this.state.modalType === this.modalEnum.ERROR) {
       modalContent = (
         <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton> 
+          <Modal.Header closeButton>
             <Modal.Title>Error!</Modal.Title>
           </Modal.Header>
 
@@ -150,7 +151,7 @@ class ConfirmRequestModal extends Component {
     } else if (this.state.modalType === this.modalEnum.OK) {
       modalContent = (
         <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton> 
+          <Modal.Header closeButton>
             <Modal.Title>Reservation created!</Modal.Title>
           </Modal.Header>
 
@@ -162,7 +163,7 @@ class ConfirmRequestModal extends Component {
         </Modal>
       )
     }
-    
+
     return (
       <div>
         <Button
@@ -174,7 +175,7 @@ class ConfirmRequestModal extends Component {
         </Button>
 
         {modalContent}
-        
+
       </div>
     );
   }

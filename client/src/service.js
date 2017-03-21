@@ -183,6 +183,8 @@ export const addResource = async (location_id, resource) => {
       }
     })
   });
+
+  return response.data;
 }
 
 export const editResource = async (resourceId, resource) => {
@@ -203,6 +205,8 @@ export const editResource = async (resourceId, resource) => {
       }
     })
   });
+
+  return response.data;
 }
 
 export const deleteResource = async (resourceId) => {
@@ -210,6 +214,8 @@ export const deleteResource = async (resourceId) => {
     method: 'delete',
     url: API.ADMIN_RESOURCES_DELETE(resourceId)
   });
+
+  return response.data;
 }
 
 /* Locations Service */
