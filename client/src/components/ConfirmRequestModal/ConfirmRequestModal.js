@@ -55,25 +55,6 @@ class ConfirmRequestModal extends Component {
     return moment(date).format('h:mm a MMM D');
   }
 
-  dateDuration(start_date, end_date){
-    var start_date_ = moment(start_date);
-    var end_date_ = moment(end_date);
-
-    var time_diff = moment.duration(end_date_.diff(start_date_));
-    return time_diff.asHours();
-  }
-
-  dateAdvanced(end_date){
-    var end_date_ = moment(end_date);
-    var max_end_date_ = moment().add(30, 'd');
-
-    if (end_date_.isAfter(max_end_date_, 'hour')) {
-        return true;
-    }else{
-        return false;
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.status) {
       if (nextProps.status === 201)
@@ -140,7 +121,9 @@ class ConfirmRequestModal extends Component {
           </Modal.Header>
 
           <Modal.Body>
-            {(this.state.errorMsg) ? this.state.errorMsg : default_error_string }
+            <div className="text-center">
+                {(this.state.errorMsg) ? this.state.errorMsg : default_error_string }
+            </div>
           </Modal.Body>
 
           <Modal.Footer>

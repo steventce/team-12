@@ -91,10 +91,10 @@ module.exports = function (app) {
     var time_diff = moment.duration(end_date_.diff(start_date_));
     var diff_hour = time_diff.asHours();
     if (diff_hour > 120){
-        console.log("can i execute here");
-        res.status(409).send("Reservation cannot be made for more than 120 hours (5 days)");
+        res.status(409).send(`Reservation cannot be made for more than 120 hours (5 days). Your current selected dates
+        are from ${start_date_.format('h:mm a MMM D')} to ${end_date_.format('h:mm a MMM D')}, which is ${diff_hour} hours`);
     } else if (end_date_.isAfter(max_end_date, 'hour')){
-        res.status(409).send("Reservation cannot be made for more than 30 days in advance");
+        res.status(409).send(`Reservation cannot be made for more than 30 days in advance.`);
     } else {
 
     // Check if the reservation conflicts with other reservations
@@ -112,7 +112,7 @@ module.exports = function (app) {
       console.log("reservations are: " + reservations);
       if (reservations.length > 0) { //findAll returns an empty array not null if nothing is found.
         // Reservation already exists
-        res.status(409).send("Resource cannot be booked for more than one user at the same time");
+        res.status(409).send("Resource cannot be booked for more than one user at the same time.");
       }
       else{
         models.Resource.findOne({
