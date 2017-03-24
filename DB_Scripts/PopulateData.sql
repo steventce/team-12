@@ -14,6 +14,11 @@ INSERT INTO admins
     (admin_id, name, created_at, updated_at)
 VALUES
     ('00000000', 'defaultAdmin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    
+INSERT INTO admins
+    (admin_id, name, created_at, updated_at)
+VALUES
+    ('43868488', 'John Doe', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 LOAD DATA LOCAL INFILE 'C:/Users/Evan/Documents/Main/Projects/team-12/DB_Scripts/Desks.csv' INTO TABLE resources
 FIELDS TERMINATED BY ','

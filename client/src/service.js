@@ -20,7 +20,7 @@ const API = {
   ADMIN_RESOURCES_GET: (location_id) => `/api/v1/locations/${location_id}/admin/resources`,
   RESOURCES_GET: (location_id) => `/api/v1/locations/${location_id}/resources`,
 
-  ADMIN_GET: (staff_id) => '/api/v1/admin/users/$(staff_id)'
+  ADMIN_GET: (staff_id) => `/api/v1/admin/users/${staff_id}`
 };
 
 /* Reservations Service */
@@ -288,12 +288,16 @@ export const editLocation = async (locationId, location) => {
 /* Admin */
 
 export const getAdmin = async (staffId) => {
-  console.log('getAdmin ' + staffId);
+  console.log('Making service call at api ' + API.ADMIN_GET);
+
   const response = await axios({
     method: 'get',
     url: API.ADMIN_GET(staffId),
-    baseURL: SERVER_URL,
+    params: {
+      staff_id: staffId
+    }
   });
 
   return response.data;
 }
+
