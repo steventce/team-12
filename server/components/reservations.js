@@ -26,7 +26,8 @@ module.exports = function (app) {
     var staff_id = req.params.staff_id;
 
     models.Reservation.findAll({
-      where: { staff_id: staff_id },
+      where: { staff_id: staff_id,
+               end_date: {$gt: moment(Date.now()).toDate()} }, //where end_date is greater than current date
       include: [{
         model: models.Resource,
         include: [models.Desk]
@@ -43,7 +44,8 @@ module.exports = function (app) {
   app.get("/api/v1/resource/:resource_id/reservations/", function(req, res){
     var resource_id = req.params.resource_id;
     models.Reservation.findAll({
-      where: { resource_id: resource_id }
+      where: { resource_id: resource_id,
+               end_date: {$gt: moment(Date.now()).toDate()} } //where end_date is great than current date
     }).then(function (reservations) {
       res.status(200).send(reservations);
     }).catch(Sequelize.ValidationError, function (err) {
@@ -54,6 +56,8 @@ module.exports = function (app) {
   //GET all
   app.get("/api/v1/reservations/", function(req, res) {
     models.Reservation.findAll({
+      where: {
+        end_date: {$gt: moment(Date.now()).toDate()}}, //where end_date is greater than current date
       include: [{
         model: models.Resource,
         include: [models.Desk]
