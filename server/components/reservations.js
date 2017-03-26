@@ -163,9 +163,9 @@ module.exports = function (app) {
     models.Reservation.destroy({
       where: { reservation_id: reservation_id }
     }).then(function (reservation) {
-      res.status(200).send(null);
+      res.status(200).json('Reservation successfully deleted.');
     }).catch(Sequelize.ValidationError, function (err) {
-      res.status(401).send({ errors: err.errors });
+      res.status(401).json({ errors: err.errors });
     });
   });
 
