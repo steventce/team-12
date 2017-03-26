@@ -33,6 +33,12 @@ var generate = function(source) {
     city: 'Vancouver',
     province_state: 'BC',
     postal_code: 'V5M 0B2'
+  }, {
+    building_name: 'Prince George Branch',
+    street_name: '100-299 Victoria Street',
+    city: 'Prince George',
+    province_state: 'BC',
+    postal_code: 'V2L 5B8'
   }]), 'utf8');
 
   // Generate resourceTypes.json

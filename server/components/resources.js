@@ -45,7 +45,7 @@ module.exports = function(app) {
         }
       ]
     }).then(function(resources) {
-      res.status(200).send(resources);
+      res.status(200).json(resources);
     });
   });
 
@@ -108,9 +108,9 @@ module.exports = function(app) {
         '$Reservations.resource_id$': null
       }
     }).then(function(resources) {
-       res.status(200).send(resources);
+       res.status(200).json(resources);
     }).catch(Sequelize.ValidationError, function(err) {
-      res.status(400).send({ errors: err.errors });
+      res.status(400).json({ errors: err.errors });
     });
   });
 
@@ -166,12 +166,12 @@ module.exports = function(app) {
         });
       }).then(function(resource) {
         res.location(`/api/v1/locations/${location_id}/resources/${resource.resource_id}`);
-        res.status(201).send(null);
+        res.status(201).json(null);
       }).catch(Sequelize.ValidationError, function(err) {
-        res.status(400).send({ errors: err.errors });
+        res.status(400).json({ errors: err.errors });
       });
     } else {
-      res.status(400).send(null);
+      res.status(400).json(null);
     }
   });
 
@@ -204,16 +204,16 @@ module.exports = function(app) {
           if (desk) {
             return desk.updateAttributes(fieldsToUpdate);
           } else {
-            res.status(400).send(null);
+            res.status(400).json(null);
           }
         })
         .then(function(desk) {
-          res.status(200).send(null);
+          res.status(200).json(null);
         }).catch(Sequelize.ValidationError, function(err) {
-          res.status(400).send({ errors: err.errors });
+          res.status(400).json({ errors: err.errors });
         });
     } else {
-      res.status(400).send(null);
+      res.status(400).json(null);
     }
   });
 
@@ -228,9 +228,9 @@ module.exports = function(app) {
         resource_id
       }
     }).then(function(affectedRows) {
-      res.status(200).send(null);
+      res.status(200).json(null);
     }).catch(Sequelize.ValidationError, function(err) {
-      res.status(400).send({ errors: err.errors });
+      res.status(400).json({ errors: err.errors });
     });
   });
 }
