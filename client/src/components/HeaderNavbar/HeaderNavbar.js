@@ -30,31 +30,26 @@ class HeaderNavbar extends Component {
   admin(){
     if(this.state.isAdmin){
       return(
-        <LinkContainer to="/admin"><NavItem>Admin Reservations</NavItem></LinkContainer>
+        <Nav>
+          <LinkContainer to="/request"><NavItem>Request</NavItem></LinkContainer>
+          <LinkContainer to="/reservations"><NavItem>Reservations</NavItem></LinkContainer>
+          <LinkContainer to="/admin"><NavItem>Admin Reservations</NavItem></LinkContainer>
+          <LinkContainer to="/resources"><NavItem>Resources</NavItem></LinkContainer>
+          <LinkContainer to="/locations"><NavItem>Locations</NavItem></LinkContainer>          
+        </Nav>
       );
     }
-    return <div></div>;
-  }
+    else{
+      return (
+        <Nav>
+          <LinkContainer to="/request"><NavItem>Request</NavItem></LinkContainer>
+          <LinkContainer to="/reservations"><NavItem>Reservations</NavItem></LinkContainer>          
+        </Nav>
 
-  resources(){
-    if(this.state.isAdmin){
-      return(
-        <LinkContainer to="/resources"><NavItem>Resources</NavItem></LinkContainer>
-      );
+      );      
     }
-    return <div></div>;
+
   }
-
-  locations(){
-    if(this.state.isAdmin){
-      return(
-        <LinkContainer to="/locations"><NavItem>Locations</NavItem></LinkContainer>
-      );
-    }
-    return <div></div>;
-  }
-
-
 
   render() {
     return (
@@ -66,13 +61,7 @@ class HeaderNavbar extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <Nav>
-            <LinkContainer to="/request"><NavItem>Request</NavItem></LinkContainer>
-            <LinkContainer to="/reservations"><NavItem>Reservations</NavItem></LinkContainer>
             {this.admin()}
-            {this.resources()}
-            {this.locations()}
-          </Nav>
           <Nav pullRight>
             <Navbar.Brand>
               <a href="#">Welcome, {staffDetails_name.toLowerCase()}</a>
