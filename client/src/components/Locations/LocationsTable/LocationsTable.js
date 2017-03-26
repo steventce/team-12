@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Button, Modal } from 'react-bootstrap';
-import { dateFormatter } from '../../../utils/formatter';
+import { Button } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import LocationsModal from '../LocationsModal';
 import { modalTypes } from '../LocationsModal';
@@ -17,7 +15,12 @@ class LocationsTable extends Component {
 
     this.addButton = this.addButton.bind(this);
     this.renderModal = this.renderModal.bind(this);
-    this.closeModal = this.setModalProps.bind(this, false, {}, modalTypes.NONE.name);
+    this.setModalProps = this.setModalProps.bind(this);
+    this.closeModal = () => {
+      this.props.resetStatus();
+      this.setModalProps(false, {}, modalTypes.NONE.name);
+      this.props.getLocations();
+    };
   }
 
   componentDidMount() {
@@ -59,19 +62,20 @@ class LocationsTable extends Component {
 
   renderModal(modal) {
     const { modalType } = modal;
+    const { addLocation, editLocation, deleteLocation, status, errors } = this.props;
     let okHandler = () => {};
 
     switch (modalType) {
       case modalTypes.ADD.name: {
-        okHandler = this.props.addLocation;
+        okHandler = addLocation;
         break;
       }
       case modalTypes.EDIT.name: {
-        okHandler = this.props.editLocation;
+        okHandler = editLocation;
         break;
       }
       case modalTypes.DELETE.name: {
-        okHandler = this.props.deleteLocation;
+        okHandler = deleteLocation;
         break;
       }
     }
@@ -79,8 +83,10 @@ class LocationsTable extends Component {
     return (
       <LocationsModal
         {...modal}
+        status={status}
         closeModal={this.closeModal}
         okHandler={okHandler}
+        errors={errors}
       />
     );
   }

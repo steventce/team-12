@@ -1,6 +1,17 @@
-import { getLocations, addLocation, editLocation, deleteLocation } from '../../../redux/modules/LocationReducer';
+import {
+  getLocations,
+  addLocation,
+  editLocation,
+  deleteLocation,
+  resetStatus,
+  setStatus
+} from '../../../redux/modules/LocationReducer';
 import { connect } from 'react-redux';
 import { LocationsTable } from '../../../components';
+
+const STATUS_TYPE = {
+  LOADING: 'loading'
+}
 
 const mapDispatchToProps = function(dispatch) {
   return {
@@ -8,19 +19,19 @@ const mapDispatchToProps = function(dispatch) {
       dispatch(getLocations());
     },
     addLocation: (location) => {
-      dispatch(addLocation(location, () => {
-        dispatch(getLocations())
-      }));
+      dispatch(setStatus(STATUS_TYPE.LOADING));
+      dispatch(addLocation(location))
     },
     editLocation: (locationId, location) => {
-      dispatch(editLocation(locationId, location, () => {
-        dispatch(getLocations())
-      }));
+      dispatch(setStatus(STATUS_TYPE.LOADING));
+      dispatch(editLocation(locationId, location));
     },
     deleteLocation: (locationId) => {
-      dispatch(deleteLocation(locationId, () => {
-        dispatch(getLocations())
-      }));
+      dispatch(setStatus(STATUS_TYPE.LOADING));
+      dispatch(deleteLocation(locationId));
+    },
+    resetStatus: () => {
+      dispatch(resetStatus());
     }
   }
 }
