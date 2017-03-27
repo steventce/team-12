@@ -155,7 +155,7 @@ export const deleteReservation = async (reservationId) => {
   const response = await axios({
     method: 'delete',
     url: API.RESERVATIONS_DELETE(reservationId),
-    baseURL: SERVER_URL,
+    baseURL: '',
     params: {
       reservation_id: reservationId
     }
@@ -256,7 +256,7 @@ export const getLocations = async () => {
   const response = await axios({
     method: 'get',
       url: API.LOCATIONS,
-      baseURL: SERVER_URL,
+      baseURL: '',
   });
 //  console.log('Received response ' + JSON.stringify(response));
   return response.data;
@@ -266,7 +266,7 @@ export const deleteLocation = async (locationId) => {
   const response = await axios({
     method: 'delete',
       url: API.LOCATION_DELETE(locationId),
-      baseURL: SERVER_URL,
+      baseURL: '',
       params: {
         location_id: locationId
       }
