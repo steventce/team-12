@@ -166,7 +166,11 @@ class Request extends Component {
             {/* Submit button */}
             <Row className="show-grid" style={{ margin: '20px 10px 30px 10px' }}>
               <Col xs={2} md={2}>
-                <ConfirmRequestModal {...this.props} handleSubmit={this.props.submitClick} />
+                <ConfirmRequestModal {...this.props} 
+                handleSubmit={this.props.submitClick} 
+                handleConfirm={this.props.confirmClick} 
+                handleAbort={this.props.abortClick}
+                />
               </Col>
             </Row>
 

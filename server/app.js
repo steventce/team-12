@@ -1,5 +1,9 @@
 process.chdir(__dirname);
 
+require("babel-register")({
+  presets: ["es2017"]
+});
+
 var express = require('express');
 var path = require('path');
 var homePath = require('os').homedir()

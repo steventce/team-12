@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
-import { resetStatus, makeReservation } from '../../redux/modules/ReservationReducer';
+import { resetStatus, makeReservation, confirmReservation, abortReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
 import floor1 from '../../images/floor_1.png';
 import floor2 from '../../images/floor_2.png';
@@ -29,7 +29,7 @@ class RequestContainer extends Component {
       sections: ['A', 'B'],
       employeeId: staffDetails_empid,
       status: null,
-      errorMsg: '',      
+      errorMsg: ''
     };
   }
 
@@ -168,6 +168,16 @@ class RequestContainer extends Component {
     }, this.state.employeeId));
   }
 
+  confirmClick() {
+    let pendingReservation = this.props.pendingReservation
+    this.props.dispatch(confirmReservation(pendingReservation.transactionId, pendingReservation.reservationId));
+  }
+
+  abortClick() {
+    let pendingReservation = this.props.pendingReservation
+    this.props.dispatch(abortReservation(pendingReservation.transactionId, pendingReservation.reservationId));
+  }
+
   render() {
     return (
       <Request
@@ -180,6 +190,8 @@ class RequestContainer extends Component {
         onEmailChange={this.onEmailChange.bind(this)}
         onFloorChange={this.onFloorChange.bind(this)}
         submitClick={this.submitClick.bind(this)}
+        confirmClick={this.confirmClick.bind(this)}
+        abortClick={this.abortClick.bind(this)}
         router={this.props.router}
       />
     );
@@ -193,6 +205,7 @@ const mapStateToProps = (state) => {
     availableResources: resources.availableResources,
     status: db.status,
     errorMsg: db.errorMsg,
+    pendingReservation: db.pendingReservation
   };
 }
 

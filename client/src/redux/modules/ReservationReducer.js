@@ -8,8 +8,11 @@ const GET_ADMIN_RESERVATIONS = 'GET_ADMIN_RESERVATIONS';
 const MAKE_RESERVATION = 'MAKE_RESERVATION';
 const CANCEL_RESERVATION = 'CANCEL_RESERVATION';
 const EDIT_RESERVATION = 'EDIT_RESERVATION';
+const CONFIRM_RESERVATION = 'CONFIRM_RESERVATION';
+const ABORT_RESERVATION = 'ABORT_RESERVATION';
 
 const RESET_STATUS = 'RESET_STATUS';
+
 
 // Action Creators
 
@@ -29,12 +32,18 @@ export const makeReservation = createAction(MAKE_RESERVATION, service.makeReserv
 
 export const resetStatus = createAction(RESET_STATUS);
 
+export const confirmReservation = createAction(CONFIRM_RESERVATION, service.confirmReservation);
+
+export const abortReservation = createAction(ABORT_RESERVATION, service.abortReservation);
+
+
 // Reducer
 
 const initialState = {
   employeeId: '00000',
   resources: desks,
   reservations: [],
+  pendingReservation: { reservationId: '', transactionId: '' },
   status: '',
   errorMsg: '',
 }
@@ -43,6 +52,8 @@ export default function reducer(state = initialState, action) {
   if (action.error) {
     console.log("Action has error:" + JSON.stringify(action));
     switch(action.type) {
+      case CONFIRM_RESERVATION:
+      case ABORT_RESERVATION:
       case MAKE_RESERVATION: {
         return { ...state, status: action.payload.response.status, errorMsg: action.payload.response.data }
       }
@@ -62,11 +73,18 @@ export default function reducer(state = initialState, action) {
       return { ...state, reservations: getObjValues(action.payload)}
     }
     case MAKE_RESERVATION: {
-      return { ...state, status: 201 };
+      let pendingReservation = action.payload.data
+      return { ...state, pendingReservation: { 
+        reservationId: pendingReservation.reservation_id, 
+        transactionId: pendingReservation.transaction_id
+      }, status: action.payload.status}
     }
     case RESET_STATUS: {
       return { ...state, status: null, errorMsg: '' };
     }
+    case CONFIRM_RESERVATION:
+    case ABORT_RESERVATION:
+      return { ...state, pendingReservation: {}, status: action.payload.status}
     default:
       return state;
   }

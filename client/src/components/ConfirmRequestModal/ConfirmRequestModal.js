@@ -32,11 +32,14 @@ class ConfirmRequestModal extends Component {
     }
     this.submit = this.submit.bind(this);
     this.close = this.close.bind(this);
+    this.confirm = this.confirm.bind(this);
+    this.abort = this.abort.bind(this);
   }
 
   submit() {
     this.props.handleSubmit();
     this.setState({ modalType: this.modalEnum.WAIT });
+    this.setState({ showModal: true });
   }
 
   close() {
@@ -47,8 +50,14 @@ class ConfirmRequestModal extends Component {
       this.props.router.push('/reservations');
   }
 
-  open() {
-    this.setState({ showModal: true });
+  confirm() {
+    this.props.handleConfirm();
+    this.setState({ modalType: this.modalEnum.WAIT });
+  }
+
+  abort() {
+    this.props.handleAbort();
+    this.setState({ showModal: false });
   }
 
   formatDate(date) {
@@ -57,9 +66,11 @@ class ConfirmRequestModal extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.status) {
-      if (nextProps.status === 201)
+      if (nextProps.status === 200)
+        this.setState({ modalType: this.modalEnum.NONE })
+      else if (nextProps.status === 201)
         this.setState({ modalType: this.modalEnum.OK });
-      else if (nextProps.status === 409)
+      else if (nextProps.status >= 400)
         this.setState({ modalType: this.modalEnum.ERROR });
     }
     if (nextProps.errorMsg) {
@@ -78,13 +89,13 @@ class ConfirmRequestModal extends Component {
     let title = `Confirm Reservation`;
     let text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
-    let confirmButton = <Button bsStyle="primary" onClick={this.submit}>OK</Button>;
-    let cancelButton = <Button onClick={this.close}>Cancel</Button>;
+    let confirmButton = <Button bsStyle="primary" onClick={this.confirm}>OK</Button>;
+    let cancelButton = <Button onClick={this.abort}>Cancel</Button>;
 
     let modalContent;
     if (this.state.modalType === this.modalEnum.NONE) {
       modalContent = (
-        <Modal show={this.state.showModal} onHide={this.close}>
+        <Modal show={this.state.showModal} onHide={this.abort.bind(this)}>
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
@@ -153,7 +164,7 @@ class ConfirmRequestModal extends Component {
           bsStyle="primary"
           bsSize="large"
           disabled={selectedResourceId === -1}
-          onClick={this.open.bind(this)}>
+          onClick={this.submit}>
           Submit
         </Button>
 

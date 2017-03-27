@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 //const SERVER_URL = "http://mylasagna.ca/";
-const SERVER_URL = "http://localhost:3000";
+const SERVER_URL = "http://localhost:8000";
 
 const API = {
   LOCATIONS: '/api/v1/locations',
@@ -116,8 +116,39 @@ export const makeReservation = async (reservation, staffId) => {
       staff_id: staffId
     }
   });
+  return response;
+}
 
-  return response.data;
+export const confirmReservation = async (transactionId, reservationId) => {
+  const response = await axios({
+    method: 'post',
+    url: API.RESERVATIONS_PUT(transactionId),
+    baseURL: '',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: {
+      reservation_id: reservationId,
+      action: "confirm"
+    }
+  });
+  return response;
+}
+
+export const abortReservation = async (transactionId, reservationId) => {
+  const response = await axios({
+    method: 'post',
+    url: API.RESERVATIONS_PUT(transactionId),
+    baseURL: '',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: {
+      reservation_id: reservationId,
+      action: "abort"
+    }
+  });
+  return response;
 }
 
 export const deleteReservation = async (reservationId) => {

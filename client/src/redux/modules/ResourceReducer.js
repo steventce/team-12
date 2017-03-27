@@ -56,7 +56,7 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   if (action.error) {
-    console.log("Action has error:" + JSON.stringify(action));
+    //console.log("Action has error:" + JSON.stringify(action));
   }
 
   switch(action.type) {
