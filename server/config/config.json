@@ -4,20 +4,29 @@
     "password": "password",
     "database": "Resource_Booker",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "pool": {
+       "maxIdleTime": 600000
+    }
   },
   "test": {
     "username": "root",
     "password": null,
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "pool": {
+      "maxIdleTime": 600000
+    }
   },
   "production": {
     "username": "root",
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "pool": {
+      "maxIdleTime": 600000
+    }
   }
 }

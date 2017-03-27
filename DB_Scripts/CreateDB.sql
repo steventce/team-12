@@ -5,10 +5,10 @@ VARCHAR(50) : long data
 */
 
 CREATE DATABASE resource_booker;
-/*
+
 USE resource_booker;
 
-CREATE TABLE Locations(
+CREATE TABLE locations(
 	location_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	building_name VARCHAR(50),
 	street_name VARCHAR(50),
@@ -19,13 +19,13 @@ CREATE TABLE Locations(
 	updated_at DATETIME
 );
 
-CREATE TABLE Resource_Types(
+CREATE TABLE resource_types(
 	resource_type VARCHAR(10) NOT NULL PRIMARY KEY,
 	created_at DATETIME,
 	updated_at DATETIME
 );
 
-CREATE TABLE Resources(
+CREATE TABLE resources(
 	resource_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	location_id INT,
 	resource_type VARCHAR(10),
@@ -35,7 +35,7 @@ CREATE TABLE Resources(
 	FOREIGN KEY (resource_type) REFERENCES Resource_Types(resource_type)
 );
 
-CREATE TABLE Desks(
+CREATE TABLE desks(
 	resource_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	floor VARCHAR(10),
 	section VARCHAR(10),
@@ -45,7 +45,7 @@ CREATE TABLE Desks(
 	FOREIGN KEY (resource_id) REFERENCES Resources(resource_id)
 );
 
-CREATE TABLE Reservations (
+CREATE TABLE reservations (
 	reservation_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	resource_id INT,
 	staff_id VARCHAR(10),
@@ -59,10 +59,10 @@ CREATE TABLE Reservations (
 	FOREIGN KEY (resource_id) REFERENCES Resources(resource_id)
 );
 
-CREATE TABLE Admins(
+CREATE TABLE admins(
 	admin_id VARCHAR(10) NOT NULL PRIMARY KEY,
 	name VARCHAR(30),
 	created_at DATETIME,
 	updated_at DATETIME
 );
-*/
+
