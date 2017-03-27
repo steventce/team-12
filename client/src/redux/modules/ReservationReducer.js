@@ -55,8 +55,13 @@ export default function reducer(state = initialState, action) {
       case CONFIRM_RESERVATION:
       case ABORT_RESERVATION:
       case MAKE_RESERVATION: {
-        return { ...state, status: action.payload.response.status, errorMsg: action.payload.response.data }
+        return { ...state, status: action.payload.response.status, errorMsg: action.payload.response.data };
       }
+      case EDIT_RESERVATION: {
+        // manually modify the error message in table
+        return state;
+      }
+
       default:
         return state;
     }

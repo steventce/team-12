@@ -261,6 +261,7 @@ module.exports = function (app) {
         start_date = req.body.start_date,
         end_date = req.body.end_date;
        
+    var now = moment();
     var newReservation = {
       reservation_id: reservation_id,
       resource_id: resource_id,
@@ -269,8 +270,34 @@ module.exports = function (app) {
       staff_name: req.body.staff_name,
       staff_department: req.body.staff_department,
       start_date: moment(start_date).toDate(),
-      end_date: moment(end_date).toDate()
+      end_date: moment(end_date).toDate(),
+      updated_at: now
     };
+
+    var start_date = moment(start_date);
+    var end_date = moment(end_date);
+
+    // Error checking 
+    if (start_date.isAfter(end_date)) {
+      console.log("start date > end date: " + start_date + " "+ end_date);
+      res.status(401).send("Start date must be after end date");
+      return;
+    } 
+    var duration = moment.duration(end_date.diff(start_date));
+    var hours = duration.asHours();
+    if (hours > 120) {
+      console.log("duration > 120: " + start_date + " "+ end_date);
+      res.status(401).send("End date must be 120 hours after start date");
+      return;
+    } 
+    var duration2 = moment.duration(start_date.diff(now));
+    var days = duration2.asDays();
+    if (days > 30) {
+      console.log("start_date > 30 days: " + start_date + " "+ end_date);
+      res.status(401).send("Start date must be within 30 days of current date");
+      return;
+    }
+
     // Check if the reservation conflicts with other reservations
     // Translates to:
     //      Where 
@@ -288,7 +315,7 @@ module.exports = function (app) {
           res.status(200).send(result);
         });
       } else {
-        res.status(401).send(null);
+        res.status(401).send("No such reservation in the system");
       }
     }).catch(Sequelize.ValidationError, function (err) {
       res.status(400).send({ errors: err.errors });

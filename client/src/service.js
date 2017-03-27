@@ -236,7 +236,7 @@ export const editResource = async (resourceId, resource) => {
       }
     })
   });
-
+  console.log("response is 11" + JSON.stringify(response));
   return response.data;
 }
 
