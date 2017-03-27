@@ -50,7 +50,8 @@ class ReservedTableAdmin extends Component {
       modalIndex: -1,
       floorNum: -1,
       modalType: this.modalEnum.NONE,
-      editOptions: this.editOptions
+      editOptions: this.editOptions,
+      errorMsg: ""
     };
 
     this.props.dispatch(getAdminReservations()).then(function(response) {
@@ -84,11 +85,18 @@ class ReservedTableAdmin extends Component {
     updatedReservation.endDate = moment(editedOptions.newEndTime).format("h:mm a MM/DD/YY");
     let that = this;
     this.props.dispatch(editReservation(updatedReservation)).then(function(response) {
-      console.log("response is: " +  response);
-      that.props.dispatch(getAdminReservations());
+      console.log("response is: " +  JSON.stringify(response));
+      if (typeof response.payload.response == 'undefined') {
+        that.props.dispatch(getAdminReservations());
+        that.modalCloseEdit();
+      } else if (response.payload.response.status != 200) {
+        that.setState({errorMsg: response.payload.response.data});
+        return;
+      }
+      // could do secondary actions here
     });
     // this.setState({reservationList: {...this.props.reservations, [this.state.modalIndex] : updatedReservation}})
-    this.modalCloseEdit();
+    
   }
 
   editButton(cell, row, enumObject, rowIndex) {
@@ -104,6 +112,7 @@ class ReservedTableAdmin extends Component {
   }
 
   modalCloseEdit() {
+    this.setState({errorMsg: ""});
     this.setState({ modalType: this.modalEnum.NONE, modalIndex: -1});
   }
 
@@ -142,6 +151,15 @@ class ReservedTableAdmin extends Component {
         </div>
       )
     }
+  }
+
+  errorMessage() {
+    if (this.state.errorMsg === "") return;
+    return (
+      <div className='error'>
+        {this.state.errorMsg}
+      </div>
+    )
   }
 
   startTimeOptions() {
@@ -198,7 +216,9 @@ class ReservedTableAdmin extends Component {
   }
 
   onClickConfirmCancel(){
-    this.props.dispatch(cancelReservation(this.props.reservations[this.state.modalIndex].reservationId, () => {
+    console.log("modalIndex is: " + this.state.modalIndex);
+    console.log("Reservation ID is: " + this.props.reservations[this.state.modalIndex].reservation_id);
+    this.props.dispatch(cancelReservation(this.props.reservations[this.state.modalIndex].reservation_id, () => {
       this.props.dispatch(getAdminReservations())
     }));
     this.modalCloseCancel();
@@ -221,6 +241,7 @@ class ReservedTableAdmin extends Component {
   }
 
   modalOpenCancel(modalIndex) {
+    console.log("modalIndex is " + modalIndex);
     this.setState({ modalType: this.modalEnum.CANCEL, modalIndex: modalIndex});
   }
 
@@ -272,6 +293,7 @@ class ReservedTableAdmin extends Component {
             <Modal.Title>Edit Resource</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            {this.errorMessage()}
             {this.dropDown()}
             {this.startTimeOptions()}
             {this.endTimeOptions()}

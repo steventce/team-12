@@ -7,7 +7,7 @@ module.exports = function(app) {
 	app.get("/api/v1/admin/users/:staff_id", function(req, res) {
 		
 		var admin_id = req.params.staff_id;
-		
+
 		models.Admin.find({
             where: { admin_id: admin_id}
         }).then(function(admin){

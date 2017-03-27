@@ -44,8 +44,13 @@ export default function reducer(state = initialState, action) {
     console.log("Action has error:" + JSON.stringify(action));
     switch(action.type) {
       case MAKE_RESERVATION: {
-        return { ...state, status: action.payload.response.status, errorMsg: action.payload.response.data }
+        return { ...state, status: action.payload.response.status, errorMsg: action.payload.response.data };
       }
+      case EDIT_RESERVATION: {
+        // manually modify the error message in table
+        return state;
+      }
+
       default:
         return state;
     }
