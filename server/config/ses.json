@@ -1,0 +1,11 @@
+{
+"enable": "false",
+"username": "",
+"nodeMailerConf": {
+	"service": "",
+	"auth": {
+		"user": "",
+	    "pass": ""
+	    }
+	}
+}

@@ -16,7 +16,8 @@ module.exports = function (app) {
   // });
   //temp for testing
 
-  var transporter = sesConfig? nodemailer.createTransport(sesConfig.nodeMailerConf) : nodemailer.createTransport({
+  var enableSes = sesConfig.enable === "true"
+  var transporter = enableSes ? nodemailer.createTransport(sesConfig.nodeMailerConf) : nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'hsbc.resource.booker@gmail.com',  //Using gmail for testing
@@ -215,7 +216,7 @@ module.exports = function (app) {
 
         if (action == "confirm" && pendingRequest.reservation.staff_email !== null) {
           var mailData = {
-            from: sesConfig ? sesConfig.username : 'hsbc.resource.booker@gmail.com', // sender address TODO
+            from: enableSes ? sesConfig.username : 'hsbc.resource.booker@gmail.com', // sender address TODO
             to: pendingRequest.reservation.staff_email, // receiver
             subject: 'HSBC Reservation Confirmation', // Subject line
             html: '<p>Your reservation has been made successfully.</p>'+
