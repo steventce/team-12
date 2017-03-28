@@ -40,10 +40,9 @@ export const abortReservation = createAction(ABORT_RESERVATION, service.abortRes
 // Reducer
 
 const initialState = {
-  employeeId: '00000',
   resources: desks,
   reservations: [],
-  pendingReservation: { reservationId: '', transactionId: '' },
+  pendingTransactionId: "",
   status: '',
   errorMsg: '',
 }
@@ -51,11 +50,12 @@ const initialState = {
 export default function reducer(state = initialState, action) {
   if (action.error) {
     console.log("Action has error:" + JSON.stringify(action));
+    let response = action.payload.response;
     switch(action.type) {
       case CONFIRM_RESERVATION:
       case ABORT_RESERVATION:
       case MAKE_RESERVATION: {
-        return { ...state, status: action.payload.response.status, errorMsg: action.payload.response.data };
+        return { ...state, status: response && response.status ? response.status : 400, errorMsg: response ? response.data : "Unknown error"};
       }
       case EDIT_RESERVATION: {
         // manually modify the error message in table
@@ -78,18 +78,14 @@ export default function reducer(state = initialState, action) {
       return { ...state, reservations: getObjValues(action.payload)}
     }
     case MAKE_RESERVATION: {
-      let pendingReservation = action.payload.data
-      return { ...state, pendingReservation: { 
-        reservationId: pendingReservation.reservation_id, 
-        transactionId: pendingReservation.transaction_id
-      }, status: action.payload.status}
+      return { ...state, pendingTransactionId: action.payload.data.transaction_id, status: action.payload.status}
     }
     case RESET_STATUS: {
       return { ...state, status: null, errorMsg: '' };
     }
     case CONFIRM_RESERVATION:
     case ABORT_RESERVATION:
-      return { ...state, pendingReservation: {}, status: action.payload.status}
+      return { ...state, pendingTransactionId: "", status: action.payload.status}
     default:
       return state;
   }

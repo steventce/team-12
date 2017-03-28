@@ -3,7 +3,7 @@ var Sequelize = require('sequelize'),
   models = require('../models'),
   nodemailer = require('nodemailer');
 
-const RESERVATION_LOCK_MS = 600000
+const RESERVATION_LOCK_MS = 60000
 
 module.exports = function (app) {
 
@@ -72,7 +72,7 @@ module.exports = function (app) {
     });
   }); 
 
-  var pendingReservations = {}; // transactionId : {timer, reservation_id, start_date, end_date, resource_id, transaction, staff_email}
+  var pendingReservations = {}; // transactionId : {timer, reservation}
   
   //POST
   app.post("/api/v1/reservations", async function (req, res) {
@@ -104,13 +104,6 @@ module.exports = function (app) {
     } else if (end_date_.isAfter(max_end_date, 'hour')){
         res.status(409).json(`Reservation cannot be made for more than 30 days in advance.`);
     } else {
-      let transaction;
-      try {
-        transaction = await models.sequelize.transaction({
-          isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED,
-          autocommit: false
-        })
-
         // Check if the reservation conflicts with other reservations
         // Translates to:
         //      Where 
@@ -123,69 +116,63 @@ module.exports = function (app) {
         for (var prop in pendingReservations) {
           if (!pendingReservations.hasOwnProperty(prop) || pendingReservations[prop] === undefined)
             continue
-          let reservation = pendingReservations[prop]
-          if (reservation.resource_id !== resource_id)
+          let pendingReservation = pendingReservations[prop].reservation
+          if (pendingReservation.resource_id !== resource_id)
             continue
 
-          if (reservation.end_date > start_date && reservation.start_date < end_date) {
+          if (pendingReservation.end_date > reservation.start_date && pendingReservation.start_date < reservation.end_date) {
             console.log("Reservation overlapped with: " + prop)
             overlap = true
             break
           } 
         }
 
-        if (!overlap) {
-          let reservations = await models.Reservation.findAll({ 
-            transaction,      
-            where:{
-              resource_id: resource_id,
-              $and: [{'$end_date$': {$gt: start_date}},
-                     {'$start_date$': {$lt: end_date}}]}})
+        try {
+          if (!overlap) {
+            let reservations = await models.Reservation.findAll({     
+              where:{
+                resource_id: resource_id,
+                $and: [{'$end_date$': {$gt: start_date}},
+                       {'$start_date$': {$lt: end_date}}]}})
 
-          console.log("reservations are: " + JSON.stringify(reservations)) 
-          overlap = reservations.length > 0
+            console.log("reservations are: " + JSON.stringify(reservations)) 
+            overlap = reservations.length > 0
+          }
+
+          if (overlap) { //findAll returns an empty array not null if nothing is found.
+            // Reservation already exists
+            res.status(409).send("You cannot book multiple desks for overlapping time period");
+          }
+          else {
+            let resource = await models.Resource.findOne({where: { resource_id: resource_id }})
+
+            console.log("Resource is: " + resource)
+            reservation.resource_type = resource.resource_type
+
+            let transaction_id = String(Date.now()) + "_" + staff_id 
+
+            // Set timeout and ask user to confirm
+            const timer = setTimeout(() => {
+              console.log("Reservation expired: " + transaction_id)
+              delete pendingReservations[transaction_id]
+            }, RESERVATION_LOCK_MS)
+
+            pendingReservations[transaction_id] = {timer, reservation}
+            console.log("Created reservation on transaction at id " + transaction_id)
+            res.status(200).send({transaction_id})
+          }
         }
-
-        if (overlap) { //findAll returns an empty array not null if nothing is found.
-          // Reservation already exists
-          res.status(409).send("You cannot book multiple desks for overlapping time period");
-          transaction.rollback();
-        }
-        else {
-          let resource = await models.Resource.findOne({ transaction, where: { resource_id: resource_id }})
-
-          console.log("Resource is: " + resource)
-          reservation.resource_type = resource.resource_type
-
-          let dbReservation = await models.Reservation.create(reservation, {transaction})
-          let transaction_id = String(Date.now()) + '-' + dbReservation.reservation_id
-
-          // Set timeout and ask user to confirm
-          const timer = setTimeout(() => {
-            console.log("Reservation expired: " + dbReservation.reservation_id)
-            delete pendingReservations[transaction_id]
-            transaction.rollback()
-          }, RESERVATION_LOCK_MS)
-
-          pendingReservations[transaction_id] = {timer, transaction, 
-            reservation_id: dbReservation.reservation_id, start_date, end_date, resource_id, staff_email}
-          console.log("Created reservation on transaction at id " + transaction_id)
-          res.status(200).send({reservation_id: String(dbReservation.reservation_id), transaction_id})
+        catch(err) {
+          console.log("Error creating reservation: " + err)
+          res.status(400).send({ errors: err });
         }
       }
-      catch(err) {
-        console.log("Error creating reservation: " + err)
-        res.status(400).send({ errors: err });
-        if (transaction)
-          transaction.rollback();
-      }
-    }
   });
 
   // POST
   app.post("/api/v1/reservations/:transaction_id", async function (req, res) {
-    var reservation_id = req.body.reservation_id,
-        transaction_id = req.params.transaction_id,
+    var transaction_id = req.params.transaction_id,
+        staff_id = req.body.staff_id,
         action = req.body.action
 
         let pendingRequest = pendingReservations[transaction_id]
@@ -194,33 +181,33 @@ module.exports = function (app) {
            res.status(404).send("Pending transaction expired.");
            return
         }
-        else if (pendingRequest.reservation_id != reservation_id) {
+        else if (pendingRequest.reservation.staff_id != staff_id) {
           res.status(400).send("Bad request");
            return
         }
 
-        try {
-          if (action == "confirm") {
-            await pendingRequest.transaction.commit()
+        if (action == "confirm") {
+          try {
+            let dbReservation = await models.Reservation.create(pendingRequest.reservation)
+
             console.log("Commited transaction " + transaction_id)
-            res.location(`/api/v1/reservations/${pendingRequest.reservation_id}`);
+            res.location(`/api/v1/reservations/${dbReservation.reservation_id}`);
             res.status(201).send("Your reservation has been made successfully.")
           }
-          else {
-            console.log("User aborted transaction " + transaction_id)
-            await pendingRequest.transaction.rollback()
+          catch (err) {
+            console.log("Error confirming transaction " + transaction_id + ": " + err)
+            res.status(400).send({ errors: err });
+            return
           }
         }
-        catch (err) {
-          console.log("Error executing action: " + err)
-          await pendingRequest.transaction.rollback()
-          res.status(400).send({ errors: err });
+        else {
+          console.log("User aborted transaction " + transaction_id)
         }
 
-        if (action == "confirm" && pendingRequest.staff_email !== null) {
+        if (action == "confirm" && pendingRequest.reservation.staff_email !== null) {
           var mailData = {
             from: 'hsbc.resource.booker@gmail.com', // sender address TODO
-            to: pendingRequest.staff_email, // receiver
+            to: pendingRequest.reservation.staff_email, // receiver
             subject: 'HSBC Reservation Confirmation', // Subject line
             html: '<p>Your reservation has been made successfully.</p>'+
                   '<p>Start time: ' + moment(pendingRequest.start_date).format("dddd, MMMM Do YYYY, h:mm:ss a") + '</p>' +

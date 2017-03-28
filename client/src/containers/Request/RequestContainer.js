@@ -169,13 +169,11 @@ class RequestContainer extends Component {
   }
 
   confirmClick() {
-    let pendingReservation = this.props.pendingReservation
-    this.props.dispatch(confirmReservation(pendingReservation.transactionId, pendingReservation.reservationId));
+    this.props.dispatch(confirmReservation(this.props.pendingTransactionId, staffDetails_empid));
   }
 
   abortClick() {
-    let pendingReservation = this.props.pendingReservation
-    this.props.dispatch(abortReservation(pendingReservation.transactionId, pendingReservation.reservationId));
+    this.props.dispatch(abortReservation(this.props.pendingTransactionId, staffDetails_empid));
   }
 
   render() {
@@ -205,7 +203,7 @@ const mapStateToProps = (state) => {
     availableResources: resources.availableResources,
     status: db.status,
     errorMsg: db.errorMsg,
-    pendingReservation: db.pendingReservation
+    pendingTransactionId: db.pendingTransactionId
   };
 }
 
