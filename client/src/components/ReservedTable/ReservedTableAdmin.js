@@ -277,12 +277,12 @@ class ReservedTableAdmin extends Component {
       </Row>
       <Row/>
       <BootstrapTable exportCSV={true} data={this.props.reservations}
-      striped={true} hover={true} pagination>
+      striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
           <TableHeaderColumn dataField='resource_id' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn dataField='start_date' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yy)</TableHeaderColumn>
-          <TableHeaderColumn dataField='end_date' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='start_date' dataSort={true} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
+          <TableHeaderColumn dataField='end_date' dataSort={true} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
           <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
           <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>

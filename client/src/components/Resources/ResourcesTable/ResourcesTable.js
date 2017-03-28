@@ -47,7 +47,7 @@ class ResourcesTable extends Component {
 
   editButton(cell, row, enumObject, rowIndex) {
     return (
-      <Button style={{minWidth:"40px", minHeight:"40px"}}
+      <Button
         onClick={this.setModalProps.bind(this, true, row, modalTypes.EDIT.name)}>
         /
       </Button>
@@ -56,7 +56,7 @@ class ResourcesTable extends Component {
 
   deleteButton(cell, row, enumObject, rowIndex) {
     return (
-      <Button style={{minWidth:"40px", minHeight:"40px"}}
+      <Button
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
         X
       </Button>
@@ -117,8 +117,8 @@ class ResourcesTable extends Component {
             <TableHeaderColumn dataField='Desk.section' dataAlign='center' dataSort hidden>Section</TableHeaderColumn>
             <TableHeaderColumn dataField='Reservations.staff_id' dataAlign='center' dataSort>Staff Id</TableHeaderColumn>
             <TableHeaderColumn dataField='Reservations.staff_name' dataAlign='center' dataSort>Staff Name</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time<div>(dd/mm/yy)</div></TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time<div>(dd/mm/yy)</div></TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time<div>(d/m/y)</div></TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time<div>(d/m/y)</div></TableHeaderColumn>
             <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
             <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Cancel</TableHeaderColumn>
           </BootstrapTable>
