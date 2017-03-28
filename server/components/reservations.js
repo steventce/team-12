@@ -2,8 +2,9 @@ var Sequelize = require('sequelize'),
   moment = require('moment'),
   models = require('../models'),
   nodemailer = require('nodemailer');
+  sesConfig = require('../config/ses');
 
-const RESERVATION_LOCK_MS = 60000
+const RESERVATION_LOCK_MS = 600000
 
 module.exports = function (app) {
 
@@ -14,7 +15,8 @@ module.exports = function (app) {
   //   secretAccessKey: 'AWS/Secret/key' //provided by HSBC?
   // });
   //temp for testing
-  var transporter = nodemailer.createTransport({
+
+  var transporter = sesConfig? nodemailer.createTransport(sesConfig.nodeMailerConf) : nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'hsbc.resource.booker@gmail.com',  //Using gmail for testing
@@ -22,6 +24,13 @@ module.exports = function (app) {
     }
   });
 
+ // var transporter = nodemailer.createTransport({
+ //    service: '"SES-US-WEST-2"',
+ //    auth: {
+ //        user: 'AKIAIBDEKDOWLGPY54IQ',  //Using gmail for testing
+ //        pass: 'ApsfD/fWjGLiOLceshisiTO7dS/GW8KGyLLMAAa+S4ZM'
+ //    }
+ //  });
 
   //GET by staff_id
   app.get("/api/v1/users/:staff_id/reservations/", function (req, res) {
@@ -206,7 +215,7 @@ module.exports = function (app) {
 
         if (action == "confirm" && pendingRequest.reservation.staff_email !== null) {
           var mailData = {
-            from: 'hsbc.resource.booker@gmail.com', // sender address TODO
+            from: sesConfig ? sesConfig.username : 'hsbc.resource.booker@gmail.com', // sender address TODO
             to: pendingRequest.reservation.staff_email, // receiver
             subject: 'HSBC Reservation Confirmation', // Subject line
             html: '<p>Your reservation has been made successfully.</p>'+
