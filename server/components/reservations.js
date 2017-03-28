@@ -214,7 +214,7 @@ module.exports = function (app) {
           console.log("User aborted transaction " + transaction_id)
         }
 
-        if (action == "confirm" && pendingRequest.reservation.staff_email !== null) {
+        if (action == "confirm" && pendingRequest.reservation.staff_email && pendingRequest.reservation.staff_email !== "") {
           var mailData = {
             from: enableSes ? sesConfig.username : 'hsbc.resource.booker@gmail.com', // sender address TODO
             to: pendingRequest.reservation.staff_email, // receiver

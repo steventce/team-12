@@ -1,5 +1,4 @@
 import { desks } from '../../resources/desks'
-import { reservations } from '../../resources/reservations'
 import { createAction } from 'redux-actions';
 import * as service from '../../service';
 
@@ -96,8 +95,9 @@ export default function reducer(state = initialState, action) {
 function getObjValues(obj) {
     let values = [];
 
+    let i = 0
     for (var prop in obj) {
-      if (reservations.hasOwnProperty(prop) && obj[prop] !== undefined )
+      if (obj.hasOwnProperty(prop) && obj[prop] !== undefined )
         values.push(obj[prop])
     }
     return values;

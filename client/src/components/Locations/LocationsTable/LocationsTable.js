@@ -44,16 +44,16 @@ class LocationsTable extends Component {
 
   editButton(cell, row, enumObject, rowIndex) {
     return (
-      <Button
+      <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.EDIT.name)}>
-        Edit
+        /
       </Button>
     )
   }
 
   deleteButton(cell, row, enumObject, rowIndex) {
     return (
-      <Button
+      <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
         X
       </Button>
@@ -97,8 +97,7 @@ class LocationsTable extends Component {
         locationId: location.location_id,
         locationName: location.building_name,
         locationAddress: location.street_name +  ", " +  location.city + ", " + location.province_state + ", " + location.postal_code,
-        editLocation: "Edit",
-        deleteLocation: "x"
+        editLocation: "Edit"
       };
     });
   }
@@ -118,12 +117,13 @@ class LocationsTable extends Component {
             data={this.formattedLocations(this.props.locations)}
             striped
             hover
+            pagination
             options={options}>
-            <TableHeaderColumn dataField='locationId' isKey={true} dataAlign='center'  width='100px' dataSort={true}>ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='locationId' isKey={true} dataAlign='center' dataSort={true}>ID</TableHeaderColumn>
             <TableHeaderColumn dataField='locationName' dataAlign='center' dataSort={true}>Name</TableHeaderColumn>
             <TableHeaderColumn dataField='locationAddress' dataAlign='center' dataSort={true}>Address</TableHeaderColumn>
-            <TableHeaderColumn dataField='editLocation' dataAlign='center' width='150px' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
-            <TableHeaderColumn dataField='deleteLocation' dataAlign='center' width='100px' dataFormat={this.deleteButton.bind(this)}>Delete</TableHeaderColumn>
+            <TableHeaderColumn dataField='editLocation' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
+            <TableHeaderColumn dataField='deleteLocation' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Delete</TableHeaderColumn>
           </BootstrapTable>
         </div>
         {this.renderModal(modal)}

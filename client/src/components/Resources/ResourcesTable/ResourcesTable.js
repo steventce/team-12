@@ -47,16 +47,16 @@ class ResourcesTable extends Component {
 
   editButton(cell, row, enumObject, rowIndex) {
     return (
-      <Button
+      <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.EDIT.name)}>
-        Edit
+        /
       </Button>
     )
   }
 
   deleteButton(cell, row, enumObject, rowIndex) {
     return (
-      <Button
+      <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
         X
       </Button>
@@ -111,16 +111,16 @@ class ResourcesTable extends Component {
             hover
             pagination
             options={options}>
-            <TableHeaderColumn dataField='Desk.desk_number' isKey dataAlign='center' dataSort width='100px'>Resource ID</TableHeaderColumn>
-            <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort width='125px'>Resource Type</TableHeaderColumn>
+            <TableHeaderColumn dataField='Desk.desk_number' isKey dataAlign='center' dataSort>Resource ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort>Resource Type</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort hidden>Floor</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.section' dataAlign='center' dataSort hidden>Section</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.staff_id' dataAlign='center' dataSort width='100px'>Staff Id</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.staff_name' dataAlign='center' dataSort width='100px'>Staff Name</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter} width='100px'>Start Time<div>(dd/mm/yyyy)</div></TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter} width='100px'>End Time<div>(dd/mm/yyyy)</div></TableHeaderColumn>
-            <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)} width='100px'>Edit</TableHeaderColumn>
-            <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)} width='100px'>Cancel</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.staff_id' dataAlign='center' dataSort>Staff Id</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.staff_name' dataAlign='center' dataSort>Staff Name</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time<div>(dd/mm/yy)</div></TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time<div>(dd/mm/yy)</div></TableHeaderColumn>
+            <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
+            <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Cancel</TableHeaderColumn>
           </BootstrapTable>
         </div>
         {this.renderModal(modal)}

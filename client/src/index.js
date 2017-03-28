@@ -6,6 +6,7 @@ import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
 import { App, Request, Locations, Reservations, AdminReservations, Resources } from './containers';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import './index.css';
 
 ReactDOM.render((

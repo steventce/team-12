@@ -14,7 +14,6 @@ import {
 } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { DropdownButton, MenuItem} from 'react-bootstrap';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import { dateFormatter } from '../../utils/formatter';
@@ -101,12 +100,12 @@ class ReservedTableAdmin extends Component {
 
   editButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button
+       <Button style={{minWidth:"40px", minHeight:"40px"}}
           type="button"
           onClick={() =>
           this.onClickEdit(cell, row, rowIndex)}
        >
-       Edit
+       /
        </Button>
     )
   }
@@ -226,7 +225,7 @@ class ReservedTableAdmin extends Component {
 
   cancelButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button
+       <Button style={{minWidth:"40px", minHeight:"40px"}}
           type="button"
           onClick={() =>
           this.onClickCancel(cell, row, rowIndex)}
@@ -278,13 +277,13 @@ class ReservedTableAdmin extends Component {
       </Row>
       <Row/>
       <BootstrapTable exportCSV={true} data={this.props.reservations}
-      striped={true} hover={true}>
+      striped={true} hover={true} pagination>
           <TableHeaderColumn dataField='resource_id' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn dataField='start_date' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yyyy)</TableHeaderColumn>
-          <TableHeaderColumn dataField='end_date' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yyyy)</TableHeaderColumn>
-          <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}></TableHeaderColumn>
+          <TableHeaderColumn dataField='start_date' dataSort={true} dataFormat={dateFormatter}>Start Time (dd/mm/yy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='end_date' dataSort={true} dataFormat={dateFormatter}>End Time (dd/mm/yy)</TableHeaderColumn>
+          <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
           <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>
 
