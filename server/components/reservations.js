@@ -215,24 +215,33 @@ module.exports = function (app) {
         }
 
         if (action == "confirm" && pendingRequest.reservation.staff_email && pendingRequest.reservation.staff_email !== "") {
-          var mailData = {
-            from: enableSes ? sesConfig.username : 'hsbc.resource.booker@gmail.com', // sender address TODO
-            to: pendingRequest.reservation.staff_email, // receiver
-            subject: 'HSBC Reservation Confirmation', // Subject line
-            html: '<p>Your reservation has been made successfully.</p>'+
-                  '<p>Start time: ' + moment(pendingRequest.start_date).format("dddd, MMMM Do YYYY, h:mm:ss a") + '</p>' +
-                  '<p>End time: ' + moment(pendingRequest.end_date).format("dddd, MMMM Do YYYY, h:mm:ss a") + '</p>' // html body
-          };
-          transporter.sendMail(mailData, function(err, info){
-            if(err){
-              console.log(err);
-            }
-            else{
-              console.log('Message %s sent: %s', info.messageId, info.response);
-            }
-          });            
+          
+          models.Resource.find({    //Need to get resource information to display in email
+            where: { resource_id: pendingRequest.reservation.resource_id },
+            include: [{
+              model: models.Desk
+            }],
+            raw: true
+          }).then(function (resource) {
+            var mailData = {
+              from: enableSes ? sesConfig.username : 'hsbc.resource.booker@gmail.com', // sender address TODO
+              to: pendingRequest.reservation.staff_email, // receiver
+              subject: 'HSBC Reservation Confirmation', // Subject line
+              html: '<p>Your reservation has been made successfully for: '+ resource['Desk.desk_number'] + '</p>' +
+                    '<p>Start time: ' + moment(pendingRequest.start_date).format("dddd, MMMM Do YYYY, h:mm:ss a") + '</p>' +
+                    '<p>End time: ' + moment(pendingRequest.end_date).format("dddd, MMMM Do YYYY, h:mm:ss a") + '</p>' // html body
+            };
+            transporter.sendMail(mailData, function(err, info){
+              if(err){
+                console.log(err);
+              }
+              else{
+                console.log('Message %s sent: %s', info.messageId, info.response);
+              }
+            });              
+          });
+          
         }
-
         clearTimeout(pendingRequest.timer)
         delete pendingReservations[transaction_id]
   });
