@@ -28,7 +28,8 @@ class ConfirmRequestModal extends Component {
     this.state = {
       showModal: false,
       modalType: this.modalEnum.NONE,
-      errorMsg: ''
+      errorMsg: '',
+      timeLeft_s: 0, timerId: -1
     }
     this.submit = this.submit.bind(this);
     this.close = this.close.bind(this);
@@ -39,11 +40,28 @@ class ConfirmRequestModal extends Component {
   submit() {
     this.props.handleSubmit();
     this.setState({ modalType: this.modalEnum.WAIT });
-    this.setState({ showModal: true });
+
+    clearTimeout(this.state.timerId);
+    this.setState({ showModal: true, timeLeft_s: 80, timerId: setTimeout(() => this.updateTimerLeft(), 1000)});
+  }
+
+  updateTimerLeft() {
+    if (!this || this.state.timeLeft_s <= 0)
+      return
+
+    this.setState({timeLeft_s: this.state.timeLeft_s - 1, timerId: setTimeout(() => this.updateTimerLeft(), 1000)})
+  }
+
+  getTimeRemaining() {
+    const min = Math.trunc(this.state.timeLeft_s / 60)
+    const sec = this.state.timeLeft_s % 60
+    return "Time Remaining: " + (min < 10 ? "0" : "") + min + ":" + (sec < 10 ? "0" : "") + sec + " "
   }
 
   close() {
     this.setState({ showModal: false });
+    clearTimeout(this.state.timerId);
+
     if (this.state.modalType === this.modalEnum.ERROR)
       window.location.reload();
     else if (this.state.modalType === this.modalEnum.OK)
@@ -58,6 +76,7 @@ class ConfirmRequestModal extends Component {
   abort() {
     this.props.handleAbort();
     this.setState({ showModal: false });
+    clearTimeout(this.state.timerId);
   }
 
   formatDate(date) {
@@ -107,6 +126,7 @@ class ConfirmRequestModal extends Component {
           </Modal.Body>
 
           <Modal.Footer>
+            {this.getTimeRemaining()}
             {cancelButton}
             {confirmButton}
           </Modal.Footer>
