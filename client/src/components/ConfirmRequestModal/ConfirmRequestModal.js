@@ -114,7 +114,7 @@ class ConfirmRequestModal extends Component {
     let modalContent;
     if (this.state.modalType === this.modalEnum.NONE) {
       modalContent = (
-        <Modal show={this.state.showModal} onHide={this.abort.bind(this)}>
+        <Modal style={{maxWidth:"100vw"}} show={this.state.showModal} onHide={this.abort.bind(this)}>
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
@@ -134,7 +134,7 @@ class ConfirmRequestModal extends Component {
       )
     } else if (this.state.modalType === this.modalEnum.WAIT) {
       modalContent = (
-        <Modal show={this.state.showModal} onHide={this.close}>
+        <Modal style={{maxWidth:"100vw"}} show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
@@ -146,7 +146,7 @@ class ConfirmRequestModal extends Component {
       )
     } else if (this.state.modalType === this.modalEnum.ERROR) {
       modalContent = (
-        <Modal show={this.state.showModal} onHide={this.close}>
+        <Modal style={{maxWidth:"100vw"}} show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Error!</Modal.Title>
           </Modal.Header>
@@ -164,7 +164,7 @@ class ConfirmRequestModal extends Component {
       )
     } else if (this.state.modalType === this.modalEnum.OK) {
       modalContent = (
-        <Modal show={this.state.showModal} onHide={this.close}>
+        <Modal style={{maxWidth:"100vw"}} show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Reservation created!</Modal.Title>
           </Modal.Header>
