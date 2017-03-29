@@ -42,7 +42,7 @@ class ConfirmRequestModal extends Component {
     this.setState({ modalType: this.modalEnum.WAIT });
 
     clearTimeout(this.state.timerId);
-    this.setState({ showModal: true, timeLeft_s: 80, timerId: setTimeout(() => this.updateTimerLeft(), 1000)});
+    this.setState({ showModal: true, timeLeft_s: 600, timerId: setTimeout(() => this.updateTimerLeft(), 1000)});
   }
 
   updateTimerLeft() {
