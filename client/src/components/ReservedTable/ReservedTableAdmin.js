@@ -243,6 +243,10 @@ class ReservedTableAdmin extends Component {
     console.log("modalIndex is " + modalIndex);
     this.setState({ modalType: this.modalEnum.CANCEL, modalIndex: modalIndex});
   }
+  
+  csvDateFormatter(cell, row){
+      return moment(cell).format("YYYY-MM-DD h:mma");
+  }
 
   // Dropdown
 
@@ -281,10 +285,10 @@ class ReservedTableAdmin extends Component {
           <TableHeaderColumn dataField='resource_id' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn dataField='start_date' dataSort={true} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
-          <TableHeaderColumn dataField='end_date' dataSort={true} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
-          <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
-          <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
+          <TableHeaderColumn dataField='start_date' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
+          <TableHeaderColumn dataField='end_date' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
+          <TableHeaderColumn dataField='edit' dataAlign='center' export={false} dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
+          <TableHeaderColumn dataField='cancel' dataAlign='center' export={false} dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>
 
       <Modal show={(this.state.modalType === this.modalEnum.EDIT)} onHide={this.modalCloseEdit.bind(this)}>
