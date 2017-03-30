@@ -33,6 +33,7 @@
     "chai": "^3.5.0",
     "csvtojson": "^1.1.4",
     "mocha": "^3.2.0",
+    "nightwatch": "^0.9.14",
     "supertest": "^3.0.0"
   }
 }

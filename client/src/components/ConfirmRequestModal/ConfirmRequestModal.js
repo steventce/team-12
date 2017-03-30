@@ -108,8 +108,8 @@ class ConfirmRequestModal extends Component {
     let title = `Confirm Reservation`;
     let text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
-    let confirmButton = <Button bsStyle="primary" onClick={this.confirm}>OK</Button>;
-    let cancelButton = <Button onClick={this.abort}>Cancel</Button>;
+    let confirmButton = <Button bsStyle="primary" onClick={this.confirm} id="confirmBtn">OK</Button>;
+    let cancelButton = <Button onClick={this.abort} id="cancelConfirmBtn">Cancel</Button>;
 
     let modalContent;
     if (this.state.modalType === this.modalEnum.NONE) {
@@ -171,7 +171,7 @@ class ConfirmRequestModal extends Component {
 
           <Modal.Footer>
             <LinkContainer to="/reservations">
-              <Button bsStyle="primary" onClick={this.close}>Ok</Button>
+              <Button bsStyle="primary" onClick={this.close} id="successBtn">Ok</Button>
             </LinkContainer>
           </Modal.Footer>
         </Modal>
@@ -185,7 +185,8 @@ class ConfirmRequestModal extends Component {
           bsSize="large"
           disabled={selectedResourceId === -1}
           style={{ marginTop: "30px" }}
-          onClick={this.submit}>
+          onClick={this.submit}
+          id="submitBtn">
           Submit
         </Button>
 
