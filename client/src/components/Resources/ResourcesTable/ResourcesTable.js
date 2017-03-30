@@ -8,6 +8,10 @@ import { modalTypes } from '../ResourcesModal';
 
 const locationId = 1;
 
+function resourceIdFormatter(cell, row) {
+  return cell || 'Available'
+}
+
 class ResourcesTable extends Component {
   constructor(props) {
     super(props);
@@ -115,10 +119,7 @@ class ResourcesTable extends Component {
             <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort>Resource Type</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort hidden>Floor</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.section' dataAlign='center' dataSort hidden>Section</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.staff_id' dataAlign='center' dataSort>Staff Id</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.staff_name' dataAlign='center' dataSort>Staff Name</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time<div>(d/m/y)</div></TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time<div>(d/m/y)</div></TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.resource_id' dataAlign='center' dataSort dataFormat={resourceIdFormatter}>Reservation ID</TableHeaderColumn>
             <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
             <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Delete</TableHeaderColumn>
           </BootstrapTable>
