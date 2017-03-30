@@ -120,7 +120,7 @@ class ResourcesTable extends Component {
             <TableHeaderColumn dataField='Reservations.start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time<div>(d/m/y)</div></TableHeaderColumn>
             <TableHeaderColumn dataField='Reservations.end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time<div>(d/m/y)</div></TableHeaderColumn>
             <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
-            <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Cancel</TableHeaderColumn>
+            <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Delete</TableHeaderColumn>
           </BootstrapTable>
         </div>
         {this.renderModal(modal)}

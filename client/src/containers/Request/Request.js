@@ -156,21 +156,21 @@ class Request extends Component {
 
             </Col>
 
+            {/* Submit button */}
+            <Row className="show-grid" style={{ margin: '50px 10px 30px 20px' }}>
+              <Col xs={2} md={2}>
+                <ConfirmRequestModal {...this.props}
+                handleSubmit={this.props.submitClick}
+                handleConfirm={this.props.confirmClick}
+                handleAbort={this.props.abortClick}
+                />
+              </Col>
+            </Row>
+
             {/* ImageMap and specific resource */}
             <Row className="show-grid">
               <Col xs={12} md={8} style={{ height: "750px" }} >
                 <ReactImageZoom {...imgProps} />
-              </Col>
-            </Row>
-
-            {/* Submit button */}
-            <Row className="show-grid" style={{ margin: '20px 10px 30px 10px' }}>
-              <Col xs={2} md={2}>
-                <ConfirmRequestModal {...this.props} 
-                handleSubmit={this.props.submitClick} 
-                handleConfirm={this.props.confirmClick} 
-                handleAbort={this.props.abortClick}
-                />
               </Col>
             </Row>
 

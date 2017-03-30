@@ -184,6 +184,7 @@ class ConfirmRequestModal extends Component {
           bsStyle="primary"
           bsSize="large"
           disabled={selectedResourceId === -1}
+          style={{ marginTop: "30px" }}
           onClick={this.submit}>
           Submit
         </Button>
