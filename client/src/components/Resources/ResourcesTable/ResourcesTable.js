@@ -115,7 +115,7 @@ class ResourcesTable extends Component {
             hover
             pagination
             options={options}>
-            <TableHeaderColumn dataField='Desk.desk_number' isKey dataAlign='center' dataSort>Resource ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='Desk.desk_number' isKey dataAlign='center' dataSort filter={{ type: 'TextFilter' }}>Resource ID</TableHeaderColumn>
             <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort>Resource Type</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort hidden>Floor</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.section' dataAlign='center' dataSort hidden>Section</TableHeaderColumn>
