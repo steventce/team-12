@@ -16,6 +16,7 @@ import 'react-widgets/dist/css/react-widgets.css';
 import { DATE_TIME_FORMAT } from '../../utils/formatter';
 import ConfirmRequestModal from '../../components/ConfirmRequestModal';
 import ReactImageZoom from 'react-image-zoom';
+import './Request.css';
 
 momentLocalizer(moment);
 
@@ -169,8 +170,10 @@ class Request extends Component {
 
             {/* ImageMap and specific resource */}
             <Row className="show-grid">
-              <Col xs={12} md={8} style={{ height: "750px" }} >
-                <ReactImageZoom {...imgProps} />
+              <Col xs={12} md={8}>
+                <div id="floor-map-container">
+                  <ReactImageZoom {...imgProps} />
+                </div>
               </Col>
             </Row>
 
