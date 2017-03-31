@@ -57,6 +57,33 @@ quit;
 ```
 Note: The warnings after running PopulateData.sql are due to the DeskNumber column in Resources table truncating the Desks.csv DeskNum entries with '- FUTURE' in it into '-'
 
+### Starting the archive reservations event
+Start the event scheduler daemon:
+```SQL
+SET GLOBAL event_scheduler = ON;
+```
+Or set it in a config file so that it will start automatically every time (my.cnf or my.ini on Windows):
+```bash
+locate my.cnf
+locate my.ini
+```
+Set the config variable:
+```
+event_scheduler=ON
+```
+Ensure that the process is running (look for User: event_scheduler):
+```SQL
+SHOW PROCESSLIST;
+```
+Source the .sql file:
+```SQL
+source ArchiveReservations.sql
+```
+Ensure that the event has been created:
+```SQL
+SHOW EVENTS
+```
+
 ## <a name="starting-the-server"></a>Starting the server
 Start development server on port 3000: 
 ```

@@ -132,26 +132,6 @@ class ReservedTableAdmin extends Component {
     this.setState({ editOptions: newOptions });
   }
 
-  dropDown(title, i) {
-    if (this.state.modalIndex !== -1) {
-      let resourceMenuItems = resourceTypes.map(function(option, i) {
-        return (
-          <MenuItem key={i} eventKey={option}>{option}</MenuItem>
-        )
-      });
-      return (
-        <div className='edit'>
-          Type
-          <br/>
-          <DropdownButton title={this.state.editOptions.resourceType} id='resourceDropdown'
-          onSelect={this.updateSelectedResource.bind(this)}>
-            {resourceMenuItems}
-          </DropdownButton>
-        </div>
-      )
-    }
-  }
-
   errorMessage() {
     if (this.state.errorMsg === "") return;
     return (
@@ -248,37 +228,9 @@ class ReservedTableAdmin extends Component {
       return moment(cell).format("YYYY-MM-DD h:mma");
   }
 
-  // Dropdown
-
   render() {
     return (
       <div className='container tableContainer'>
-      <Row className="show-grid">
-        <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
-          <FormGroup controlId="formControlsBuildingSelect">
-            <ControlLabel>Location</ControlLabel>
-            <FormControl componentClass="select" disabled={true}>
-            {BuildingArr.map(function (building, index) {
-              return (
-                <option key={index} value={index}>{building}</option>
-                );
-            })}
-            </FormControl>
-          </FormGroup>
-        </Col>
-        <Col xs={6} md={4} style={{ textAlign: "left", paddingLeft: "20px" }}>
-          <FormGroup controlId="formControlsFloorSelect">
-            <ControlLabel>Floor</ControlLabel>
-            <FormControl componentClass="select" onChange={event=>this.setState({floorNum: event.target.value})}>
-            {this.props.resources.map(function (_, index) {
-              return (
-                <option key={index + 1} value={index + 1  }>{index + 1}</option>
-                );
-            })}
-            </FormControl>
-          </FormGroup>
-        </Col>
-      </Row>
       <Row/>
       <BootstrapTable exportCSV={true} data={this.props.reservations}
       striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
@@ -297,7 +249,6 @@ class ReservedTableAdmin extends Component {
           </Modal.Header>
           <Modal.Body>
             {this.errorMessage()}
-            {this.dropDown()}
             {this.startTimeOptions()}
             {this.endTimeOptions()}
           </Modal.Body>
