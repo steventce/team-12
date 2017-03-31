@@ -62,6 +62,15 @@ Start the event scheduler daemon:
 ```SQL
 SET GLOBAL event_scheduler = ON;
 ```
+Or set it in a config file so that it will start automatically every time (my.cnf or my.ini on Windows):
+```bash
+locate my.cnf
+locate my.ini
+```
+Set the config variable:
+```
+event_scheduler=ON
+```
 Ensure that the process is running (look for User: event_scheduler):
 ```SQL
 SHOW PROCESSLIST;
