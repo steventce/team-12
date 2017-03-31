@@ -38,7 +38,6 @@ describe('Reservations', function() {
         include: [ Resource ]
       }).then(function(location) {
         var location_id = location.location_id;
-        console.log(location);
         var resource = {
           location_id: location.location_id,
           resource_type: 'Desk',
@@ -119,7 +118,6 @@ describe('Reservations', function() {
           start_date: moment().toDate(),
           end_date: moment().add(6, 'd').toDate()
         };
-        //console.log(reservations.start_date);
         request(app)
             .post(`/api/v1/reservations`)
             .set('Accept', 'application/json')
@@ -216,7 +214,6 @@ describe('Reservations', function() {
           start_date: moment().toDate(),
           end_date: moment().toDate()
         };
-        console.log(reservations.resource_id);
         request(app)
             .post(`/api/v1/reservations`)
             .set('Accept', 'application/json')
@@ -311,7 +308,6 @@ describe('Reservations', function() {
               include: [ Resource ]
            }).then(function(location) {
               var location_id = location.location_id;
-              console.log(location);
               var resource = {
                   location_id: location.location_id,
                     resource_type: 'Desk',

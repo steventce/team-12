@@ -3,17 +3,9 @@ import {
   div,
   Button,
   Modal,
-  Col,
-  Form,
-  ControlLabel,
-  FormControl,
-  FormGroup,
-  Radio,
-  Grid,
   Row
 } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { DropdownButton, MenuItem} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import { dateFormatter } from '../../utils/formatter';
@@ -54,7 +46,6 @@ class ReservedTableAdmin extends Component {
     };
 
     this.props.dispatch(getAdminReservations()).then(function(response) {
-      // console.log(response.payload);
     });
     
     
@@ -84,11 +75,10 @@ class ReservedTableAdmin extends Component {
     updatedReservation.endDate = moment(editedOptions.newEndTime).format("h:mm a MM/DD/YY");
     let that = this;
     this.props.dispatch(editReservation(updatedReservation)).then(function(response) {
-      console.log("response is: " +  JSON.stringify(response));
       if (typeof response.payload.response == 'undefined') {
         that.props.dispatch(getAdminReservations());
         that.modalCloseEdit();
-      } else if (response.payload.response.status != 200) {
+      } else if (response.payload.response.status !== 200) {
         that.setState({errorMsg: response.payload.response.data});
         return;
       }
@@ -194,8 +184,7 @@ class ReservedTableAdmin extends Component {
     this.modalOpenCancel(rowIndex);
   }
 
-  onClickConfirmCancel(){
-    console.log("modalIndex is: " + this.state.modalIndex);
+  onClickConfirmCancel() {
     console.log("Reservation ID is: " + this.props.reservations[this.state.modalIndex].reservation_id);
     this.props.dispatch(cancelReservation(this.props.reservations[this.state.modalIndex].reservation_id, () => {
       this.props.dispatch(getAdminReservations())
@@ -220,7 +209,6 @@ class ReservedTableAdmin extends Component {
   }
 
   modalOpenCancel(modalIndex) {
-    console.log("modalIndex is " + modalIndex);
     this.setState({ modalType: this.modalEnum.CANCEL, modalIndex: modalIndex});
   }
   

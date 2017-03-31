@@ -95,7 +95,6 @@ export default function reducer(state = initialState, action) {
 function getObjValues(obj) {
     let values = [];
 
-    let i = 0
     for (var prop in obj) {
       if (obj.hasOwnProperty(prop) && obj[prop] !== undefined )
         values.push(obj[prop])

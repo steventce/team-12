@@ -17,8 +17,6 @@ export default function reducer(state = initialState, action) {
 
   switch(action.type) {
     case GET_ADMIN: {
-    	console.log("in admin reducer:");
-    	console.log(action.payload);
       return { ...state, admin: getObjValues(action.payload)};
     }
     default:{

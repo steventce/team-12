@@ -63,10 +63,6 @@ export const editReservation = async (reservation) => {
     endDate
   } = reservation;
 
-  console.log(reservationId);
-
-  console.log(staffName);
-
   const response = await axios({
     method: 'put',
     url: API.RESERVATIONS_PUT(reservationId),
@@ -235,7 +231,6 @@ export const editResource = async (resourceId, resource) => {
       }
     })
   });
-  console.log("response is 11" + JSON.stringify(response));
   return response.data;
 }
 

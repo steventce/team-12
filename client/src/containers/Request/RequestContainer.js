@@ -197,7 +197,6 @@ class RequestContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   const { db, resources } = state;
   return {
     availableResources: resources.availableResources,

@@ -111,7 +111,6 @@ describe('Locations', function() {
           building_name: 'Seattle Garden',
         }).then(function(location) {
           locationId = location.location_id;
-          console.log("location?? ", location);
           var newLocation = {
             location_id: locationId,
             building_name: "Wayne Manor",
