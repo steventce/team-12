@@ -5,7 +5,7 @@ class Reservations extends Component {
   render() {
     return (
       <div>
-        <h1 style={{textAlign: 'center'}}>Your Current Bookings</h1>
+        <h1 style={{textAlign: 'center'}}>Your Current Reservations</h1>
         <ReservedTable />
       </div>
     );
