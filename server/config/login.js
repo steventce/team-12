@@ -1,0 +1,13 @@
+var staffDetails_name='JOHN DOE';
+var staffDetails_empid='43868488';
+var staffDetails_extphone='1 1 778 8743386';
+var staffDetails_country='CANADA';
+var staffDetails_jobrole='HEAD OF WEALTH IT CANADA';
+var staffDetails_dept='SWD WEALTH MANAGEMENT IT GENER';
+var staffDetails_photourl='photos.global.hsbc/casual/square/4316/43868488.jpg';
+var staffDetails_extemail='JOHN DOE/HBCA/HSBC';
+var staffDetails_employeeType='E';
+var staffDetails_location='3383GIL';
+var staffDetails_intphone='778';
+var staffDetails_postaladdress='3383 Gilmore Way, Burnaby, B.C. V5G 4S1';
+var errormessage='';

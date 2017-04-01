@@ -1,13 +1,43 @@
-import React, { Component } from 'react';
+import {
+  getLocations,
+  addLocation,
+  editLocation,
+  deleteLocation,
+  resetStatus,
+  setStatus
+} from '../../../redux/modules/LocationReducer';
+import { connect } from 'react-redux';
+import { LocationsTable } from '../../../components';
 
-class Locations extends Component {
-  render() {
-    return (
-      <div>
-        <h1>Locations Entry</h1>
-      </div>
-    );
+const STATUS_TYPE = {
+  LOADING: 'loading'
+}
+
+const mapDispatchToProps = function(dispatch) {
+  return {
+    getLocations: () => {
+      dispatch(getLocations());
+    },
+    addLocation: (location) => {
+      dispatch(setStatus(STATUS_TYPE.LOADING));
+      dispatch(addLocation(location))
+    },
+    editLocation: (locationId, location) => {
+      dispatch(setStatus(STATUS_TYPE.LOADING));
+      dispatch(editLocation(locationId, location));
+    },
+    deleteLocation: (locationId) => {
+      dispatch(setStatus(STATUS_TYPE.LOADING));
+      dispatch(deleteLocation(locationId));
+    },
+    resetStatus: () => {
+      dispatch(resetStatus());
+    }
   }
 }
 
-export default Locations;
+const mapStateToProps = (state) => {
+  return state.locations;
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LocationsTable);

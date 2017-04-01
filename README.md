@@ -1,5 +1,4 @@
 # CPSC 319 Team 12 - HSBC Reservation System
-
 ## Client Side Quick Start
 This project uses [create-react-app](https://github.com/facebookincubator/create-react-app) as a starter for the team's front-end.
 

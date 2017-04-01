@@ -1,0 +1,24 @@
+{
+  "name": "team-12",
+  "version": "0.1.0",
+  "description": "HSBC Reservation System",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UBC-CPSC319/team-12.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UBC-CPSC319/team-12/issues"
+  },
+  "homepage": "/",
+  "scripts": {
+    "serve-dev": "PORT=8000 nodemon server/app.js",
+    "serve": "PORT=80 node server/app.js",
+    "build": "npm run build --prefix client",
+    "build-all": "npm install --prefix client && npm install --prefix server && npm run build --prefix client",
+    "test": "react-scripts test --env=jsdom",
+    "clean": "rm -r -f client/build && rm -r -f client/node_modules && rm -r -f server/node_modules"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

@@ -1,50 +1,68 @@
-CREATE DATABASE Resource_Booker;
+/*
+VARCHAR(10) : short data
+VARCHAR(30) : med length data
+VARCHAR(50) : long data
+*/
 
-USE Resource_Booker;
+CREATE DATABASE resource_booker;
 
-CREATE TABLE Locations(
-	LocationId INT PRIMARY KEY,
-	BuildingName VARCHAR(20),
-	StreetName VARCHAR(20),
-	City VARCHAR(20),
-	ProvinceState VARCHAR(20),
-	PostalCode VARCHAR(20)
+USE resource_booker;
+
+CREATE TABLE locations(
+	location_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	building_name VARCHAR(50),
+	street_name VARCHAR(50),
+	city VARCHAR(30),
+	province_state VARCHAR(10),
+	postal_code VARCHAR(10),
+	created_at DATETIME,
+	updated_at DATETIME
 );
 
-CREATE TABLE ResourceTypes(
-	ResourceType VARCHAR(20) PRIMARY KEY
+CREATE TABLE resource_types(
+	resource_type VARCHAR(10) NOT NULL PRIMARY KEY,
+	created_at DATETIME,
+	updated_at DATETIME
 );
 
-CREATE TABLE Resources(
-	ResourceId INT PRIMARY KEY,
-	LocationId INT,
-	ResourceType VARCHAR(20),
-	FOREIGN KEY (LocationId) REFERENCES Locations(LocationId),
-	FOREIGN KEY (ResourceType) REFERENCES ResourceTypes(ResourceType)
+CREATE TABLE resources(
+	resource_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	location_id INT,
+	resource_type VARCHAR(10),
+	created_at DATETIME,
+	updated_at DATETIME,
+	FOREIGN KEY (location_id) REFERENCES Locations(location_id),
+	FOREIGN KEY (resource_type) REFERENCES Resource_Types(resource_type)
 );
 
-CREATE TABLE Desks(
-	ResourceId INT PRIMARY KEY,
-	Floor VARCHAR(20),
-	Section VARCHAR(20),
-	DeskNumber VARCHAR(20),
-	FOREIGN KEY (ResourceId) REFERENCES Resources(ResourceId)
+CREATE TABLE desks(
+	resource_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	floor VARCHAR(10),
+	section VARCHAR(10),
+	desk_number VARCHAR(10),
+	created_at DATETIME,
+	updated_at DATETIME,
+	FOREIGN KEY (resource_id) REFERENCES Resources(resource_id)
 );
 
-CREATE TABLE Reservations (
-	ReservationId INT PRIMARY KEY, 
-	ResourceId INT, 
-	StaffId VARCHAR(20), 
-	StaffName VARCHAR(20), 
-	StaffDepartment VARCHAR(20),
-	StaffEmail VARCHAR(20),
-	StartDate DATETIME,
-	EndDate DATETIME,
-	FOREIGN KEY (ResourceId) REFERENCES Resources(ResourceId)
+CREATE TABLE reservations (
+	reservation_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	resource_id INT,
+	staff_id VARCHAR(10),
+	staff_name VARCHAR(30),
+	staff_department VARCHAR(30),
+	staff_email VARCHAR(50),
+	start_date DATETIME,
+	end_date DATETIME,
+	created_at DATETIME,
+	updated_at DATETIME,
+	FOREIGN KEY (resource_id) REFERENCES Resources(resource_id)
 );
 
-CREATE TABLE Admins(
-	AdminId INT PRIMARY KEY,
-	Name VARCHAR(20)
+CREATE TABLE admins(
+	admin_id VARCHAR(10) NOT NULL PRIMARY KEY,
+	name VARCHAR(30),
+	created_at DATETIME,
+	updated_at DATETIME
 );
 
