@@ -34,7 +34,16 @@ class Request extends Component {
       endDate,
     } = this.props;
 
-    const imgProps = {width: 900, height: 740, zoomWidth: 200, img: floorMapImgSrc, offset: {vertical: 0, horizontal: 8}};
+    const imgProps = {
+      width: 800,
+      height: 660,
+      zoomWidth: 300,
+      img: floorMapImgSrc,
+      offset: {
+        vertical: 0,
+        horizontal: 8
+      }
+    };
 
     return (
       <div>

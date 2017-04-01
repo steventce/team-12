@@ -9,7 +9,7 @@ import { modalTypes } from '../ResourcesModal';
 const locationId = 1;
 
 function resourceIdFormatter(cell, row) {
-  return cell || 'Available'
+  return cell ? `Booked by: ${cell}` : 'Available';
 }
 
 class ResourcesTable extends Component {
@@ -119,7 +119,7 @@ class ResourcesTable extends Component {
             <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort>Resource Type</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort hidden>Floor</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.section' dataAlign='center' dataSort hidden>Section</TableHeaderColumn>
-            <TableHeaderColumn dataField='Reservations.resource_id' dataAlign='center' dataSort dataFormat={resourceIdFormatter}>Reservation ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='Reservations.resource_id' dataAlign='center' dataSort dataFormat={resourceIdFormatter}>Reservation Status</TableHeaderColumn>
             <TableHeaderColumn dataField='edit' dataAlign='center' dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
             <TableHeaderColumn dataField='cancel' dataAlign='center' dataFormat={this.deleteButton.bind(this)}>Delete</TableHeaderColumn>
           </BootstrapTable>

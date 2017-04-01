@@ -134,8 +134,8 @@ class ReservedTableAdmin extends Component {
   startTimeOptions() {
     if (this.state.modalIndex === -1) return;
     return (
-      <div className='edit'>
-        StartTime
+      <div className='edit-start-time-container'>
+        Start Time
         <br/>
         <DateTimePicker
           value={new Date(this.state.editOptions.newStartTime)}       
@@ -158,8 +158,8 @@ class ReservedTableAdmin extends Component {
     if (this.state.modalIndex === -1) return;
 
     return (
-      <div className='edit'>
-        EndTime
+      <div className='edit-end-time-container'>
+        End Time
         <br/>
         <DateTimePicker
           value={new Date(this.state.editOptions.newEndTime)}
@@ -220,8 +220,8 @@ class ReservedTableAdmin extends Component {
     return (
       <div className='container tableContainer'>
       <Row/>
-      <BootstrapTable exportCSV={true} data={this.props.reservations}
-      striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
+      <BootstrapTable exportCSV={true} csvFileName='reserved_resources.csv' 
+      data={this.props.reservations} striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
           <TableHeaderColumn dataField='resource_id' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
@@ -233,7 +233,7 @@ class ReservedTableAdmin extends Component {
 
       <Modal show={(this.state.modalType === this.modalEnum.EDIT)} onHide={this.modalCloseEdit.bind(this)}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Resource</Modal.Title>
+            <Modal.Title>Edit Reservation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {this.errorMessage()}

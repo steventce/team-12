@@ -1,7 +1,8 @@
-div.edit {
+.edit-start-time-container, .edit-end-time-container {
+  padding-bottom: 25px;
 }
 
 div.error {
-	color: red;
-	font-weight: bold;
+  color: red;
+  font-weight: bold;
 }
