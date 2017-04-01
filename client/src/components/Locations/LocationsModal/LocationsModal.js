@@ -52,11 +52,11 @@ class LocationsModal extends Component {
   setData() {
     const { data } = this.props;
       this.setState({
-        buildingName: location.building_name || "",
-        streetAddress: location.street_name || "",
-        city: location.city || "",
-        province_state: location.province_state || "",
-        postal_code: location.postal_code || ""
+        building_name: data.locationName || "",
+        street_name: data.streetName || "",
+        city: data.city || "",
+        province_state: data.provinceState || "",
+        postal_code: data.postalCode || ""
       });
   }
 

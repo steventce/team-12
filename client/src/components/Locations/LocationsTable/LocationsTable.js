@@ -97,7 +97,11 @@ class LocationsTable extends Component {
         locationId: location.location_id,
         locationName: location.building_name,
         locationAddress: location.street_name +  ", " +  location.city + ", " + location.province_state + ", " + location.postal_code,
-        editLocation: "Edit"
+        editLocation: "Edit",
+        streetName: location.street_name,
+        city: location.city,
+        provinceState: location.province_state,
+        postalCode: location.postal_code
       };
     });
   }
