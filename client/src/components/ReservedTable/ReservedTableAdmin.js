@@ -220,8 +220,8 @@ class ReservedTableAdmin extends Component {
     return (
       <div className='container tableContainer'>
       <Row/>
-      <BootstrapTable exportCSV={true} data={this.props.reservations}
-      striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
+      <BootstrapTable exportCSV={true} csvFileName='reserved_resources.csv' 
+      data={this.props.reservations} striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
           <TableHeaderColumn dataField='resource_id' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
