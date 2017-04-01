@@ -134,8 +134,8 @@ class ReservedTableAdmin extends Component {
   startTimeOptions() {
     if (this.state.modalIndex === -1) return;
     return (
-      <div className='edit'>
-        StartTime
+      <div className='edit-start-time-container'>
+        Start Time
         <br/>
         <DateTimePicker
           value={new Date(this.state.editOptions.newStartTime)}       
@@ -158,8 +158,8 @@ class ReservedTableAdmin extends Component {
     if (this.state.modalIndex === -1) return;
 
     return (
-      <div className='edit'>
-        EndTime
+      <div className='edit-end-time-container'>
+        End Time
         <br/>
         <DateTimePicker
           value={new Date(this.state.editOptions.newEndTime)}
@@ -233,7 +233,7 @@ class ReservedTableAdmin extends Component {
 
       <Modal show={(this.state.modalType === this.modalEnum.EDIT)} onHide={this.modalCloseEdit.bind(this)}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Resource</Modal.Title>
+            <Modal.Title>Edit Reservation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {this.errorMessage()}
