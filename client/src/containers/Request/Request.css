@@ -5,11 +5,11 @@
 }
 
 #floor-map-container img + div {
-  background-color: black !important;
+  background-color: lightgrey !important;
   cursor: pointer;
 }
 
 #floor-map-container img + div + div {
-  border: 5px solid grey !important;
+  border: 2px solid lightgrey !important;
   cursor: pointer;
 }
