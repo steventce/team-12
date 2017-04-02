@@ -37,23 +37,27 @@ SET PASSWORD = PASSWORD('<your new password>')
 - `password`	:	user password, for RDS instance it should have been set / reset from the RDS console, for localhost it is the new password set after the above section
 - `database`	:	database name to connect to (eg. if you create a database within MySQL called Resource_Booker, then put Resource_Booker here)
 
+To connect to the DB, run mysql from the command line.
+```
+mysql -u <user> -h <host> -P 3306 -p<db password>
+```
+
 ### Generating the DB schema
-1. Ensure sequelize-cli is installed
-2. In the /server/ directory, run `sequelize db:migrate`
-3. Changes to the existing schema should be done by writing a new database migration, see [Sequelize CLI](https://github.com/sequelize/cli) for more information
+1. Run the same command as above, but pass the CreateDB.sql script in
+```
+mysql -u <user> -h <host> -P 3306 -p<db password> < DB_Scripts/CreateDB.sql
+```
+2. Ensure sequelize-cli is installed
+3. In the /server/ directory, run `sequelize db:migrate`
+4. Changes to the existing schema should be done by writing a new database migration, see [Sequelize CLI](https://github.com/sequelize/cli) for more information
 
 ### <a name="init-db-data"></a>Initialize DB data
+This will add desk data and a default admin to the tables
 1. Navigate to DB_Scripts folder from project root
 2. Manually change all 'import-path' keywords in PopulateData.sql to the ABSOLUTE path of Desks.csv
-3. Run PopulateData.sql to add in the initial data (including the desk resources from Desks.csv). This can be done from MySQL Workbench, or through the command line.
+3. Run PopulateData.sql from project root to add in the initial data
 ```
-cd DB_Scripts
-mysql -u <user> -h <host> -P 3306 -p<db password>
-// In MySQL console
-CREATE DATABASE Resource_Booker;
-USE Resource_Booker;
-source PopulateData.sql;
-quit;
+mysql -u <user> -h <host> -P 3306 -p<db password> < DB_Scripts/PopulateData.sql
 ```
 Note: The warnings after running PopulateData.sql are due to the DeskNumber column in Resources table truncating the Desks.csv DeskNum entries with '- FUTURE' in it into '-'
 

@@ -7,7 +7,7 @@ VARCHAR(50) : long data
 CREATE DATABASE resource_booker;
 
 USE resource_booker;
-
+/*
 CREATE TABLE locations(
 	location_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	building_name VARCHAR(50),
@@ -66,3 +66,4 @@ CREATE TABLE admins(
 	updated_at DATETIME
 );
 
+*/
