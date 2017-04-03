@@ -55,7 +55,7 @@ class ConfirmRequestModal extends Component {
   getTimeRemaining() {
     const min = Math.trunc(this.state.timeLeft_s / 60)
     const sec = this.state.timeLeft_s % 60
-    return "Time Remaining: " + (min < 10 ? "0" : "") + min + ":" + (sec < 10 ? "0" : "") + sec + " "
+    return "Time Remaining: " + (min < 10 ? "0" : "") + min + ":" + (sec < 10 ? "0" : "") + sec
   }
 
   close() {
@@ -126,9 +126,13 @@ class ConfirmRequestModal extends Component {
           </Modal.Body>
 
           <Modal.Footer>
-            {this.getTimeRemaining()}
-            {cancelButton}
-            {confirmButton}
+            <div className="confirmFooter">
+              <div>{this.getTimeRemaining()}</div>
+              <div>
+                {cancelButton}
+                {confirmButton}
+              </div>
+            </div>
           </Modal.Footer>
         </Modal>
       )
