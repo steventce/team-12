@@ -58,7 +58,7 @@ quit;
 Note: The warnings after running PopulateData.sql are due to the DeskNumber column in Resources table truncating the Desks.csv DeskNum entries with '- FUTURE' in it into '-'
 
 ### Starting the archive reservations event
-Start the event scheduler daemon:
+After generating the DB schema, start the event scheduler daemon as a SQL statement:
 ```SQL
 SET GLOBAL event_scheduler = ON;
 ```
@@ -67,8 +67,9 @@ Or set it in a config file so that it will start automatically every time (my.cn
 locate my.cnf
 locate my.ini
 ```
-Set the config variable:
+Set the config variable at the end of the file:
 ```
+[mysqld]
 event_scheduler=ON
 ```
 Ensure that the process is running (look for User: event_scheduler):
