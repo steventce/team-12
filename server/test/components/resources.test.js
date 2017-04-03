@@ -56,11 +56,57 @@ describe('Resources', function() {
               var badResources = res.body.filter(function(resource) {
                 return reservedResourceIds.includes(resource.resource_id);
               });
-              assert.strictEqual(badResources.length, 0);
-              assert.strictEqual(res.body.length, count - numReservations);
+              assert.strictEqual(badResources.length, 0, 'Reserved resources returned as available');
+              assert.strictEqual(res.body.length, count - numReservations, 'Number of resources incorrect');
             })
             .expect(200);
         })
+      })
+      .then(function() {
+        done();
+      });
+    });
+
+    it('should only get resources that match the filters', function(done) {
+      var { Resource, Reservation, Desk } = models;
+      var id = 1;
+      var resourceType = 'Desk';
+      var floor = 2;
+      var section = 'B';
+
+      Resource.count({
+        include: [{
+          model: Desk,
+          where: {
+            floor,
+            section
+          }
+        }],
+        where: {
+          location_id: id
+        }
+      })
+      .then(function(count) {
+        return request(app)
+          .get(`/api/v1/locations/${id}/resources`)
+          .query({
+            resource_type: resourceType,
+            floor,
+            section,
+            start_date: moment().add(2, 'h').startOf('hour').toDate(),
+            end_date: moment().startOf('hour').add(3, 'h').toDate()
+          })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(function(res) {
+            var badResources = res.body.filter(function(resource) {
+              return id !== resource.location_id || resourceType !== resource.resource_type
+                || String(floor) !== resource.Desk.floor || section !== resource.Desk.section;
+            });
+            assert.strictEqual(badResources.length, 0, 'Resources that do not match filters returned');
+            assert.strictEqual(res.body.length, count, 'Wrong number of resources returned');
+          })
+          .expect(200);
       })
       .then(function() {
         done();
@@ -108,7 +154,7 @@ describe('Resources', function() {
             var badReservations = res.body.filter(function(resource) {
               return resource.location_id !== id;
             });
-            assert.strictEqual(badReservations.length, 0);
+            assert.strictEqual(badReservations.length, 0, 'Resources from wrong location');
           })
           .expect(200)
       })
