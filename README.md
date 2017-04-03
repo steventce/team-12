@@ -89,6 +89,23 @@ Ensure that the event has been created:
 ```SQL
 SHOW EVENTS
 ```
+### Edit ses.json in server/config/ to use amazon's email service
+```
+{
+"enable": "true",
+"username": "admin@mylasagna.ca",
+"nodeMailerConf": {
+  "service": "SES-US-WEST-2",
+  "auth": {
+    "user": "AKIAIBDEKDOWLGPY54IQ",
+    "pass": "ApsfD/fWjGLiOLceshisiTO7dS/GW8KGyLLMAAa+S4ZM"
+    }
+  }
+}
+```
+- `enable` : this file will be ignored if set to false, then the server will use the test gmail account to send emails (see `server/components/reservations.js`)
+- `username` : what the receiver will sees as the sender of the email. Note that admin@mylasagna.ca or mylasagna.ca have to be registered with Amazon's SES console
+- `nodeMailerConf` : config options for nodemailer library, see its document at `https://nodemailer.com/smtp/`. Basically, `service` should be one of `https://nodemailer.com/smtp/well-known/`, or you can specify the host and port of the smtp server manually based on your SES settings. `user` and `pass` are generated during the SES user creation wizard
 
 ## <a name="starting-the-server"></a>Starting the server
 Start development server on port 3000: 
