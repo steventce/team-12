@@ -2,7 +2,8 @@ var app        = require('../../').app,
     assert     = require('chai').assert,
     request    = require('supertest'),
     models     = require('../../models/'),
-    populateDb = require('../utils/dbUtils');
+    populateDb = require('../utils/dbUtils'),
+    moment     = require('moment');
 
 describe('Resources', function() {
   beforeEach(function() {
@@ -10,6 +11,64 @@ describe('Resources', function() {
   });
 
   describe('GET /api/v1/locations/:location_id/resources', function() {
+    it('should only get available resources', function(done) {
+      var { Resource, Reservation } = models;
+      var id = 1;
+      var numReservations = 5
+
+      Resource.findAll({
+        limit: numReservations
+      })
+      .then(function(resources) {
+        var reservations = resources.map(function(resource) {
+          return {
+            resource_id: resource.resource_id,
+            staff_id: '12345678',
+            staff_name: 'John Smith',
+            staff_department: 'Human Resources',
+            staff_email: 'john_smith@hsbc.ca',
+            start_date: moment().add(1, 'h').startOf('hour'),
+            end_date: moment().startOf('hour').add(1, 'd')
+          };
+        });
+        // Hook to add reservation_id
+        return Reservation.bulkCreate(reservations, { individualHooks: true });
+      })
+      .then(function(reservations) {
+        var reservedResourceIds = reservations.map(function(reservation) {
+          return reservation.resource_id;
+        });
+
+        return Resource.count({
+          where: { location_id: id }
+        })
+        .then(function(count) {
+          return request(app)
+            .get(`/api/v1/locations/${id}/resources`)
+            .query({
+              resource_type: 'Desk',
+              start_date: moment().add(2, 'h').startOf('hour').toDate(),
+              end_date: moment().startOf('hour').add(21, 'h').toDate()
+            })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+              var badResources = res.body.filter(function(resource) {
+                return reservedResourceIds.includes(resource.resource_id);
+              });
+              assert.strictEqual(badResources.length, 0);
+              assert.strictEqual(res.body.length, count - numReservations);
+            })
+            .expect(200);
+        })
+      })
+      .then(function() {
+        done();
+      });
+    });
+  });
+
+  describe('GET /api/v1/locations/:location_id/admin/resources', function() {
     it('should only get resources from the specified location', function(done) {
       var { Resource, Desk, Location, ResourceType } = models;
       var numData = 5;
@@ -38,14 +97,18 @@ describe('Resources', function() {
       })
       .then(function(count) {
         return request(app)
-          .get(`/api/v1/locations/${id}/resources`)
+          .get(`/api/v1/locations/${id}/admin/resources`)
           .query({
             resource_type: 'Desk'
           })
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(function(res) {
-            assert.equal(res.body.length, count);
+            assert.strictEqual(res.body.length, count);
+            var badReservations = res.body.filter(function(resource) {
+              return resource.location_id !== id;
+            });
+            assert.strictEqual(badReservations.length, 0);
           })
           .expect(200)
       })
