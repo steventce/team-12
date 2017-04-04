@@ -7,7 +7,7 @@ npm run [--prefix <path-to-root>] build-all
 ```
 Only include the `[...]` part if you are not at the project root, which includes client and server folders (eg. if you are in server folder, then put `--prefix ../`)
 
-## Setup development environment to develop the server
+## Setup development environment
 ### Using a local DB
 1. Install MySQL Community Server, MySQL command line tools, and optionally MySQL Workbench, take note of 'root' password given after installing MySQL Server
 https://www.mysql.com/products/
@@ -62,7 +62,8 @@ mysql -u <user> -h <host> -P 3306 -p<db password> < DB_Scripts/PopulateData.sql
 ```
 Note: The warnings after running PopulateData.sql are due to the DeskNumber column in Resources table truncating the Desks.csv DeskNum entries with '- FUTURE' in it into '-'
 
-### Starting the archive reservations event
+### [Optional] Starting the archive reservations event
+This will automatically check and move old reservations to an archive table at certain interval
 After generating the DB schema, start the event scheduler daemon as a SQL statement:
 ```SQL
 SET GLOBAL event_scheduler = ON;
@@ -89,7 +90,7 @@ Ensure that the event has been created:
 ```SQL
 SHOW EVENTS
 ```
-### Edit ses.json in server/config/ to use amazon's email service
+### [Optional] Edit ses.json in server/config/ to use amazon's email service
 ```
 {
 "enable": "true",
