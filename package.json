@@ -13,6 +13,7 @@
   "scripts": {
     "serve-dev": "PORT=8000 nodemon server/app.js",
     "serve": "PORT=80 node server/app.js",
+    "serve-win": "node server/app.js",
     "build": "npm run build --prefix client",
     "build-all": "npm install --prefix client && npm install --prefix server && npm run build --prefix client",
     "test": "react-scripts test --env=jsdom",
