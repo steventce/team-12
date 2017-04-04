@@ -173,6 +173,11 @@ OR Start production server on http port 80 (requires sudo):
 npm run [--prefix <path-to-root>] serve
 ```
 
+**For Windows environment, which will use port 3000:
+```bash
+npm run [--prefix <path-to-root>] serve-win
+```
+
 If there are build problems, you can try running the line below and repeat the `build-all` line at the top:
 ```bash
 npm run [--prefix <path-to-root>] clean
