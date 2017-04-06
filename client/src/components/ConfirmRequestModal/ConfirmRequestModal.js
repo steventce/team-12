@@ -53,7 +53,7 @@ class ConfirmRequestModal extends Component {
   }
 
   getTimeRemaining() {
-    const min = Math.trunc(this.state.timeLeft_s / 60)
+    const min = Math.floor(this.state.timeLeft_s / 60)
     const sec = this.state.timeLeft_s % 60
     return "Time Remaining: " + (min < 10 ? "0" : "") + min + ":" + (sec < 10 ? "0" : "") + sec
   }
