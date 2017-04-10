@@ -77,4 +77,6 @@ const mapStateToProps = (state) => {
   return { ...state.db };
 }
 
-export default connect(mapStateToProps)(HeaderNavbar);
+export default connect(mapStateToProps, null, null, {
+  pure: false
+})(HeaderNavbar);
