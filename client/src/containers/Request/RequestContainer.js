@@ -9,7 +9,7 @@ import floor2 from '../../images/floor_2.png';
 import floor3 from '../../images/floor_3.png';
 import floor4 from '../../images/floor_4.png';
 
-/*global staffDetails_empid:true*/
+/*global staffDetails_empid:true, staffDetails_name:true, staffDetails_dept:true*/
 
 class RequestContainer extends Component {
   constructor(props) {
@@ -28,6 +28,8 @@ class RequestContainer extends Component {
       floorMapImgSrc: floor1,
       sections: ['A', 'B'],
       employeeId: staffDetails_empid,
+      employeeName: staffDetails_name,
+      employeeDept: staffDetails_dept,
       status: null,
       errorMsg: ''
     };
@@ -164,6 +166,8 @@ class RequestContainer extends Component {
     this.props.dispatch(makeReservation({
       ...this.state,
       resourceId: this.state.selectedResourceId,
+      staffName: this.state.employeeName,
+      staffDepartment: this.state.employeeDept,
       staffEmail: this.state.email
     }, this.state.employeeId));
   }
