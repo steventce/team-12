@@ -1,5 +1,5 @@
 module.exports = {
-  'Test Admin Reservations Page' : function (browser) {
+  'Test All Reservations Page' : function (browser) {
     browser
       .url('http://localhost:3000/admin')
       .waitForElementVisible('body', 1000)

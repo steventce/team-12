@@ -1,10 +1,10 @@
 # CPSC 319 Team 12 - HSBC Reservation System
 
-The HSBC Reservation System is a webapp that allows employees to reserve desk resources and for admins to manage these resources. It is built using React (with the [create-react-app](https://github.com/facebookincubator/create-react-app) starter) on the front-end, Node.js (with the [Sequelize ORM](http://docs.sequelizejs.com/en/v3/) (object-relational mapping) on the server, and supported with MySQL database.
+The HSBC Reservation System is a webapp that allows employees to reserve desk resources and for admins to manage these resources. It is built using React (with the [create-react-app](https://github.com/facebookincubator/create-react-app) starter) on the front-end, Node.js (with the [Sequelize ORM](http://docs.sequelizejs.com/en/v3/) (object-relational mapping) on the server, and supported by a MySQL database.
 
 This README contains specific instructions to aid developers to setup their environment.
 
-If the local environment is setup already, follow the instructions below to quickly get started. If starting from scratch, go [here](#new-installation):
+If the local environment is setup already, follow the instructions below to quickly get started. If starting from scratch, go to the [New Installation](#new-installation) section:
 
 ## Developer quick start guide
 
@@ -226,7 +226,7 @@ CREATE DATABASE Resource_Booker_Test
 ```
 
 Fill in the required information in the test section of the `server/config.json` file.
-```
+```js
 {
   ...development config
   "test": {
@@ -389,16 +389,7 @@ Below is a tree of the app's folder structure for reference. The project is sepa
     ├── coverage
     │   ├── coverage.json
     │   ├── lcov.info
-    │   └── lcov-report
-    │       ├── base.css
-    │       ├── index.html
-    │       ├── prettify.css
-    │       ├── prettify.js
-    │       ├── server
-    │       │   ├── app.js.html
-    │       │   └── index.html
-    │       ├── sort-arrow-sprite.png
-    │       └── sorter.js
+    │   └── lcov-report (report files)
     ├── data
     │   ├── desks.csv
     │   ├── desks.seed.json

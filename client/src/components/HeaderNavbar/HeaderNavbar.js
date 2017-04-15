@@ -32,8 +32,8 @@ class HeaderNavbar extends Component {
       return(
         <Nav>
           <LinkContainer to="/request"><NavItem>Request</NavItem></LinkContainer>
-          <LinkContainer to="/reservations"><NavItem>Reservations</NavItem></LinkContainer>
-          <LinkContainer to="/admin"><NavItem>Admin Reservations</NavItem></LinkContainer>
+          <LinkContainer to="/reservations"><NavItem>My Reservations</NavItem></LinkContainer>
+          <LinkContainer to="/admin"><NavItem>All Reservations</NavItem></LinkContainer>
           <LinkContainer to="/resources"><NavItem>Resources</NavItem></LinkContainer>
           <LinkContainer to="/locations"><NavItem>Locations</NavItem></LinkContainer>          
         </Nav>
