@@ -12,6 +12,8 @@ import { dateFormatter } from '../../utils/formatter';
 import moment from 'moment';
 import './ReservedTable.css';
 import './ReservedTableAdmin.css';
+import TrashIcon from 'react-icons/lib/fa/trash';
+import EditIcon from 'react-icons/lib/fa/pencil';
 
 import { cancelReservation, editReservation, getAdminReservations } from '../../redux/modules/ReservationReducer';
 import { connect } from 'react-redux';
@@ -92,10 +94,11 @@ class ReservedTableAdmin extends Component {
     return (
        <Button
           type="button"
+          className="edit-btn"
           onClick={() =>
           this.onClickEdit(cell, row, rowIndex)}
        >
-       /
+         <EditIcon />
        </Button>
     )
   }
@@ -196,10 +199,11 @@ class ReservedTableAdmin extends Component {
     return (
        <Button
           type="button"
+          className="cancel-btn"
           onClick={() =>
           this.onClickCancel(cell, row, rowIndex)}
        >
-       X
+         <TrashIcon size={16} />
        </Button>
     )
   }

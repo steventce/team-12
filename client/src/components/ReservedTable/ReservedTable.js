@@ -4,6 +4,7 @@ import { dateFormatter } from '../../utils/formatter';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import './ReservedTable.css';
 import '../../index.css';
+import TrashIcon from 'react-icons/lib/fa/trash';
 
 import { cancelReservation, getReservations} from '../../redux/modules/ReservationReducer';
 import { connect } from 'react-redux';
@@ -37,12 +38,13 @@ class ReservedTable extends Component {
 
   cancelButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button style={{minWidth:"40px", minHeight:"40px"}}
+       <Button
           type="button"
+          className="cancel-btn"
           onClick={() =>
           this.onClickCancel(cell, row, rowIndex)}
        >
-       X
+         <TrashIcon size={16} />
        </Button>
     )
   }

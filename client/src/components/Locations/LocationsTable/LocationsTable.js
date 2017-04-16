@@ -3,6 +3,8 @@ import { Button } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import LocationsModal from '../LocationsModal';
 import { modalTypes } from '../LocationsModal';
+import TrashIcon from 'react-icons/lib/fa/trash';
+import EditIcon from 'react-icons/lib/fa/pencil';
 
 
 class LocationsTable extends Component {
@@ -46,7 +48,7 @@ class LocationsTable extends Component {
     return (
       <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.EDIT.name)}>
-        /
+        <EditIcon />
       </Button>
     )
   }
@@ -55,7 +57,7 @@ class LocationsTable extends Component {
     return (
       <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
-        X
+        <TrashIcon />
       </Button>
     );
   }

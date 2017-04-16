@@ -5,6 +5,8 @@ import { dateFormatter } from '../../../utils/formatter';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import ResourcesModal from '../ResourcesModal';
 import { modalTypes } from '../ResourcesModal';
+import TrashIcon from 'react-icons/lib/fa/trash';
+import EditIcon from 'react-icons/lib/fa/pencil';
 
 const locationId = 1;
 
@@ -53,7 +55,7 @@ class ResourcesTable extends Component {
     return (
       <Button
         onClick={this.setModalProps.bind(this, true, row, modalTypes.EDIT.name)}>
-        /
+        <EditIcon />
       </Button>
     )
   }
@@ -62,7 +64,7 @@ class ResourcesTable extends Component {
     return (
       <Button
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
-        X
+        <TrashIcon />
       </Button>
     );
   }
