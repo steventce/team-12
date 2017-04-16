@@ -90,7 +90,7 @@ class ReservedTableAdmin extends Component {
 
   editButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button style={{minWidth:"40px", minHeight:"40px"}}
+       <Button
           type="button"
           onClick={() =>
           this.onClickEdit(cell, row, rowIndex)}
@@ -194,7 +194,7 @@ class ReservedTableAdmin extends Component {
 
   cancelButton(cell, row, enumObject, rowIndex) {
     return (
-       <Button style={{minWidth:"40px", minHeight:"40px"}}
+       <Button
           type="button"
           onClick={() =>
           this.onClickCancel(cell, row, rowIndex)}
@@ -223,14 +223,14 @@ class ReservedTableAdmin extends Component {
       <Row/>
       <BootstrapTable exportCSV={true} csvFileName='reserved_resources.csv' 
       data={this.props.reservations} striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
-          <TableHeaderColumn dataField='reservation_id' isKey={true} dataAlign='center' dataSort={true}>Reservation ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='Resource.Desk.desk_number' dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
-          <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn dataField='start_date' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
-          <TableHeaderColumn dataField='end_date' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
-          <TableHeaderColumn dataField='edit' dataAlign='center' export={false} dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
-          <TableHeaderColumn dataField='cancel' dataAlign='center' export={false} dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='reservation_id' isKey={true} dataAlign='center' dataSort={true}>Reservation ID</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='Resource.Desk.desk_number' dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='start_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='end_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='edit' dataAlign='center' export={false} dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
+          <TableHeaderColumn width='50' dataField='cancel' dataAlign='center' export={false} dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>
 
       <Modal show={(this.state.modalType === this.modalEnum.EDIT)} onHide={this.modalCloseEdit.bind(this)}>
