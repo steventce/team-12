@@ -222,6 +222,7 @@ class ReservedTableAdmin extends Component {
 
   render() {
     var selectedResource = this.props.reservations[this.state.modalIndex] ? this.props.reservations[this.state.modalIndex]["Resource.Desk.desk_number"] : "";
+    var selectedReservation = this.props.reservations[this.state.modalIndex] ? this.props.reservations[this.state.modalIndex].reservation_id : "";
     return (
       <div className='container tableContainer'>
       <Row/>
@@ -239,9 +240,13 @@ class ReservedTableAdmin extends Component {
 
       <Modal show={(this.state.modalType === this.modalEnum.EDIT)} onHide={this.modalCloseEdit.bind(this)}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Reservation for Resource {selectedResource}</Modal.Title>
+            <Modal.Title>Edit Reservation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <div className="edit-reservation-details">
+              Resource: <b>{selectedResource}</b>
+              <br />Reservation: <b>{selectedReservation}</b>
+            </div>
             {this.errorMessage()}
             {this.startTimeOptions()}
             {this.endTimeOptions()}

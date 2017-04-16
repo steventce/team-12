@@ -7,6 +7,10 @@
   padding-right: 8px;
 }
 
+.edit-reservation-details {
+  padding: 5px 8px 18px 8px;
+}
+
 div.error {
   color: red;
   font-weight: bold;
