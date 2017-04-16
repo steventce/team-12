@@ -304,28 +304,52 @@ module.exports = function (app) {
       return;
     }
 
-    // Check if the reservation conflicts with other reservations
-    // Translates to:
-    //      Where 
-    //      start_date <= reservation.end_date AND start_date >= reservation.start_date
-    //      OR
-    //      end_date >= resource.start_date AND end_date <= resource.end_date
-    models.Reservation.findOne({      
-      where:{
-        reservation_id: reservation_id,
+    models.Reservation.findAll({
+      where: {
+        resource_id: resource_id
       }
-    }).then(function (reservation) {
-      console.log("Reservation is: " + reservation);
-      if (reservation) {
-        reservation.updateAttributes(newReservation).then(function (result) {
-          res.status(200).send(result);
-        });
+    }).then(function (allReservationsWithResourceId) {
+      let overlapWithAnotherTime = false;
+      allReservationsWithResourceId.map(function (existingReservation) {
+        // Check if reservation times overlap
+        let hasOverlap = newReservation.start_date < existingReservation.end_date && newReservation.end_date > existingReservation.start_date;
+        let differentReservations = newReservation.reservation_id != existingReservation.reservation_id;
+        if (hasOverlap && differentReservations) {
+          overlapWithAnotherTime = true;
+          return;
+        }
+      });
+      if (overlapWithAnotherTime) {
+        res.status(400).send("Reservation times cannot overlap for the same resource");
       } else {
-        res.status(401).send("No such reservation in the system");
+        // Update reservation since there is no overlapping reservation times
+
+            // Check if the reservation conflicts with other reservations
+            // Translates to:
+            //      Where
+            //      start_date <= reservation.end_date AND start_date >= reservation.start_date
+            //      OR
+            //      end_date >= resource.start_date AND end_date <= resource.end_date
+            models.Reservation.findOne({
+              where:{
+                reservation_id: reservation_id,
+              }
+            }).then(function (reservation) {
+              console.log("Reservation is: " + reservation);
+              if (reservation) {
+                reservation.updateAttributes(newReservation).then(function (result) {
+                  res.status(200).send(result);
+                });
+              } else {
+                res.status(401).send("No such reservation in the system");
+              }
+            }).catch(Sequelize.ValidationError, function (err) {
+              res.status(400).send({ errors: err.errors });
+            });
+
       }
-    }).catch(Sequelize.ValidationError, function (err) {
-      res.status(400).send({ errors: err.errors });
-    });  
+    });
+
   });
 
 
