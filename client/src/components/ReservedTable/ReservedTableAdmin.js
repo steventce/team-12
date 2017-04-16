@@ -223,7 +223,8 @@ class ReservedTableAdmin extends Component {
       <Row/>
       <BootstrapTable exportCSV={true} csvFileName='reserved_resources.csv' 
       data={this.props.reservations} striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
-          <TableHeaderColumn dataField='Resource.Desk.desk_number' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
+          <TableHeaderColumn dataField='reservation_id' isKey={true} dataAlign='center' dataSort={true}>Reservation ID</TableHeaderColumn>
+          <TableHeaderColumn dataField='Resource.Desk.desk_number' dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
           <TableHeaderColumn dataField='staff_id' dataAlign='center' dataSort={true}>Employee</TableHeaderColumn>
           <TableHeaderColumn dataField='start_date' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>

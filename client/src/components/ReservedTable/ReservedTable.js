@@ -59,7 +59,8 @@ class ReservedTable extends Component {
     return (
     	<div className='container tableContainer'>
 		  <BootstrapTable data={this.props.reservations} striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
-		      <TableHeaderColumn dataField='Resource.Desk.desk_number' isKey={true} dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
+              <TableHeaderColumn dataField='reservation_id' isKey={true} dataAlign='center' dataSort={true}>Reservation ID</TableHeaderColumn>
+		      <TableHeaderColumn dataField='Resource.Desk.desk_number' dataAlign='center' dataSort={true}>Resource ID</TableHeaderColumn>
 		      <TableHeaderColumn dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
 		      <TableHeaderColumn dataField='start_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
 		      <TableHeaderColumn dataField='end_date' dataAlign='center' dataSort={true} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
