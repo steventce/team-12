@@ -48,7 +48,7 @@ class LocationsTable extends Component {
     return (
       <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.EDIT.name)}>
-        <EditIcon />
+        <EditIcon size={16} />
       </Button>
     )
   }
@@ -57,7 +57,7 @@ class LocationsTable extends Component {
     return (
       <Button style={{minWidth:"40px", minHeight:"40px"}}
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
-        <TrashIcon />
+        <TrashIcon size={16} />
       </Button>
     );
   }

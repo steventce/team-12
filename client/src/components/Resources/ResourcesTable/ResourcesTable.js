@@ -55,7 +55,7 @@ class ResourcesTable extends Component {
     return (
       <Button
         onClick={this.setModalProps.bind(this, true, row, modalTypes.EDIT.name)}>
-        <EditIcon />
+        <EditIcon size={16} />
       </Button>
     )
   }
@@ -64,7 +64,7 @@ class ResourcesTable extends Component {
     return (
       <Button
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
-        <TrashIcon />
+        <TrashIcon size={16} />
       </Button>
     );
   }
