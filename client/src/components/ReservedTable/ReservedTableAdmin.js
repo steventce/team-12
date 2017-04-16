@@ -227,14 +227,14 @@ class ReservedTableAdmin extends Component {
       <Row/>
       <BootstrapTable exportCSV={true} csvFileName='reserved_resources.csv' 
       data={this.props.reservations} striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
-          <TableHeaderColumn width='50' dataField='reservation_id' isKey={true} dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Reservation ID</TableHeaderColumn>
-          <TableHeaderColumn width='50' dataField='Resource.Desk.desk_number' dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Resource ID</TableHeaderColumn>
-          <TableHeaderColumn width='50' dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
-          <TableHeaderColumn width='50' dataField='staff_id' dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Employee</TableHeaderColumn>
-          <TableHeaderColumn width='50' dataField='start_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
-          <TableHeaderColumn width='50' dataField='end_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
-          <TableHeaderColumn width='50' dataField='edit' dataAlign='center' export={false} dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
-          <TableHeaderColumn width='50' dataField='cancel' dataAlign='center' export={false} dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='reservation_id' isKey={true} dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Reservation ID</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='Resource.Desk.desk_number' dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Resource ID</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='staff_id' dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Employee</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='start_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='end_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='edit' dataAlign='center' export={false} dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='cancel' dataAlign='center' export={false} dataFormat={this.cancelButton.bind(this)}>Cancel</TableHeaderColumn>
       </BootstrapTable>
 
       <Modal show={(this.state.modalType === this.modalEnum.EDIT)} onHide={this.modalCloseEdit.bind(this)}>
