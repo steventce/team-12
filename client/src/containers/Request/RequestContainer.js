@@ -64,13 +64,6 @@ class RequestContainer extends Component {
   }
 
   onStartDateChange(startDate) {
-    this.setState({ startDate });
-    if (moment(startDate).isSameOrAfter(moment(this.state.endDate))) {
-      let newEndDate = moment(startDate).add(1, 'h').startOf('hour').toDate();
-      this.setState({ endDate: newEndDate });
-    }
-    this.setState({ selectedResourceId: -1 });
-
     const {
       resourceType,
       endDate,
@@ -78,9 +71,26 @@ class RequestContainer extends Component {
       section
     } = this.state;
 
-    this.props.dispatch(getAvailableResources(1, {
-      resourceType, startDate, endDate, floor, section
-    }));
+    const req = {
+      resourceType,
+      startDate,
+      endDate,
+      floor,
+      section
+    }
+
+    this.setState({
+      startDate,
+      selectedResourceId: -1
+    });
+
+    if (moment(startDate).isSameOrAfter(moment(endDate))) {
+      const newEndDate = moment(startDate).add(1, 'h').startOf('hour').toDate();
+      this.setState({ endDate: newEndDate });
+      req.endDate = newEndDate;
+    }
+
+    this.props.dispatch(getAvailableResources(1, req));
   }
 
   onEndDateChange(endDate) {
