@@ -217,6 +217,7 @@ class ReservedTableAdmin extends Component {
   }
 
   render() {
+    var selectedResource = this.props.reservations[this.state.modalIndex] ? this.props.reservations[this.state.modalIndex]["Resource.Desk.desk_number"] : "";
     return (
       <div className='container tableContainer'>
       <Row/>
@@ -233,7 +234,7 @@ class ReservedTableAdmin extends Component {
 
       <Modal show={(this.state.modalType === this.modalEnum.EDIT)} onHide={this.modalCloseEdit.bind(this)}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit Reservation</Modal.Title>
+            <Modal.Title>Edit Reservation for Resource {selectedResource}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {this.errorMessage()}
@@ -250,7 +251,7 @@ class ReservedTableAdmin extends Component {
             <Modal.Title>Confirm Cancellation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-              Are you sure you want to cancel this reservation?
+            Are you sure you want to cancel reservation for resource {selectedResource}?
           </Modal.Body>
           <Modal.Footer>
             <Button bsStyle="primary" onClick={this.onClickConfirmCancel.bind(this)}>Confirm</Button>
