@@ -219,8 +219,9 @@ describe('Reservations', function() {
             .set('Accept', 'application/json')
             .send(reservations)
             .end(function (err, res){
-                assert.equal(res.status, 201);
-                assert.equal(res.body, 'Your reservation has been made successfully.');
+                assert.equal(res.status, 200);
+                var json = JSON.parse(res.text);
+                assert.strictEqual(typeof json.transaction_id, 'string');
                 done();
             });
         });
@@ -280,7 +281,7 @@ describe('Reservations', function() {
             .send(reservations2)
             .end(function (err, res){
                 assert.equal(res.status, 409);
-                assert.equal(res.body, 'Resource cannot be booked for more than one user at the same time.');
+                assert.equal(res.text, 'You cannot book multiple desks for overlapping time period');
                 done();
             })
         });
