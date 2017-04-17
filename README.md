@@ -162,6 +162,9 @@ Ensure that the event has been created:
 SHOW EVENTS
 ```
 
+### Set custom log in information
+By default, everyone will be logged in as user 43868488 (admin). To set a different user id, copy login.js from /server/config/ into /client/public/, edit staffDetails_name and staffDetails_empid as desired.
+
 ### <a name="starting-the-server"></a>Starting the server
 Start the development server. It will use port 3000 by default: 
 ```bash
