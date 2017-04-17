@@ -6,7 +6,7 @@ import './ConfirmRequestModal.css';
 import Loader from '../Loader';
 
 const default_error_string = 'Please check your input and try again.';
-const RESERVATION_LOCK_MS = 6000
+const RESERVATION_LOCK_MS = 600000
 
 class ConfirmRequestModal extends Component {
   static propTypes = {

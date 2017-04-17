@@ -4,7 +4,7 @@ var Sequelize = require('sequelize'),
   nodemailer = require('nodemailer');
   sesConfig = require('../config/ses');
 
-const RESERVATION_LOCK_MS = 60000
+const RESERVATION_LOCK_MS = 600000
 
 module.exports = function (app) {
 
