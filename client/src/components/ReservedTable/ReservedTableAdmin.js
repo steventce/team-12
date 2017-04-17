@@ -152,9 +152,18 @@ class ReservedTableAdmin extends Component {
   }
 
   changeStartTime(time) {
-    let newOptions = this.state.editOptions;
-    newOptions.newStartTime = time;
-    this.setState({ editOptions: newOptions });
+    let startTime = time;
+    let endTime = this.state.editOptions.newEndTime;
+
+    if (moment(startTime).isSameOrAfter(moment(endTime))) {
+      const updatedEndTime = moment(startTime).add(1, 'h').startOf('hour').toDate();
+      this.setState({ editOptions: {
+        resourceType: this.props.reservations[this.state.modalIndex]["Resource.resource_type"],
+        newStartTime: startTime,
+        newEndTime: updatedEndTime
+        }
+      });
+    }
   }
 
   endTimeOptions() {
