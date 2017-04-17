@@ -6,6 +6,7 @@ import './ConfirmRequestModal.css';
 import Loader from '../Loader';
 
 const default_error_string = 'Please check your input and try again.';
+const RESERVATION_LOCK_MS = 6000
 
 class ConfirmRequestModal extends Component {
   static propTypes = {
@@ -29,7 +30,7 @@ class ConfirmRequestModal extends Component {
       showModal: false,
       modalType: this.modalEnum.NONE,
       errorMsg: '',
-      timeLeft_s: 0, timerId: -1
+      submitDeadline: null, timeLeft_s: 0, timerId: -1
     }
     this.submit = this.submit.bind(this);
     this.close = this.close.bind(this);
@@ -42,19 +43,24 @@ class ConfirmRequestModal extends Component {
     this.setState({ modalType: this.modalEnum.WAIT });
 
     clearTimeout(this.state.timerId);
-    this.setState({ showModal: true, timeLeft_s: 600, timerId: setTimeout(() => this.updateTimerLeft(), 1000)});
+    this.setState({ showModal: true, timeLeft_s: RESERVATION_LOCK_MS / 1000, 
+      submitDeadline_s: (Date.now() + RESERVATION_LOCK_MS) / 1000, timerId: setTimeout(() => this.updateTimerLeft(), 1000)});
   }
 
   updateTimerLeft() {
     if (!this || this.state.timeLeft_s <= 0)
       return
 
-    this.setState({timeLeft_s: this.state.timeLeft_s - 1, timerId: setTimeout(() => this.updateTimerLeft(), 1000)})
+    this.setState({timeLeft_s: this.state.submitDeadline_s - Date.now() / 1000, timerId: setTimeout(() => this.updateTimerLeft(), 1000)})
   }
 
   getTimeRemaining() {
-    const min = Math.floor(this.state.timeLeft_s / 60)
-    const sec = this.state.timeLeft_s % 60
+    const timeLeft_s = Math.max(0, Math.floor(this.state.timeLeft_s))
+    const min = Math.floor(timeLeft_s / 60)
+    const sec = timeLeft_s % 60
+    if (timeLeft_s <= 0)
+      return "TIMED OUT!"
+
     return "Time Remaining: " + (min < 10 ? "0" : "") + min + ":" + (sec < 10 ? "0" : "") + sec
   }
 
@@ -108,7 +114,7 @@ class ConfirmRequestModal extends Component {
     let title = `Confirm Reservation`;
     let text = `Are you sure you want to reserve ${selectedResourceName} from
              ${this.formatDate(startDate)} to ${this.formatDate(endDate)}?`;
-    let confirmButton = <Button bsStyle="primary" onClick={this.confirm} id="confirmBtn">OK</Button>;
+    let confirmButton = <Button bsStyle="primary" disabled={this.state.timeLeft_s <= 0} onClick={this.confirm} id="confirmBtn">OK</Button>;
     let cancelButton = <Button onClick={this.abort} id="cancelConfirmBtn">Cancel</Button>;
 
     let modalContent;
@@ -127,7 +133,7 @@ class ConfirmRequestModal extends Component {
 
           <Modal.Footer>
             <div className="confirmFooter">
-              <div>{this.getTimeRemaining()}</div>
+              <div style={this.state.timeLeft_s < 60? {color:"red"} : {}}>{this.getTimeRemaining()}</div>
               <div>
                 {cancelButton}
                 {confirmButton}

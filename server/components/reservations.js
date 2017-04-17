@@ -4,7 +4,7 @@ var Sequelize = require('sequelize'),
   nodemailer = require('nodemailer');
   sesConfig = require('../config/ses');
 
-const RESERVATION_LOCK_MS = 600000
+const RESERVATION_LOCK_MS = 60000
 
 module.exports = function (app) {
 
@@ -188,7 +188,10 @@ module.exports = function (app) {
         let pendingRequest = pendingReservations[transaction_id]
 
         if (!pendingRequest) {
-           res.status(404).send("Pending transaction expired.");
+          if (action == "confirm")
+            res.status(404).send("Pending transaction expired.");
+          else
+            res.status(200).send();
            return
         }
         else if (pendingRequest.reservation.staff_id != staff_id) {
@@ -212,6 +215,7 @@ module.exports = function (app) {
         }
         else {
           console.log("User aborted transaction " + transaction_id)
+          res.status(200).send();
         }
 
         if (action == "confirm" && pendingRequest.reservation.staff_email && pendingRequest.reservation.staff_email !== "") {
