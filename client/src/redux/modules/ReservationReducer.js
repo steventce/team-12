@@ -9,6 +9,7 @@ const CANCEL_RESERVATION = 'CANCEL_RESERVATION';
 const EDIT_RESERVATION = 'EDIT_RESERVATION';
 const CONFIRM_RESERVATION = 'CONFIRM_RESERVATION';
 const ABORT_RESERVATION = 'ABORT_RESERVATION';
+const GET_USER_RESERVATIONS = 'GET_USER_RESERVATIONS';
 
 const RESET_STATUS = 'RESET_STATUS';
 
@@ -35,6 +36,7 @@ export const confirmReservation = createAction(CONFIRM_RESERVATION, service.conf
 
 export const abortReservation = createAction(ABORT_RESERVATION, service.abortReservation);
 
+export const getUserReservations = createAction(GET_USER_RESERVATIONS, service.getAllReservations);
 
 // Reducer
 
@@ -85,6 +87,9 @@ export default function reducer(state = initialState, action) {
     case CONFIRM_RESERVATION:
     case ABORT_RESERVATION:
       return { ...state, pendingTransactionId: "", status: action.payload.status}
+    case GET_USER_RESERVATIONS: {
+      return { ...state, reservations: getObjValues(action.payload)}
+    }
     default:
       return state;
   }

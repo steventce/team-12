@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
-import { App, Request, Locations, Reservations, AdminReservations, Resources } from './containers';
+import { App, Request, Locations, Reservations, AdminReservations, Resources, UserReservations } from './containers';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -19,6 +19,7 @@ ReactDOM.render((
         <Route path="resources" component={Resources} />
         <Route path="locations" component={Locations} />
         <Route path="admin" component={AdminReservations} />
+        <Route path="users" component={UserReservations} />
         <IndexRedirect to="/home" />
       </Route>
     </Router>
