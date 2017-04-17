@@ -220,9 +220,18 @@ class ReservedTableAdmin extends Component {
       return moment(cell).format("YYYY-MM-DD h:mma");
   }
 
+  formatDate(date) {
+    return moment(date).format('h:mm a MMM D');
+  }
+
   render() {
     var selectedResource = this.props.reservations[this.state.modalIndex] ? this.props.reservations[this.state.modalIndex]["Resource.Desk.desk_number"] : "";
     var selectedReservation = this.props.reservations[this.state.modalIndex] ? this.props.reservations[this.state.modalIndex].reservation_id : "";
+    var selectedReservationStartTime = this.props.reservations[this.state.modalIndex] ?
+      this.formatDate(this.props.reservations[this.state.modalIndex].start_date) : "";
+    var selectedReservationEndTime = this.props.reservations[this.state.modalIndex] ?
+      this.formatDate(this.props.reservations[this.state.modalIndex].end_date) : "";
+
     return (
       <div className='container tableContainer'>
       <Row/>
@@ -261,7 +270,7 @@ class ReservedTableAdmin extends Component {
             <Modal.Title>Confirm Cancellation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you want to cancel reservation for resource {selectedResource}?
+            Are you sure you want to cancel reservation for resource {selectedResource} from {selectedReservationStartTime} to {selectedReservationEndTime}?
           </Modal.Body>
           <Modal.Footer>
             <Button bsStyle="primary" onClick={this.onClickConfirmCancel.bind(this)}>Confirm</Button>

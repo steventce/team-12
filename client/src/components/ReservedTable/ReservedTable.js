@@ -4,6 +4,7 @@ import { dateFormatter } from '../../utils/formatter';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import './ReservedTable.css';
 import '../../index.css';
+import moment from 'moment';
 import TrashIcon from 'react-icons/lib/fa/trash';
 
 import { cancelReservation, getReservations} from '../../redux/modules/ReservationReducer';
@@ -57,7 +58,18 @@ class ReservedTable extends Component {
     this.setState({ showModal: true, cancelIndex: cancelIndex});
   }
 
+  formatDate(date) {
+    return moment(date).format('h:mm a MMM D');
+  }
+
   render() {
+    var selectedResource = this.props.reservations[this.state.cancelIndex] ? this.props.reservations[this.state.cancelIndex]["Resource.Desk.desk_number"] : "";
+    var selectedReservation = this.props.reservations[this.state.cancelIndex] ? this.props.reservations[this.state.cancelIndex].reservation_id : "";
+    var selectedReservationStartTime = this.props.reservations[this.state.cancelIndex] ?
+      this.formatDate(this.props.reservations[this.state.cancelIndex].start_date) : "";
+    var selectedReservationEndTime = this.props.reservations[this.state.cancelIndex] ?
+      this.formatDate(this.props.reservations[this.state.cancelIndex].end_date) : "";
+
     return (
     	<div className='container tableContainer'>
 		  <BootstrapTable data={this.props.reservations} striped={true} hover={true} pagination options={{hideSizePerPage: true}}>
@@ -73,7 +85,7 @@ class ReservedTable extends Component {
             <Modal.Title>Confirm Cancellation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you want to cancel this reservation?
+            Are you sure you want to cancel reservation for resource {selectedResource} from {selectedReservationStartTime} to {selectedReservationEndTime}?
           </Modal.Body>
           <Modal.Footer>
             <Button bsStyle="primary" onClick={this.onClickConfirmCancel.bind(this)}>Confirm</Button>
