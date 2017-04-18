@@ -279,7 +279,7 @@ class ReservedTableAdmin extends Component {
             <Modal.Title>Confirm Cancellation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you want to cancel reservation for resource {selectedResource} from {selectedReservationStartTime} to {selectedReservationEndTime}?
+            Are you sure you want to cancel the reservation for resource {selectedResource} from {selectedReservationStartTime} to {selectedReservationEndTime}?
           </Modal.Body>
           <Modal.Footer>
             <Button bsStyle="primary" onClick={this.onClickConfirmCancel.bind(this)}>Confirm</Button>
