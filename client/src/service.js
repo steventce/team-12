@@ -267,7 +267,8 @@ export const deleteLocation = async (locationId) => {
       baseURL: '',
       params: {
         location_id: locationId
-      }
+      },
+      data: {staff_id: staffDetails_empid}
   });
   return response.data;
 }
@@ -287,7 +288,8 @@ export const addLocation = async (location) => {
       city: location.city,
       province_state: location.province_state,
       postal_code: location.postal_code
-      }
+      },
+      staff_id: staffDetails_empid
     })
   });
   return response.data;
@@ -308,7 +310,8 @@ export const editLocation = async (locationId, location) => {
       city: location.city,
       province_state: location.province_state,
       postal_code: location.postal_code
-      }
+      },
+      staff_id: staffDetails_empid
     })
   });
   return response.data;

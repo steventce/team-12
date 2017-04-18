@@ -13,9 +13,20 @@ module.exports = function(app) {
 
   app.delete("/api/v1/locations/:location_id", function(req, res) {
     var location_id = req.params.location_id;
-    models.Resource.findAll({
-      where: { location_id: location_id }
+    var staff_id = req.body.staff_id;
+    models.Admin.findAll({
+      where: { admin_id: staff_id}
+    }).then(function(admins) {
+      if (admins.length == 0) {
+        res.status(401).json('User needs to be admin to delete locations');
+        return;
+      } else {
+        return models.Resource.findAll({
+          where: { location_id: location_id }
+        });
+      } 
     }).then(function (resources) {
+      if (resources == null) return;
       if (resources.length > 0) {
         res.status(403).send("Location cannot be deleted unless all the resources in it have been deleted");
       } else {
@@ -40,8 +51,18 @@ module.exports = function(app) {
       province_state: req.body.location.province_state,
       postal_code: req.body.location.postal_code
     };
+    var staff_id = req.body.staff_id;
 
-    models.Location.create(location).then(function() {
+    models.Admin.findAll({
+      where: { admin_id: staff_id}
+    }).then(function(admins) {
+      if (admins.length == 0) {
+        res.status(401).json('User needs to be admin to delete locations');
+        return;
+      } else {
+        return models.Location.create(location);
+      } 
+    }).then(function() {
       res.status(201).send(null);
     }).catch(Sequelize.ValidationError, function(err) {
       res.status(400).send({ errors: err.errors });
@@ -58,9 +79,17 @@ module.exports = function(app) {
       province_state: req.body.location.province_state,
       postal_code: req.body.location.postal_code
     };
-
-    models.Location.update(location, {where: {location_id: location_id}
-      }).then(function(location) {
+    var staff_id = req.body.staff_id;
+    models.Admin.findAll({
+      where: { admin_id: staff_id}
+    }).then(function(admins) {
+      if (admins.length == 0) {
+        res.status(401).json('User needs to be admin to delete locations');
+        return;
+      } else {
+        return models.Location.update(location, {where: {location_id: location_id}});
+      } 
+    }).then(function(location) {
         res.status(200).send(null);
       }).catch(Sequelize.ValidationError, function(err) {
         res.status(401).send({ errors: err.errors });
