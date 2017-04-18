@@ -335,73 +335,84 @@ module.exports = function (app) {
     var start_date = moment(start_date);
     var end_date = moment(end_date);
 
-    // Error checking 
-    if (start_date.isAfter(end_date)) {
-      console.log("start date > end date: " + start_date + " "+ end_date);
-      res.status(401).send("Start date must be after end date");
-      return;
-    } 
-    var duration = moment.duration(end_date.diff(start_date));
-    var hours = duration.asHours();
-    if (hours > 120) {
-      console.log("duration > 120: " + start_date + " "+ end_date);
-      res.status(401).send("End date must be 120 hours after start date");
-      return;
-    } 
-    var duration2 = moment.duration(start_date.diff(now));
-    var days = duration2.asDays();
-    if (days > 30) {
-      console.log("start_date > 30 days: " + start_date + " "+ end_date);
-      res.status(401).send("Start date must be within 30 days of current date");
-      return;
-    }
+    models.Admin.findAll({
+      where: { admin_id: req.body.staff_id}
+    }).then(function(admins) {
+      if (admins.length == 0) {
+        res.status(401).json('User needs to be admin to delete reservations by others');
+        return;
+      } else {
 
-    models.Reservation.findAll({
-      where: {
-        resource_id: resource_id
-      }
-    }).then(function (allReservationsWithResourceId) {
-      let overlapWithAnotherTime = false;
-      allReservationsWithResourceId.map(function (existingReservation) {
-        // Check if reservation times overlap
-        let hasOverlap = newReservation.start_date < existingReservation.end_date &&
-          newReservation.end_date > existingReservation.start_date;
-        let differentReservations = newReservation.reservation_id != existingReservation.reservation_id;
-        if (hasOverlap && differentReservations) {
-          overlapWithAnotherTime = true;
+        // Error checking 
+        if (start_date.isAfter(end_date)) {
+          console.log("start date > end date: " + start_date + " "+ end_date);
+          res.status(401).send("Start date must be after end date");
+          return;
+        } 
+        var duration = moment.duration(end_date.diff(start_date));
+        var hours = duration.asHours();
+        if (hours > 120) {
+          console.log("duration > 120: " + start_date + " "+ end_date);
+          res.status(401).send("End date must be 120 hours after start date");
+          return;
+        } 
+        var duration2 = moment.duration(start_date.diff(now));
+        var days = duration2.asDays();
+        if (days > 30) {
+          console.log("start_date > 30 days: " + start_date + " "+ end_date);
+          res.status(401).send("Start date must be within 30 days of current date");
           return;
         }
-      });
-      if (overlapWithAnotherTime) {
-        res.status(400).send("Reservation times cannot overlap for the same resource");
-      } else {
-        // Update reservation since there is no overlapping reservation times
 
-            // Check if the reservation conflicts with other reservations
-            // Translates to:
-            //      Where
-            //      start_date <= reservation.end_date AND start_date >= reservation.start_date
-            //      OR
-            //      end_date >= resource.start_date AND end_date <= resource.end_date
-            models.Reservation.findOne({
-              where:{
-                reservation_id: reservation_id,
-              }
-            }).then(function (reservation) {
-              console.log("Reservation is: " + reservation);
-              if (reservation) {
-                reservation.updateAttributes(newReservation).then(function (result) {
-                  res.status(200).send(result);
+        models.Reservation.findAll({
+          where: {
+            resource_id: resource_id
+          }
+        }).then(function (allReservationsWithResourceId) {
+          let overlapWithAnotherTime = false;
+          allReservationsWithResourceId.map(function (existingReservation) {
+            // Check if reservation times overlap
+            let hasOverlap = newReservation.start_date < existingReservation.end_date &&
+              newReservation.end_date > existingReservation.start_date;
+            let differentReservations = newReservation.reservation_id != existingReservation.reservation_id;
+            if (hasOverlap && differentReservations) {
+              overlapWithAnotherTime = true;
+              return;
+            }
+          });
+          if (overlapWithAnotherTime) {
+            res.status(400).send("Reservation times cannot overlap for the same resource");
+          } else {
+            // Update reservation since there is no overlapping reservation times
+
+                // Check if the reservation conflicts with other reservations
+                // Translates to:
+                //      Where
+                //      start_date <= reservation.end_date AND start_date >= reservation.start_date
+                //      OR
+                //      end_date >= resource.start_date AND end_date <= resource.end_date
+                models.Reservation.findOne({
+                  where:{
+                    reservation_id: reservation_id,
+                  }
+                }).then(function (reservation) {
+                  console.log("Reservation is: " + reservation);
+                  if (reservation) {
+                    reservation.updateAttributes(newReservation).then(function (result) {
+                      res.status(200).send(result);
+                    });
+                  } else {
+                    res.status(401).send("No such reservation in the system");
+                  }
+                }).catch(Sequelize.ValidationError, function (err) {
+                  res.status(400).send({ errors: err.errors });
                 });
-              } else {
-                res.status(401).send("No such reservation in the system");
-              }
-            }).catch(Sequelize.ValidationError, function (err) {
-              res.status(400).send({ errors: err.errors });
-            });
 
-      }
+          }
+        });
+      } 
     });
+
 
   });
 
