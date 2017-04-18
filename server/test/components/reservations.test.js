@@ -281,7 +281,7 @@ describe('Reservations', function() {
             .send(reservations2)
             .end(function (err, res){
                 assert.equal(res.status, 409);
-                assert.equal(res.text, 'You cannot book multiple desks for overlapping time period');
+                assert.equal(res.text, 'Reservation times cannot overlap for the same resource');
                 done();
             })
         });

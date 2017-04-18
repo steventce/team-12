@@ -139,7 +139,7 @@ module.exports = function (app) {
 
         try {
           if (!overlap) {
-            let reservations = await models.Reservation.findAll({     
+            let reservations = await models.Reservation.findAll({
               where:{
                 resource_id: resource_id,
                 $and: [{'$end_date$': {$gt: start_date}},
@@ -151,25 +151,48 @@ module.exports = function (app) {
 
           if (overlap) { //findAll returns an empty array not null if nothing is found.
             // Reservation already exists
-            res.status(409).send("You cannot book multiple desks for overlapping time period");
+            res.status(409).send("Reservation times cannot overlap for the same resource");
           }
           else {
-            let resource = await models.Resource.findOne({where: { resource_id: resource_id }})
+            // Check if the same user booked another resource for an overlapping time period
+            let overlappingReservationByUser = false;
+            await models.Reservation.findAll({
+              where: {
+                staff_id: staff_id
+              }
+            }).then(function (reservationsMadeByEmployee) {
+              reservationsMadeByEmployee.map(function (employeeReservation) {
+                if (reservation.start_date < employeeReservation.end_date &&
+                  reservation.end_date > employeeReservation.start_date) {
+                    overlappingReservationByUser = true;
+                }
+              });
+            });
+            if (overlappingReservationByUser) {
+              res.status(400).send("You cannot book multiple desks for an overlapping time period");
+            } else {
 
-            console.log("Resource is: " + resource)
-            reservation.resource_type = resource.resource_type
+                // Allow the user to book a resource as there are no reservations that
+                // overlap with the requested time period
 
-            let transaction_id = String(Date.now()) + "_" + staff_id 
+                let resource = await models.Resource.findOne({where: { resource_id: resource_id }});
 
-            // Set timeout and ask user to confirm
-            const timer = setTimeout(() => {
-              console.log("Reservation expired: " + transaction_id)
-              delete pendingReservations[transaction_id]
-            }, RESERVATION_LOCK_MS)
+                console.log("Resource is: " + resource);
+                reservation.resource_type = resource.resource_type;
 
-            pendingReservations[transaction_id] = {timer, reservation}
-            console.log("Created reservation on transaction at id " + transaction_id)
-            res.status(200).send({transaction_id})
+                let transaction_id = String(Date.now()) + "_" + staff_id;
+
+                // Set timeout and ask user to confirm
+                const timer = setTimeout(() => {
+                  console.log("Reservation expired: " + transaction_id)
+                  delete pendingReservations[transaction_id]
+                }, RESERVATION_LOCK_MS)
+
+                pendingReservations[transaction_id] = {timer, reservation}
+                console.log("Created reservation on transaction at id " + transaction_id)
+                res.status(200).send({transaction_id});
+
+            }
           }
         }
         catch(err) {
@@ -316,7 +339,8 @@ module.exports = function (app) {
       let overlapWithAnotherTime = false;
       allReservationsWithResourceId.map(function (existingReservation) {
         // Check if reservation times overlap
-        let hasOverlap = newReservation.start_date < existingReservation.end_date && newReservation.end_date > existingReservation.start_date;
+        let hasOverlap = newReservation.start_date < existingReservation.end_date &&
+          newReservation.end_date > existingReservation.start_date;
         let differentReservations = newReservation.reservation_id != existingReservation.reservation_id;
         if (hasOverlap && differentReservations) {
           overlapWithAnotherTime = true;
