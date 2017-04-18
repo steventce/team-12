@@ -1,5 +1,4 @@
 import axios from 'axios';
-import global_staff_id from './components/admin.js';
 
 //const SERVER_URL = "http://mylasagna.ca/";
 /*global staffDetails_empid:true*/
