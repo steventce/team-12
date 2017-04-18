@@ -250,10 +250,14 @@ module.exports = function(app) {
         res.status(401).json('User needs to be admin to delete resources');
         return;
       } else {
-        models.Resource.destroy({
-          where: {
-            resource_id: resource_id
-          }
+        models.Desk.destroy({
+          where: {resource_id: resource_id}
+        }).then(function(affectedRows) {
+          models.Resource.destroy({
+            where: {
+              resource_id: resource_id
+            }
+          })
         }).then(function(affectedRows) {
           res.status(200).json(null);
         }).catch(Sequelize.ValidationError, function(err) {
