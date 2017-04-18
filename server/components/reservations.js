@@ -276,14 +276,39 @@ module.exports = function (app) {
   //DELETE
   app.delete("/api/v1/reservations/:reservation_id", function (req, res) {
     var reservation_id = req.params.reservation_id;
-
-    models.Reservation.destroy({
+    var staff_id = req.body.staff_id;
+    console.log("\r\n Deleting reservation " + reservation_id + " from user " + staff_id + ":\r\n");
+    models.Reservation.findOne({
       where: { reservation_id: reservation_id }
+    }).then(function(reservation) {
+      if (reservation.staff_id == staff_id) {
+        return models.Reservation.destroy({
+          where: { reservation_id: reservation_id }
+        });
+      } else {
+        models.Admin.findAll({
+          where: { admin_id: staff_id}
+        }).then(function(admins) {
+          if (admins.length == 0) {
+            res.status(401).json('User needs to be admin to delete reservations by others');
+            return;
+          } else {
+            return models.Reservation.destroy({
+              where: { reservation_id: reservation_id }
+            });
+          } 
+        });
+      }
     }).then(function (reservation) {
-      res.status(200).json('Reservation successfully deleted.');
+      if (reservation == null)
+        res.status(401);
+      else 
+        res.status(200).json('Reservation successfully deleted.');
     }).catch(Sequelize.ValidationError, function (err) {
       res.status(401).json({ errors: err.errors });
     });
+     
+
   });
 
   //PUT
