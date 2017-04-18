@@ -25,6 +25,7 @@ class Request extends Component {
     const {
       //floor,
       floors,
+      locations,
       floorMapImgSrc,
       sections,
       selectedResourceId,
@@ -72,7 +73,19 @@ class Request extends Component {
                   </FormControl>
                 </FormGroup>
 
-                {/* Select a floor */}
+                {/* Select a Location */}
+                <FormGroup controlId="formControlsLocationSelect">
+                  <ControlLabel>Location</ControlLabel>
+                  <FormControl componentClass="select" onChange={this.props.onLocationChange} name="location">
+                    {locations.map(function (location) {
+                      return (
+                        <option key={location.location_id} value={location.location_id}>{location.building_name}</option>
+                      );
+                    })}
+                  </FormControl>
+                </FormGroup>
+
+                 {/* Select a floor */}
                 <FormGroup controlId="formControlsFloorSelect">
                   <ControlLabel>Floor</ControlLabel>
                   <FormControl componentClass="select" onChange={this.props.onFloorChange} name="floor">

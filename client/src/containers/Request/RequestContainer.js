@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { getAvailableResources } from '../../redux/modules/ResourceReducer';
+import { getLocations } from '../../redux/modules/LocationReducer';
 import { resetStatus, makeReservation, confirmReservation, abortReservation } from '../../redux/modules/ReservationReducer';
 import Request from './Request';
 import floor1 from '../../images/floor_1.png';
@@ -15,6 +16,7 @@ class RequestContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      location_id: -1,
       resourceTypes: ['Desk'],
       resourceType: 'Desk',
       floor: 1,
@@ -42,20 +44,21 @@ class RequestContainer extends Component {
     if (nextProps.errorMsg) {
       this.setState({ errorMsg: nextProps.errorMsg });
     }
+
+    if (nextProps.locations !== this.props.locations) {
+      if (nextProps.locations && nextProps.locations.length > 0) {
+        this.setState({location_id: nextProps.locations[0].location_id})
+        this.refreshResourceList(nextProps.locations[0].location_id)
+      }
+      else {
+        this.setState({location_id: -1})
+        this.refreshResourceList(-1)
+      }
+    }
   }
 
   componentDidMount() {
-    const {
-      resourceType,
-      startDate,
-      endDate,
-      floor,
-      section
-    } = this.state;
-
-    this.props.dispatch(getAvailableResources(1, {
-      resourceType, startDate, endDate, floor, section
-    }));
+    this.props.dispatch(getLocations())
   }
 
   componentWillUnmount() {
@@ -64,21 +67,8 @@ class RequestContainer extends Component {
   }
 
   onStartDateChange(startDate) {
-    const {
-      resourceType,
-      endDate,
-      floor,
-      section
-    } = this.state;
-
-    const req = {
-      resourceType,
-      startDate,
-      endDate,
-      floor,
-      section
-    }
-
+    let endDate = this.state.endDate
+      
     this.setState({
       startDate,
       selectedResourceId: -1
@@ -87,26 +77,17 @@ class RequestContainer extends Component {
     if (moment(startDate).isSameOrAfter(moment(endDate))) {
       const newEndDate = moment(startDate).add(1, 'h').startOf('hour').toDate();
       this.setState({ endDate: newEndDate });
-      req.endDate = newEndDate;
+      endDate = newEndDate;
     }
 
-    this.props.dispatch(getAvailableResources(1, req));
+    this.refreshResourceList(this.state.location_id, {startDate, endDate})
   }
 
   onEndDateChange(endDate) {
     this.setState({ endDate });
     this.setState({ selectedResourceId: -1 });
 
-    const {
-      resourceType,
-      startDate,
-      floor,
-      section
-    } = this.state;
-
-    this.props.dispatch(getAvailableResources(1, {
-      resourceType, startDate, endDate, floor, section
-    }));
+    this.refreshResourceList(this.state.location_id, {endDate})
   }
 
   onResourceSelect(resource, event) {
@@ -118,6 +99,34 @@ class RequestContainer extends Component {
     });
   }
 
+  refreshResourceList(location_id, reqOverride) {
+    const {
+      resourceType,
+      startDate,
+      endDate,
+      floor,
+      section,
+    } = this.state;
+
+    const req = Object.assign({
+      resourceType,
+      startDate,
+      endDate,
+      floor,
+      section
+    }, reqOverride)
+
+    this.props.dispatch(getAvailableResources(location_id, req))
+  }
+
+  onLocationChange(event) {
+    const location_id = event.target.value;
+    this.setState({location_id});
+    this.setState({ selectedResourceId: -1 });
+
+    this.refreshResourceList(location_id)
+  }
+
   onChange(event) {
     const { name, value } = event.target;
 
@@ -127,9 +136,7 @@ class RequestContainer extends Component {
       selectedResourceName: '',
     });
 
-    this.props.dispatch(getAvailableResources(1, {
-      ...this.state, [name]: value
-    }));
+    this.refreshResourceList(this.state.location_id, {[name]: value})
   }
 
   onEmailChange(e) {
@@ -167,9 +174,8 @@ class RequestContainer extends Component {
       break;
       }
     }
-    this.props.dispatch(getAvailableResources(1, {
-      ...this.state, floor: newFloor
-    }));
+
+    this.refreshResourceList(this.state.location_id, {floor: newFloor})
   }
 
   submitClick() {
@@ -194,7 +200,9 @@ class RequestContainer extends Component {
     return (
       <Request
         {...this.state}
+        locations={this.props.locations}
         availableResources={this.props.availableResources}
+        onLocationChange={this.onLocationChange.bind(this)}
         onStartDateChange={this.onStartDateChange.bind(this)}
         onEndDateChange={this.onEndDateChange.bind(this)}
         onResourceSelect={this.onResourceSelect.bind(this)}
@@ -211,9 +219,10 @@ class RequestContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { db, resources } = state;
+  const { db, resources, locations } = state;
   return {
     availableResources: resources.availableResources,
+    locations: locations.locations,
     status: db.status,
     errorMsg: db.errorMsg,
     pendingTransactionId: db.pendingTransactionId
