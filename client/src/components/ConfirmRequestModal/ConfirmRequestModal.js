@@ -59,7 +59,7 @@ class ConfirmRequestModal extends Component {
     const min = Math.floor(timeLeft_s / 60)
     const sec = timeLeft_s % 60
     if (timeLeft_s <= 0)
-      return "TIMED OUT!"
+      return "Your session has timed out. Please cancel and try again."
 
     return "Time Remaining: " + (min < 10 ? "0" : "") + min + ":" + (sec < 10 ? "0" : "") + sec
   }
