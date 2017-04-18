@@ -7,6 +7,7 @@ import {
   resetStatus,
   setStatus
 } from '../../../redux/modules/ResourceReducer';
+import { getLocations } from '../../../redux/modules/LocationReducer';
 import { ResourcesTable } from '../../../components';
 
 const STATUS_TYPE = {
@@ -15,8 +16,11 @@ const STATUS_TYPE = {
 
 const mapDispatchToProps = function(dispatch) {
   return {
+    getLocations: () => {
+      return dispatch(getLocations());
+    },
     getResources: (locationId) => {
-      dispatch(getAllResources(locationId));
+      return dispatch(getAllResources(locationId));
     },
     addResource: (locationId, resource) => {
       dispatch(setStatus(STATUS_TYPE.LOADING));
@@ -37,7 +41,8 @@ const mapDispatchToProps = function(dispatch) {
 }
 
 const mapStateToProps = function(state) {
-  return state.resources;
+  const { resources, locations } = state;
+  return { ...resources, locations: locations.locations };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourcesTable);

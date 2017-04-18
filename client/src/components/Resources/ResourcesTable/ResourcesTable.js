@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Form, FormGroup, FormControl } from 'react-bootstrap';
 import { dateFormatter } from '../../../utils/formatter';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import ResourcesModal from '../ResourcesModal';
 import { modalTypes } from '../ResourcesModal';
 import TrashIcon from 'react-icons/lib/fa/trash';
 import EditIcon from 'react-icons/lib/fa/pencil';
-
-const locationId = 1;
 
 function resourceIdFormatter(cell, row) {
   return cell ? `Booked by: ${cell}` : 'Available';
@@ -18,22 +16,28 @@ class ResourcesTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employeeId: this.props.employeeId,
+      locationId: null,
       modal: { show: false, data: {}, modalType: modalTypes.NONE.name }
     };
 
     this.addButton = this.addButton.bind(this);
+    this.renderTableOptionsPanel = this.renderTableOptionsPanel.bind(this);
     this.renderModal = this.renderModal.bind(this);
     this.setModalProps = this.setModalProps.bind(this);
     this.closeModal = () => {
       this.props.resetStatus();
       this.setModalProps(false, {}, modalTypes.NONE.name);
-      this.props.getResources(locationId);
+      this.props.getResources(this.state.locationId);
     };
   }
 
   componentDidMount() {
-    this.props.getResources(locationId);
+    this.props.getLocations()
+      .then((locations) => {
+        const locationId = locations.payload[0].location_id;
+        this.setState({ locationId })
+        this.props.getResources(locationId);
+      });
   }
 
   setModalProps(show, data, modalType) {
@@ -46,7 +50,7 @@ class ResourcesTable extends Component {
     return (
       <Button style={{marginLeft: '10px'}}
         onClick={this.setModalProps.bind(this, true, {}, modalTypes.ADD.name)}>
-        Add Resource
+        Add Resource To Selected Location
       </Button>
     )
   }
@@ -66,6 +70,33 @@ class ResourcesTable extends Component {
         onClick={this.setModalProps.bind(this, true, row, modalTypes.DELETE.name)}>
         <TrashIcon size={16} />
       </Button>
+    );
+  }
+
+  renderTableOptionsPanel() {
+    return (
+      <Form inline>
+        <FormGroup controlId="formControlsLocationSelect" style={{marginLeft: '10px'}}>
+          <FormControl componentClass="select" onChange={(event) => {
+            const locationId = event.target.value;
+            this.setState({ locationId });
+            this.props.getResources(locationId)
+              .then(() => {
+                const table = this.refs.table;
+                table.reset();
+                table.handlePaginationData(1, table.state.sizePerPage);
+              });
+          }} name="location">
+            {this.props.locations.map(function (location) {
+              const { building_name: name, location_id: id } = location;
+              return (
+                <option key={id} value={id}>{name}</option>
+              );
+            })}
+          </FormControl>
+        </FormGroup>
+        {this.addButton()}
+      </Form>
     );
   }
 
@@ -91,7 +122,7 @@ class ResourcesTable extends Component {
 
     return (
       <ResourcesModal
-        locationId={locationId}
+        locationId={this.state.locationId}
         {...modal}
         status={status}
         closeModal={this.closeModal}
@@ -110,13 +141,15 @@ class ResourcesTable extends Component {
       <div>
         <h1 style={{textAlign: 'center'}}>Resources</h1>
         <div className='container tableContainer'>
-          {this.addButton()}
+          {this.renderTableOptionsPanel()}
           <BootstrapTable
             data={this.props.resources}
             striped
             hover
             pagination
+            ref="table"
             options={options}>
+            <TableHeaderColumn dataField='location_id' ref="locationId" filter={{ type: 'TextFilter' }} hidden></TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.desk_number' isKey dataAlign='center' dataSort filter={{ type: 'TextFilter' }}>Resource ID</TableHeaderColumn>
             <TableHeaderColumn dataField='resource_type' dataAlign='center' dataSort>Resource Type</TableHeaderColumn>
             <TableHeaderColumn dataField='Desk.floor' dataAlign='center' dataSort hidden>Floor</TableHeaderColumn>
