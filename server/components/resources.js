@@ -128,7 +128,7 @@ module.exports = function(app) {
     var floor = req.body.resource.floor;
     var section = req.body.resource.section;
     var desk_number = req.body.resource.desk_number;
-
+    var staff_id = req.body.staff_id;
     var desk = {
       floor,
       section,
@@ -139,40 +139,48 @@ module.exports = function(app) {
       resource_type: req.body.resource_type,
       Desk: desk
     };
-
-    if (req.body.resource_type === RESOURCE_TYPE.DESK) {
-      models.Resource.find({
-        where: {
-          location_id
-        },
-        include: [{
-          model: models.Desk,
-          where: {
-            desk_number: desk.desk_number
-          }
-        }]
-      }).then(function(db_resource) {
-        if (db_resource) {
-          throw new Sequelize.ValidationError('', [
-            {
-              message: 'Desk number already exists at this location',
-              path: 'desk_number',
-              type: 'Validation error'
+    models.Admin.findAll({
+      where: { admin_id: staff_id}
+    }).then(function(admins) {
+      if (admins.length == 0) {
+        res.status(401).json('User needs to be admin to add resources');
+        return;
+      } else {
+        if (req.body.resource_type === RESOURCE_TYPE.DESK) {
+          models.Resource.find({
+            where: {
+              location_id
+            },
+            include: [{
+              model: models.Desk,
+              where: {
+                desk_number: desk.desk_number
+              }
+            }]
+          }).then(function(db_resource) {
+            if (db_resource) {
+              throw new Sequelize.ValidationError('', [
+                {
+                  message: 'Desk number already exists at this location',
+                  path: 'desk_number',
+                  type: 'Validation error'
+                }
+              ]);
             }
-          ]);
+            return models.Resource.create(resource, {
+              include: [ models.Desk ]
+            });
+          }).then(function(resource) {
+            res.location(`/api/v1/locations/${location_id}/resources/${resource.resource_id}`);
+            res.status(201).json(null);
+          }).catch(Sequelize.ValidationError, function(err) {
+            res.status(400).json({ errors: err.errors });
+          });
+        } else {
+          res.status(400).json(null);
         }
-        return models.Resource.create(resource, {
-          include: [ models.Desk ]
-        });
-      }).then(function(resource) {
-        res.location(`/api/v1/locations/${location_id}/resources/${resource.resource_id}`);
-        res.status(201).json(null);
-      }).catch(Sequelize.ValidationError, function(err) {
-        res.status(400).json({ errors: err.errors });
-      });
-    } else {
-      res.status(400).json(null);
-    }
+      }
+    });
   });
 
   /**
@@ -187,6 +195,7 @@ module.exports = function(app) {
   app.put('/api/v1/resources/:resource_id', function(req, res) {
     var resource_id = req.params.resource_id;
     var resource = req.body.resource || {};
+    var staff_id = req.body.staff_id;
 
     var fieldsToUpdate = {
       resource_id: resource_id, // Used for model validation
@@ -197,24 +206,34 @@ module.exports = function(app) {
 
     var selector = { where: { resource_id } };
 
-    if (req.body.resource_type === RESOURCE_TYPE.DESK) {
-      models.Desk
-        .find(selector)
-        .then(function(desk) {
-          if (desk) {
-            return desk.updateAttributes(fieldsToUpdate);
-          } else {
-            res.status(400).json(null);
-          }
-        })
-        .then(function(desk) {
-          res.status(200).json(null);
-        }).catch(Sequelize.ValidationError, function(err) {
-          res.status(400).json({ errors: err.errors });
-        });
-    } else {
-      res.status(400).json(null);
-    }
+    models.Admin.findAll({
+      where: { admin_id: staff_id}
+    }).then(function(admins) {
+      if (admins.length == 0) {
+        res.status(401).json('User needs to be admin to edit resources');
+        return;
+      } else {
+        if (req.body.resource_type === RESOURCE_TYPE.DESK) {
+          models.Desk
+            .find(selector)
+            .then(function(desk) {
+              if (desk) {
+                return desk.updateAttributes(fieldsToUpdate);
+              } else {
+                res.status(400).json(null);
+              }
+            })
+            .then(function(desk) {
+              res.status(200).json(null);
+            }).catch(Sequelize.ValidationError, function(err) {
+              res.status(400).json({ errors: err.errors });
+            });
+        } else {
+          res.status(400).json(null);
+        }
+      } 
+    });
+
   });
 
   /**
@@ -223,14 +242,25 @@ module.exports = function(app) {
    */
   app.delete('/api/v1/resources/:resource_id', function(req, res) {
     var resource_id = req.params.resource_id;
-    models.Resource.destroy({
-      where: {
-        resource_id
+    var staff_id = req.body.staff_id;
+    models.Admin.findAll({
+      where: { admin_id: staff_id}
+    }).then(function(admins) {
+      if (admins.length == 0) {
+        res.status(401).json('User needs to be admin to delete resources');
+        return;
+      } else {
+        models.Resource.destroy({
+          where: {
+            resource_id: resource_id
+          }
+        }).then(function(affectedRows) {
+          res.status(200).json(null);
+        }).catch(Sequelize.ValidationError, function(err) {
+          res.status(400).json({ errors: err.errors });
+        });
       }
-    }).then(function(affectedRows) {
-      res.status(200).json(null);
-    }).catch(Sequelize.ValidationError, function(err) {
-      res.status(400).json({ errors: err.errors });
     });
+
   });
 }

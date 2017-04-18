@@ -210,7 +210,8 @@ export const addResource = async (location_id, resource) => {
         floor,
         section,
         desk_number: deskNumber
-      }
+      },
+      staff_id: staffDetails_empid
     })
   });
 
@@ -232,7 +233,8 @@ export const editResource = async (resourceId, resource) => {
         floor,
         section,
         desk_number: deskNumber
-      }
+      },
+      staff_id: staffDetails_empid
     })
   });
   return response.data;
@@ -241,7 +243,8 @@ export const editResource = async (resourceId, resource) => {
 export const deleteResource = async (resourceId) => {
   const response = await axios({
     method: 'delete',
-    url: API.ADMIN_RESOURCES_DELETE(resourceId)
+    url: API.ADMIN_RESOURCES_DELETE(resourceId),
+    data: {staff_id: staffDetails_empid}
   });
 
   return response.data;

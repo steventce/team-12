@@ -57,7 +57,7 @@ module.exports = function(app) {
       where: { admin_id: staff_id}
     }).then(function(admins) {
       if (admins.length == 0) {
-        res.status(401).json('User needs to be admin to delete locations');
+        res.status(401).json('User needs to be admin to add locations');
         return;
       } else {
         return models.Location.create(location);
@@ -84,7 +84,7 @@ module.exports = function(app) {
       where: { admin_id: staff_id}
     }).then(function(admins) {
       if (admins.length == 0) {
-        res.status(401).json('User needs to be admin to delete locations');
+        res.status(401).json('User needs to be admin to edit locations');
         return;
       } else {
         return models.Location.update(location, {where: {location_id: location_id}});
