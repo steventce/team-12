@@ -9,18 +9,32 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     floor: {
-      type: DataTypes.STRING(10)
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Floor cannot be blank' }
+      }
     },
     section: {
-      type: DataTypes.STRING(10)
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Section cannot be blank' }
+      }
     },
     desk_number: {
       type: DataTypes.STRING(10),
+      allowNull: false,
       validate: {
+        notEmpty: { msg: 'Desk number cannot be blank' },
         // Validate unique desk numbers per location
         isUnique: function(value, next) {
           var Resource = require('./').Resource;
           var resource_id = this.resource_id
+
+          if (!value && value !== 0) {
+            next();
+          }
 
           if (!this.isNewRecord) {
             this.getResource()
