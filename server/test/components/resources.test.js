@@ -5,9 +5,30 @@ var app        = require('../../').app,
     populateDb = require('../utils/dbUtils'),
     moment     = require('moment');
 
+var admin_id = 9999999;
 describe('Resources', function() {
+  before(function(){
+
+  })
   beforeEach(function() {
-    return populateDb(models);
+    return populateDb(models).then(function() {
+      var admin = {
+        admin_id: admin_id,
+        name: "stub",
+      };
+      return models.Admin.findAll({
+        where: {admin_id:admin_id}
+      }).then(function(admins){
+        if (admins.length == 0) {
+          models.Admin.create(admin).then(function(){
+            // console.log("admin created");
+            return;
+          }).catch(function(err) {
+            return;
+          });
+        }
+      });
+    });
   });
 
   describe('GET /api/v1/locations/:location_id/resources', function() {
@@ -181,7 +202,8 @@ describe('Resources', function() {
       request(app)
         .post(`/api/v1/locations/${locationId}/resources`)
         .set('Accept', 'application/json')
-        .send({ resource_type, resource })
+        .send({ resource_type, resource,
+          staff_id: admin_id})
         .expect(201)
         .then(function() {
           Resource.count({
@@ -218,7 +240,8 @@ describe('Resources', function() {
             floor: 1,
             section: 'A',
             desk_number: 101
-          }
+          },
+          staff_id:admin_id
         })
         .expect(function(res) {
           assert.equal(res.body.errors.length, 1, 'Wrong number of errors');
@@ -239,7 +262,8 @@ describe('Resources', function() {
             floor: 1,
             section: 'Z',
             desk_number: 102
-          }
+          },
+          staff_id:admin_id
         })
         .expect(200, done);
     });
@@ -257,7 +281,8 @@ describe('Resources', function() {
             floor: 1,
             section: 'A',
             desk_number: 102
-          }
+          },
+          staff_id:admin_id
         })
         .expect(function(res) {
           assert.equal(res.body.errors.length, 1, 'Wrong number of errors');
@@ -270,9 +295,13 @@ describe('Resources', function() {
     it('should successfully delete a resource', function(done) {
       var Resource = models.Resource;
       var resourceId = 1;
+      console.log(admin_id);
       request(app)
         .delete(`/api/v1/resources/${resourceId}`)
         .set('Accept', 'application/json')
+        .send({
+          staff_id:admin_id
+        })
         .expect(200)
         .then(function(response) {
           Resource.count({ where: { resource_id: resourceId } }).then(function(count) {

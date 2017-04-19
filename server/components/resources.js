@@ -247,6 +247,7 @@ module.exports = function(app) {
       where: { admin_id: staff_id}
     }).then(function(admins) {
       if (admins.length == 0) {
+        console.log(staff_id);
         res.status(401).json('User needs to be admin to delete resources');
         return;
       } else {

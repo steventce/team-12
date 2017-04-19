@@ -4,9 +4,32 @@ var app        = require('../../').app,
     models     = require('../../models/'),
     populateDb = require('../utils/dbUtils');
 
+var admin_id = 9999999;
 describe('Locations', function() {
+
+  before(function() {
+
+  })
+
   beforeEach(function() {
-    return populateDb(models);
+    return populateDb(models).then(function() {
+      var admin = {
+        admin_id: admin_id,
+        name: "stub",
+      };
+      return models.Admin.findAll({
+        where: {admin_id:admin_id}
+      }).then(function(admins){
+        if (admins.length == 0) {
+          models.Admin.create(admin).then(function(){
+            // console.log("admin created");
+            return;
+          }).catch(function(err) {
+            return;
+          });
+        }
+      });
+    });
   });
 
   describe('POST /api/v1/locations', function () {
@@ -17,13 +40,18 @@ describe('Locations', function() {
         street_name: "1007 Mountain Drive",
         city: "Gotham City",
         province_state: "New York",
-        postal_code: "60035"
+        postal_code: "60035",
       };
+
+      var data = {
+        location:location,
+        staff_id:admin_id
+      }
 
       request(app)
         .post(`/api/v1/locations`)
         .set('Accept', 'application/json')
-        .send({ location })
+        .send(data)
         .expect(201)
         .then(function() {
           Location.count({
@@ -54,6 +82,7 @@ describe('Locations', function() {
           request(app)
           .delete(`/api/v1/locations/${locationId}`)
           .set('Accept', 'application/json')
+          .send({staff_id: admin_id})
           .expect(200)
           .then(function(response) {
             Location.count({ where: { location_id: locationId } }).then(function(count) {
@@ -90,6 +119,7 @@ describe('Locations', function() {
         request(app)
         .delete(`/api/v1/locations/${locationId}`)
         .set('Accept', 'application/json')
+        .send({staff_id: admin_id})
         .expect(403)
         .then(function(response) {
           Location.count({ where: { location_id: locationId } }).then(function(count) {
@@ -122,7 +152,8 @@ describe('Locations', function() {
           request(app)
           .put(`/api/v1/locations/${locationId}`)
           .set('Accept', 'application/json')
-          .send({ location })
+          .send({ location : location,
+            staff_id: admin_id})
           .expect(200, done);
         });
       });
