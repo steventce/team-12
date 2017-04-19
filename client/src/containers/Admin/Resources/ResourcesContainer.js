@@ -41,8 +41,8 @@ const mapDispatchToProps = function(dispatch) {
 }
 
 const mapStateToProps = function(state) {
-  const { resources, locations } = state;
-  return { ...resources, locations: locations.locations };
+  const { adminReducer, resources, locations } = state;
+  return { ...resources, locations: locations.locations, admin: adminReducer.admin };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourcesTable);

@@ -5,14 +5,15 @@ import LocationsModal from '../LocationsModal';
 import { modalTypes } from '../LocationsModal';
 import TrashIcon from 'react-icons/lib/fa/trash';
 import EditIcon from 'react-icons/lib/fa/pencil';
-
+import UnauthorizedModal from '../../UnauthorizedModal';
 
 class LocationsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       employeeId: this.props.employeeId,
-      modal: { show: false, data: {}, modalType: modalTypes.NONE.name }
+      modal: { show: false, data: {}, modalType: modalTypes.NONE.name },
+      isAdmin: true
     };
 
     this.addButton = this.addButton.bind(this);
@@ -27,6 +28,12 @@ class LocationsTable extends Component {
 
   componentDidMount() {
     this.props.getLocations();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.admin){
+      this.setState({ isAdmin: this.props.admin.length });
+    }
   }
 
   setModalProps(show, data, modalType) {
@@ -109,6 +116,13 @@ class LocationsTable extends Component {
   }
 
   render() {
+    // restrict access if not an admin
+    if (!this.state.isAdmin) {
+      return (
+        <UnauthorizedModal />
+      );
+    }
+    
     const { modal } = this.state;
     const options = {
       hideSizePerPage: true

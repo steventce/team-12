@@ -7,6 +7,7 @@ import ResourcesModal from '../ResourcesModal';
 import { modalTypes } from '../ResourcesModal';
 import TrashIcon from 'react-icons/lib/fa/trash';
 import EditIcon from 'react-icons/lib/fa/pencil';
+import UnauthorizedModal from '../../UnauthorizedModal';
 
 function resourceIdFormatter(cell, row) {
   return cell ? `Booked by: ${cell}` : 'Available';
@@ -17,7 +18,8 @@ class ResourcesTable extends Component {
     super(props);
     this.state = {
       locationId: null,
-      modal: { show: false, data: {}, modalType: modalTypes.NONE.name }
+      modal: { show: false, data: {}, modalType: modalTypes.NONE.name },
+      isAdmin: true
     };
 
     this.addButton = this.addButton.bind(this);
@@ -38,6 +40,12 @@ class ResourcesTable extends Component {
         this.setState({ locationId })
         this.props.getResources(locationId);
       });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.admin){
+      this.setState({ isAdmin: this.props.admin.length });
+    }
   }
 
   setModalProps(show, data, modalType) {
@@ -133,6 +141,13 @@ class ResourcesTable extends Component {
   }
 
   render() {
+    // restrict access if not an admin
+    if (!this.state.isAdmin) {
+      return (
+        <UnauthorizedModal />
+      );
+    }
+
     const { modal } = this.state;
     const options = {
       hideSizePerPage: true

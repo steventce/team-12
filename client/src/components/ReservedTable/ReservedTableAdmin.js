@@ -14,6 +14,7 @@ import './ReservedTable.css';
 import './ReservedTableAdmin.css';
 import TrashIcon from 'react-icons/lib/fa/trash';
 import EditIcon from 'react-icons/lib/fa/pencil';
+import UnauthorizedModal from '../UnauthorizedModal';
 
 import { cancelReservation, editReservation, getAdminReservations } from '../../redux/modules/ReservationReducer';
 import { connect } from 'react-redux';
@@ -44,13 +45,19 @@ class ReservedTableAdmin extends Component {
       floorNum: -1,
       modalType: this.modalEnum.NONE,
       editOptions: this.editOptions,
-      errorMsg: ""
+      errorMsg: "",
+      isAdmin: true
     };
+  }
 
-    this.props.dispatch(getAdminReservations()).then(function(response) {
-    });
-    
-    
+  componentDidMount() {
+    this.props.dispatch(getAdminReservations()).then(function(response) {});
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.admin){
+      this.setState({ isAdmin: this.props.admin.length });
+    }
   }
 
   // Edit Modal
@@ -234,6 +241,13 @@ class ReservedTableAdmin extends Component {
   }
 
   render() {
+    // restrict access if not an admin
+    if (!this.state.isAdmin) {
+      return (
+        <UnauthorizedModal />
+      );
+    }
+
     var selectedResource = this.props.reservations[this.state.modalIndex] ? this.props.reservations[this.state.modalIndex]["Resource.Desk.desk_number"] : "";
     var selectedReservation = this.props.reservations[this.state.modalIndex] ? this.props.reservations[this.state.modalIndex].reservation_id : "";
     var selectedReservationStartTime = this.props.reservations[this.state.modalIndex] ?
@@ -292,7 +306,8 @@ class ReservedTableAdmin extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { ...state.db };
+  const { adminReducer, db } = state;
+  return { ...db, admin: adminReducer.admin };
 }
 
 export default connect(mapStateToProps)(ReservedTableAdmin);
