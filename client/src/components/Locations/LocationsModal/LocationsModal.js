@@ -46,6 +46,7 @@ class LocationsModal extends Component {
     this.setData = this.setData.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getValidationState = this.getValidationState.bind(this);
     this.renderConfirmModal = this.renderConfirmModal.bind(this);
   }
 
@@ -66,9 +67,18 @@ class LocationsModal extends Component {
     });
   }
 
+  getValidationState(attr_name) {
+    return !this.state[attr_name] ? "error" : null
+  }
+
   handleSubmit() {
     let okHandler = this.props.okHandler;
     const { modalType, closeModal, locationId, data } = this.props;
+
+    const { building_name, street_name, city, province_state, postal_code } = this.state;
+    if ((modalType != modalTypes.DELETE.name) && (!building_name || !street_name || !city || !province_state || !postal_code)) {
+      return
+    }
 
     switch (modalType) {
       case modalTypes.ADD.name: {
@@ -162,7 +172,8 @@ class LocationsModal extends Component {
         <Modal.Body>
           {modalData.body({
             ...this.state,
-            handleChange: this.handleChange
+            handleChange: this.handleChange,
+            getValidationState: this.getValidationState
           })}
         </Modal.Body>
         <Modal.Footer>

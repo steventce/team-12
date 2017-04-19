@@ -263,7 +263,7 @@ class ReservedTableAdmin extends Component {
           <TableHeaderColumn width='50px' dataField='reservation_id' isKey={true} dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Reservation ID</TableHeaderColumn>
           <TableHeaderColumn width='50px' dataField='Resource.Desk.desk_number' dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Resource ID</TableHeaderColumn>
           <TableHeaderColumn width='50px' dataField='Resource.resource_type' dataAlign='center' dataSort={true}>Resource Type</TableHeaderColumn>
-          <TableHeaderColumn width='50px' dataField='staff_id' dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Employee</TableHeaderColumn>
+          <TableHeaderColumn width='50px' dataField='staff_id' dataAlign='center' dataSort filter={{ type: 'TextFilter' }} dataSort={true}>Staff ID</TableHeaderColumn>
           <TableHeaderColumn width='50px' dataField='start_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>Start Time (d/m/y)</TableHeaderColumn>
           <TableHeaderColumn width='50px' dataField='end_date' dataAlign='center' dataSort={true} csvFormat={ this.csvDateFormatter} dataFormat={dateFormatter}>End Time (d/m/y)</TableHeaderColumn>
           <TableHeaderColumn width='50px' dataField='edit' dataAlign='center' export={false} dataFormat={this.editButton.bind(this)}>Edit</TableHeaderColumn>

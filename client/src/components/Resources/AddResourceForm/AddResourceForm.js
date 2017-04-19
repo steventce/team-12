@@ -2,15 +2,11 @@ import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class AddResourceForm extends Component {
-  getValidationState() {
-
-  }
-
   render() {
-    const { resource_type, floor, section, deskNumber, handleChange } = this.props;
+    const { resource_type, floor, section, deskNumber, handleChange, getValidationState } = this.props;
     return (
       <form>
-        <FormGroup controlId="addResourceType" validationState={this.getValidationState()}>
+        <FormGroup controlId="addResourceType" validationState={null}>
           <ControlLabel>Resource Type</ControlLabel>
           <FormControl
             componentClass="select"
@@ -21,7 +17,7 @@ class AddResourceForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="addFloor" validationState={this.getValidationState()}>
+        <FormGroup controlId="addFloor" validationState={getValidationState("floor")}>
           <ControlLabel>Floor</ControlLabel>
           <FormControl
             type="text"
@@ -32,7 +28,7 @@ class AddResourceForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="addSection" validationState={this.getValidationState()}>
+        <FormGroup controlId="addSection" validationState={getValidationState("section")}>
           <ControlLabel>Section</ControlLabel>
           <FormControl
             type="text"
@@ -43,7 +39,7 @@ class AddResourceForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="addDeskNumber" validationState={this.getValidationState()}>
+        <FormGroup controlId="addDeskNumber" validationState={getValidationState("deskNumber")}>
           <ControlLabel>Desk Number</ControlLabel>
           <FormControl
             type="text"

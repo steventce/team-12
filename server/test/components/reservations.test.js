@@ -8,13 +8,31 @@ var app        = require('../../').app,
 
 
 describe('Reservations', function() {
+  var admin_id = 9999999;
 
   before(function() {
     generate('test.csv');
   });
 
   beforeEach(function() {
-    return populateDb(models);
+    return populateDb(models).then(function() {
+      var admin = {
+        admin_id: admin_id,
+        name: "stub",
+      };
+      return models.Admin.findAll({
+        where: {admin_id:admin_id}
+      }).then(function(admins){
+        if (admins.length == 0) {
+          models.Admin.create(admin).then(function(){
+            // console.log("admin created");
+            return;
+          }).catch(function(err) {
+            return;
+          });
+        }
+      });
+    });
   });
 
   describe('GET /api/v1/users/:{staff_id}/reservations/', function() {
@@ -111,7 +129,7 @@ describe('Reservations', function() {
       }).then(function(resource) {
         var reservations = {
           resouce_id: resource.resource_id,
-          staff_id:"1234567890",
+          staff_id:admin_id,
           staff_name:"John",
           staff_department:"dept2",
           staff_email:"testing@hsbc.ca",
@@ -159,7 +177,7 @@ describe('Reservations', function() {
       }).then(function(resource) {
         var reservations = {
           resouce_id: resource.resource_id,
-          staff_id:"1234567890",
+          staff_id:admin_id,
           staff_name:"Kevin",
           staff_department:"dept3",
           staff_email:"testing@hsbc.ca",
@@ -207,7 +225,7 @@ describe('Reservations', function() {
       }).then(function(resource) {
         var reservations = {
           resource_id: id,
-          staff_id:"1234567890",
+          staff_id:admin_id,
           staff_name:"Sunny",
           staff_department:"dept4",
           staff_email:"testing@hsbc.ca",
@@ -267,7 +285,7 @@ describe('Reservations', function() {
       }).then(function(reservations1){
         var reservations2 = {
              resource_id: id,
-             staff_id:"3030303030",
+             staff_id:admin_id,
              staff_name:"Bruce",
              staff_department:"dept4",
              staff_email:"bruce@hsbc.ca",
@@ -319,7 +337,7 @@ describe('Reservations', function() {
            }).then(function(resource) {
                 var reservations = {
                     resouce_id: resource.resource_id  ,
-                    staff_id:"23456789",
+                    staff_id:admin_id,
                     staff_name:"James",
                     staff_department:"dept123",
                     staff_email:"testing@hsbc.ca",
@@ -330,6 +348,7 @@ describe('Reservations', function() {
             }).then(function(reservations) {
                 request(app)
                     .delete(`/api/v1/reservations/${reservations.reservation_id}`)
+                    .send({staff_id:admin_id})
                     .end(function (err, res){
                         assert.equal(res.status, 200);
                         assert.equal(res.body, 'Reservation successfully deleted.');

@@ -132,7 +132,7 @@ module.exports = function(app) {
     var desk = {
       floor,
       section,
-      desk_number: `${floor}.${section}.${desk_number}`
+      desk_number: desk_number ? `${floor}.${section}.${desk_number}` : ''
     }
     var resource = {
       location_id,
@@ -201,7 +201,7 @@ module.exports = function(app) {
       resource_id: resource_id, // Used for model validation
       floor: resource.floor,
       section: resource.section,
-      desk_number: `${resource.floor}.${resource.section}.${resource.desk_number}`
+      desk_number: resource.desk_number ? `${resource.floor}.${resource.section}.${resource.desk_number}` : ''
     }
 
     var selector = { where: { resource_id } };
@@ -247,6 +247,7 @@ module.exports = function(app) {
       where: { admin_id: staff_id}
     }).then(function(admins) {
       if (admins.length == 0) {
+        console.log(staff_id);
         res.status(401).json('User needs to be admin to delete resources');
         return;
       } else {
