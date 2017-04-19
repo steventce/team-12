@@ -2,19 +2,11 @@ import React, { Component } from 'react';
 import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 class AddLocationForm extends Component {
-
-  getValidationState() {
-//    const length = this.state.value.length;
-//    if (length > 10) return 'success';
-//    else if (length > 5) return 'warning';
-//    else if (length > 0) return 'error';
-  }
-
   render() {
-    const { building_name, street_name, city, province_state, postal_code, handleChange } = this.props;
+    const { building_name, street_name, city, province_state, postal_code, handleChange, getValidationState } = this.props;
     return (
       <form>
-        <FormGroup controlId="newBuildingName" validationState={this.getValidationState()}>
+        <FormGroup controlId="newBuildingName" validationState={getValidationState("building_name")}>
           <ControlLabel>Name</ControlLabel>
           <FormControl
             type="text"
@@ -25,7 +17,7 @@ class AddLocationForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="newLocationStreetAddress" validationState={this.getValidationState()}>
+        <FormGroup controlId="newLocationStreetAddress" validationState={getValidationState("street_name")}>
           <ControlLabel>Street Address</ControlLabel>
           <FormControl
             type="text"
@@ -36,7 +28,7 @@ class AddLocationForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="newLocationCity" validationState={this.getValidationState()}>
+        <FormGroup controlId="newLocationCity" validationState={getValidationState("city")}>
           <ControlLabel>City</ControlLabel>
           <FormControl
             type="text"
@@ -47,7 +39,7 @@ class AddLocationForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="newLocationProvinceState" validationState={this.getValidationState()}>
+        <FormGroup controlId="newLocationProvinceState" validationState={getValidationState("province_state")}>
           <ControlLabel>Province/State</ControlLabel>
           <FormControl
             type="text"
@@ -58,7 +50,7 @@ class AddLocationForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="newLocationPostalZIPCode" validationState={this.getValidationState()}>
+        <FormGroup controlId="newLocationPostalZIPCode" validationState={getValidationState("postal_code")}>
           <ControlLabel>Postal/ZIP Code</ControlLabel>
           <FormControl
             type="text"

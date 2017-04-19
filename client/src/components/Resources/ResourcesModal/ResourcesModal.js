@@ -43,6 +43,7 @@ class ResourcesModal extends Component {
     this.setData = this.setData.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getValidationState = this.getValidationState.bind(this);
     this.renderConfirmModal = this.renderConfirmModal.bind(this);
   }
 
@@ -63,9 +64,18 @@ class ResourcesModal extends Component {
     });
   }
 
+  getValidationState(attr_name) {
+    return !this.state[attr_name] ? "error" : null
+  }
+
   handleSubmit() {
     let okHandler = this.props.okHandler;
     const { modalType, closeModal, locationId, data } = this.props;
+
+    const { floor, section, deskNumber } = this.state;
+    if ((modalType != modalTypes.DELETE.name) && (!floor || !section || !deskNumber)) {
+      return
+    }
 
     switch (modalType) {
       case modalTypes.ADD.name: {
@@ -159,7 +169,8 @@ class ResourcesModal extends Component {
         <Modal.Body>
           {modalData.body({
             ...this.state,
-            handleChange: this.handleChange
+            handleChange: this.handleChange,
+            getValidationState: this.getValidationState
           })}
         </Modal.Body>
         <Modal.Footer>

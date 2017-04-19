@@ -2,15 +2,11 @@ import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class EditResourceForm extends Component {
-  getValidationState() {
-
-  }
-
   render() {
-    const { floor, section, deskNumber, handleChange } = this.props;
+    const { floor, section, deskNumber, handleChange, getValidationState } = this.props;
     return (
       <form>
-        <FormGroup controlId="editFloor" validationState={this.getValidationState()}>
+        <FormGroup controlId="editFloor" validationState={getValidationState("floor")}>
           <ControlLabel>Floor</ControlLabel>
           <FormControl
             type="text"
@@ -21,7 +17,7 @@ class EditResourceForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="editSection" validationState={this.getValidationState()}>
+        <FormGroup controlId="editSection" validationState={getValidationState("section")}>
           <ControlLabel>Section</ControlLabel>
           <FormControl
             type="text"
@@ -32,7 +28,7 @@ class EditResourceForm extends Component {
           <FormControl.Feedback />
         </FormGroup>
 
-        <FormGroup controlId="editDeskNumber" validationState={this.getValidationState()}>
+        <FormGroup controlId="editDeskNumber" validationState={getValidationState("deskNumber")}>
           <ControlLabel>Desk Number</ControlLabel>
           <FormControl
             type="text"
